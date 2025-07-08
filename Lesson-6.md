@@ -1,11 +1,11 @@
 # 6.Ders
 ## ```constexpr``` Functions
 
-```constexpr``` anahtar sözcüğü sadece değişkenler ile değil fonksiyon tanımlanırkende kullanılabilir. ```constexpr``` fonksiyonları, sadece sabit parametrelerle çalışacak şekilde yazılmalıdır ve yalnızca **derleme zamanında hesaplanabilecek** işlemleri içerebilirler.
+```constexpr``` anahtar kelimesi, sadece sabitler (constants) ile değil, fonksiyon tanımlarında da kullanılabilir. Bu tür fonksiyonlar, yalnızca **derleme zamanında** hesaplanabilen işlemler içerir.
 
-- ```constexpr``` ile işaretlenmiş fonksiyonlar, **derleme zamanında** hesaplanabilir. Bu, **runtime (çalışma zamanı)** sırasında değil, derleme zamanında hesaplanan sonuçların kullanılmasına olanak tanır.
+- ```constexpr``` ile işaretlenmiş fonksiyonlar, **derleme zamanında** hesaplanabilir. Bu, programın çalışması sırasında değil, derleme aşamasında hesaplanan sonuçların kullanılmasını sağlar.
 
-- ```constexpr``` fonksiyonlar yalnızca **sabit ifadeler** ile çalışabilir ve fonksiyonun tamamı **sabit değerlere dayalı olmalıdır**.
+- ```constexpr``` fonksiyonlar yalnızca **sabit ifadelerle** çalışabilir. Fonksiyonun tamamı **sabit değerlere** dayanmalıdır.
 
 - ```constexpr``` fonksiyonlar, ```const``` fonksiyonlardan farklıdır. Bir const fonksiyon yalnızca bir nesnenin sabit olduğunu belirtirken, ```constexpr``` fonksiyonun değeri derleme zamanında hesaplanabilir.
 
@@ -17,16 +17,19 @@ constexpr int x_func(int x)
 
 constexpr int y_func(int x)
 {
-    // Bu şekilde tanımlanmış bir fonksiyon Syntax hatasıdır. "failure was caused by variable declaration with non-automatic storage" hatasına sebep olur.
+    // Bu şekilde tanımlanmış bir fonksiyon, derleyici hatasına yol açar. 
+    // "Static" değişkenler, derleme zamanında hesaplanamadığı için, 
+    // "non-automatic storage" hatası oluşur. Çünkü statik değişkenlerin değeri runtime'da belirlenir.
     static int y = x;
     return y * y - 3;
 }
+
 ```
 
 **NOT-1:** Her fonksiyon ```constexpr``` fonksiyonu olamaz.
-- Statik ömürlü yerel değişkene olmamalıdır.
+- ```constexpr```fonksiyonlar, statik ömürlü yerel değişkenler içeremez.
 
-**NOT-2:** Eğer tüm parametrelerine sabit ifadeleri ile çağrı yapılırsa fonksiyonun **geri dönüş değeri derleme zamanında** elde edilir.
+**NOT-2:** Eğer bir fonksiyon, parametrelerine sabit ifadelerle çağrılırsa, fonksiyonun **geri dönüş değeri derleme zamanında** hesaplanır.
 
 ```cpp
 constexpr int ndigit(int x)
@@ -101,7 +104,7 @@ int main() {
 // func_duplicate.cpp dosyası
 #include <iostream>
 
-void foo()  // Tanım 2, bu da aynı fonksiyonu tanımlıyor
+void foo()  // Tanım 2, aynı fonksiyonu tekrar tanımlıyor
 {   
     std::cout << "Hello from foo again!" << std::endl;
 }
@@ -111,7 +114,6 @@ int main()
     foo();
     return 0;
 }
-
 ```
 
 **NOT-1:** Yukarıdaki örnekte, ```foo()``` fonksiyonu **aynı adı taşıyan iki farklı dosyada** iki kez tanımlanmış. Bu durum **ODR kuralını** ihlal eder ve **linker error**'a neden olur. Derleyici **bu iki farklı tanımın çakıştığını** fark eder ve hata verir.
@@ -221,7 +223,7 @@ inline int g = 10; // api.h dosyasını birden çok kere include edilse dahi run
 
 ---
 
-## C++ Dilinde Enumaration Types
+## Enumaration Types
 
 Sabit sayısal değerlerin isimlendirilmiş bir koleksiyonunu tanımlamak için kullanılan bir veri türüdür. **```enum```** türleri, bir grup sabit değeri isimlendirerek daha okunabilir ve yönetilebilir hale getirir.
 
@@ -231,11 +233,59 @@ enum Color {Blue, Black, White, Pruple, Red}; // C'de kullanımı
 int main()
 {
     Color my_color;
-    my_color = 3;   // C'de böyle bir atama legaldir fakat C++'de böyle bir atama mümkün değildir!
+    my_color = 3;   // C'de bu atama geçerlidir, fakat C++'da böyle bir atama yapılamaz! 
+                    // C++'da sadece enum türünde tanımlanmış bir değişkene, enum tipinde tanımlanmış bir değer atanabilir!
 }
 
 ```
 
-**NOT: DERS 5, 2.15'DE KALDIM**
+### C++ dilinde(modern C++ öncesi), enum türlerinin istenmeyen özellikleri:
+
+1) Underliying-type'ın (baz tür) derleyiciye bağlı için enum türleri başlık dosyalarında incomplete type olarak kullanılamıyor.
+
+```cpp
+// api.h dosyası
+
+enum Color;
+
+struct Data
+{
+  //...
+  Color mc
+};
+
+// Bu kod C'de geçerlidir fakat C++'da, enum türlerinin alt türlerinin derleyiciye bağlı olması nedeniyle, enum türlerinin incomplete-type olarak kullanılmasına engel olur.
+```
+
+2) Aritmetik türlerden, enum türlerine örtülü dönüşüm olmamasına rağmen farklı enum türleri arasında örtülü dönüşüm olmamasına rağmen farklı enum türlerinden aritmetik türlere örtülü dönüşüm var.
+
+```cpp
+enum Color {Blue, Black, White, Pruple, Red};
+enum Pos {On, Off, Hold};
+
+int main()
+{
+  Color c;
+  // ...
+  c = Off; // C++'da bu geçerli değil!
+
+  Color my_color = Black;
+  int ival;
+  // ...
+  ival = mycolor; // C++'da bu geçerli!
+}
+```
+
+3) Enumaratörlerin ayrı bir scopeları yoktur.
+
+```cpp 
+// api.h dosyası
+enum traffic_light {Red, Yellow, Green};
+
+// app.h dosyası
+enum screen_color {Magenta, White, Black, Red};
+
+// Her iki başlık dosyası include edildiğinde, "Red" in ayrı bir scope'u olmadığı için bu kod derlendiğinde "Syntax hatası" olur.
+```
 
 ---
