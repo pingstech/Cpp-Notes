@@ -1,0 +1,33 @@
+# 8.Ders
+
+## Function Overloading
+
+Farklı parametrelerle aynı isme sahip fonksiyonlar oluşturmanıza olanak tanır. Bu, fonksiyonlar arasında parametre türü veya sayısı gibi farklar olabilir.
+
+- **Fonksiyonların adı aynıdır**, ancak parametre sayısı veya türleri farklıdır.
+- Derleyici, fonksiyonun çağrıldığı yere göre uygun fonksiyonu seçer.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void print(int i) {
+    cout << "Integer: " << i << endl;
+}
+
+void print(double d) {
+    cout << "Double: " << d << endl;
+}
+
+void print(string s) {
+    cout << "String: " << s << endl;
+}
+
+int main() {
+    print(10);      // Integer: 10
+    print(3.14);    // Double: 3.14
+    print("Hello"); // String: Hello
+    return 0;
+}
+
+```

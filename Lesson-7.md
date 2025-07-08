@@ -1,4 +1,3 @@
-
 # 7.Ders
 ## Scope Enum
 
