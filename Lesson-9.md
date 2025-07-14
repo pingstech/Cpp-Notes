@@ -1,6 +1,6 @@
 # 9.Ders
 
-## CLASS
+## Class
 
 Bir tür veri yapısıdır ve iki ana bileşenden oluşur:
 - **Veri üyeleri (data members)**: Bir sınıfın içindeki değişkenlerdir.
@@ -74,27 +74,27 @@ int main()
     **Örnek:**
 
     ```cpp
-    #include <iostream>
-    using namespace std;
+    class MyClass 
+    {
+        public:
+            int x;  // public veri üyesi
 
-    class MyClass {
-    public:
-        int x;  // public veri üyesi
+            void setX(int value)    // public fonksiyon
+            {  
+                x = value;
+            }
 
-        void setX(int value) {  // public fonksiyon
-            x = value;
-        }
-
-        int getX() {  // public fonksiyon
-            return x;
-        }
+            int getX() // public fonksiyon
+            {  
+                return x;
+            }
     };
 
-    int main() {
+    int main() 
+    {
         MyClass obj;  
         obj.x = 10;  // public veri üyesine dışarıdan erişim
-        cout << "X değeri: " << obj.getX() << endl;  // public fonksiyon kullanımı
-        return 0;
+        std::cout << "X değeri: " << obj.getX() << '\n';  // public fonksiyon kullanımı
     }
     ```
     - Burada, ```x``` ```public``` olarak tanımlandığı için ```main``` fonksiyonunda dışarıdan erişilebilir.
@@ -110,29 +110,29 @@ int main()
     **Örnek:**
 
     ```cpp
-    #include <iostream>
-    using namespace std;
+    class MyClass 
+    {
+        private:
+            int x;  // private veri üyesi
 
-    class MyClass {
-    private:
-        int x;  // private veri üyesi
+        public:
+            void setX(int value) // public fonksiyon
+            {  
+                x = value;
+            }
 
-    public:
-        void setX(int value) {  // public fonksiyon
-            x = value;
-        }
-
-        int getX() {  // public fonksiyon
-            return x;
-        }
+            int getX() // public fonksiyon
+            {  
+                return x;
+            }
     };
 
-    int main() {
+    int main() 
+    {
         MyClass obj;
         // obj.x = 10;  // HATA! private veri üyelerine dışarıdan erişilemez
         obj.setX(10);  // public fonksiyon ile erişim sağlanır
-        cout << "X değeri: " << obj.getX() << endl;  // private veri üyesine erişim, public fonksiyon ile yapılır
-        return 0;
+        std::cout << "X değeri: " << obj.getX() << '\n';  // private veri üyesine erişim, public fonksiyon ile yapılır
     }
     ```
     - ```x``` değişkeni ```private``` olarak tanımlanmıştır, bu nedenle ```main``` fonksiyonunda doğrudan erişilemez.
@@ -148,32 +148,37 @@ int main()
     #include <iostream>
     using namespace std;
 
-    class Base {
-    protected:
-        int x;  // protected veri üyesi
+    class Base 
+    {
+        protected:
+            int x;  // protected veri üyesi
 
-    public:
-        void setX(int value) {  // public fonksiyon
-            x = value;
-        }
+        public:
+            void setX(int value) // public fonksiyon
+            {  
+                x = value;
+            }
 
-        int getX() {  // public fonksiyon
-            return x;
-        }
+            int getX() // public fonksiyon
+            {  
+                return x;
+            }
     };
 
-    class Derived : public Base {
-    public:
-        void display() {
-            cout << "X değeri (türetilmiş sınıf): " << x << endl;  // protected üyeye erişim
-        }
+    class Derived : public Base 
+    {
+        public:
+            void display() 
+            {
+                std::cout << "X değeri (türetilmiş sınıf): " << x << '\n';  // protected üyeye erişim
+            }
     };
 
-    int main() {
+    int main() 
+    {
         Derived obj;
         obj.setX(10);  // Base sınıfının public fonksiyonu ile erişim
         obj.display();  // Derived sınıfının fonksiyonu ile protected üyeye erişim
-        return 0;
     }
     ```
     - Burada, ```x``` ```protected``` olarak tanımlandığı için ```Base``` sınıfının dışında doğrudan erişilemez, ancak ```Derived``` sınıfından erişilebilir.
@@ -188,8 +193,217 @@ int main()
 | **`private`**            | Yalnızca sınıf içinden erişilebilir.                  |
 | **`protected`**          | Sınıf içinden ve türetilmiş sınıflardan erişilebilir. |
 
+### Member Function
+
+Bir sınıfın içine dahil edilmiş fonksiyonlardır ve bu fonksiyonlar sınıfın nesneleri üzerinde işlem yapar.
+
+```cpp
+// 
+// api.h dosyası
+class _my_class()
+{
+    public:
+        void func();    // Sınıfın içinde tanımladığımız için "inline" anahtar kelimesi ile fonksiyonu göstermemize gerek yoktur. "Implicite inline" olarak orada bulunur.
+}
+
+inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığımız için "inline" kullanmak zorundayız.
+```
+
+1) **Temel Bildirim ve Tanım:**
+
+    ```cpp
+    class Araba 
+    {
+        public: // Erişim belirleyici
+            // Üye fonksiyon bildirimi (declaration)
+            void hizlan(int artis);
+
+            // Inline tanım (doğrudan sınıf içinde)
+            void frenYap() 
+            {
+                hiz -= 10;
+                if (hiz < 0) hiz = 0; // Hız negatif olamaz
+            }
+
+        private:
+            int hiz = 0; // Üye değişken
+    };
+
+    // Sınıf dışında tanım (definition) → "Araba::" scope'u zorunlu!
+    void Araba::hizlan(int artis) {
+        hiz += artis; // Üye değişkene doğrudan erişim
+    }
+    ```
+    ---
+
+2) **Erişim Kuralları(```public``` vs ```private```):**  
+
+    Üye fonksiyonların dışarıdan çağrılabilmesi için public olmalıdır.
+
+    ```cpp
+    int main() 
+    {
+        Araba tesla;
+        tesla.hizlan(50); // public → Geçerli
+        tesla.frenYap();   // public → Geçerli
+
+        // tesla.hiz = 100; // HATA! private üyeye dışarıdan erişilemez
+        // Üye değişkenlere sadece sınıfın KENDİ fonksiyonları erişebilir.
+    }
+    ```
+    ---
+
+3) **```const``` Üye Fonksiyonlar:**
+
+    Nesnenin durumunu değiştirmeyen fonksiyonlar ```const``` ile işaretlenir.
+
+    ```cpp
+    class Araba 
+    {
+        public:
+            // 3.1 const üye fonksiyon → içeride üye değişken değiştirilemez
+            int mevcutHiz() const {
+                // hiz = 0; // HATA! const fonksiyon içinde üye değiştirilemez
+                return hiz;
+            }
+
+        private:
+            int hiz;
+    };
+
+    int main() 
+    {
+        const Araba sabitAraba; // const nesne
+        // sabitAraba.hizlan(10); // HATA! const nesne sadece const fonksiyon çağırabilir
+        sabitAraba.mevcutHiz(); // Geçerli (const fonksiyon)
+    }
+    ```
+    ---
+
+4) **```static``` Üye Fonksiyonlar:**
+
+    Nesneye değil, sınıfa ait fonksiyonlar. İçeride this yoktur.
+
+    ```cpp
+    class Araba 
+    {
+        public:
+            static int toplamArabaSayisi() 
+            {
+                return sayac; // Sadece static üyelere erişebilir
+            }
+
+            Araba() { sayac++; } // Kurucu (constructor)
+
+        private:
+            static int sayac; // Sınıf genelinde paylaşılan değişken
+    };
+
+    int Araba::sayac = 0; // Static değişkenin tanımı (zorunlu)
+
+    int main() 
+    {
+        Araba a1, a2;
+        // Nesne olmadan çağırma
+        std::cout << Araba::toplamArabaSayisi(); // Çıktı: 2
+    }
+    ```
+    ---
+
+5) **Tanım Yerleri: Inline vs Dışarıda**
+
+    - **Inline**: Sınıf içinde tanım → Derleyici optimizasyonu.
+    - **Dışarıda**: Büyük fonksiyonlar için → ```SınıfAdı::fonksiyon``` syntax'ı zorunlu.
+
+    ```cpp
+    class Araba 
+    {
+        public:
+            void korna_cal(); // Sadece bildirim
+    };
+
+    // Dışarıda tanım → "Araba::" unutulursa LINK HATASI!
+    void Araba::korna_cal() {
+        std::cout << "Beep!";
+    }
+    ```
+---
+
+**Özet Tablo: Kritik Kurallar**
+| Özellik             | Syntax Kuralı                         | Sık Hata                     |
+|---------------------|---------------------------------------|------------------------------|
+| **Sınıf Dışı Tanım**| `void Sınıf::fonksiyon() { ... }`     | `Sınıf::` unutma → Tanımsızlık hatası! |
+| **`const` Fonksiyon**| `int get() const { ... }`            | `const` nesneler için zorunlu |
+| **`static` Fonksiyon**| `static void foo();` → `this` yok!  | Static üye değişken gerektirir |
+| **Erişim**          | `private` fonksiyon → Sadece sınıf içi | Dışarıdan çağırma hatası    |
+
+> ✅ **En İyi Uygulama:**  
+> - Nesne durumu değişmiyorsa **`const`** ekle.  
+> - Sınıf geneli işlemler için **`static`** kullan.  
+> - Büyük fonksiyonları **sınıf dışında tanımla** (kod okunabilirliği).
+
+#### Member Function ile Function Overloading:**
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Calculator 
+{
+    public:
+        // İki tam sayıyı toplayan fonksiyon
+        int add(int a, int b) { return a + b; }
+
+        // İki ondalıklı sayıyı toplayan fonksiyon
+        double add(double a, double b) { return a + b; }
+
+        // Üç tam sayıyı toplayan fonksiyon
+        int add(int a, int b, int c) { return a + b + c; }
+};
+
+int add(double a, int b) { return a + b; }      // Bu fonkisyon "function overloading" değildir. Farklı scope'taki fonkisyonlar birbirlerini overload etmezler!
+
+int main() 
+{
+    Calculator calc;  // Calculator sınıfından bir nesne oluşturuluyor
+
+    std::cout << "2 + 3 = " << calc.add(2, 3) << '\n';           // int türündeki add fonksiyonu çağrılır
+    std::cout << "2.5 + 3.5 = " << calc.add(2.5, 3.5) << '\n';   // double türündeki add fonksiyonu çağrılır
+    std::cout << "1 + 2 + 3 = " << calc.add(1, 2, 3) << '\n';    // Üç parametreli add fonksiyonu çağrılır
+}
+```
+
+**1.52'de kaldım**
+
+```cpp
+struct _my_str_t 
+{
+    int a, b, x;
+}
+
+void func(_my_str_t * p) { }    // C'de bu şekilde erişim sağlıyorduk.
+
+class _my_class_t
+{
+    public:    
+        void func( );
+}   //            ^~~~~ "_my_class_t *" sınıfını burada her zaman gizli bir parametre olarak tutar.
+
+int main()
+{
+    struct _my_str_t real_my_str_t;
+    func(&real_my_str_t);
+
+    _my_class_t real_my_class_t;
+    real_my_class_t.func();
+}
+```
+
+---
 
 ### Class Kullanımına Ait Ekstra Notlar:
+
+
 
 1) **Erişim belirleyici kullanmadan sınıf tanımlama:**
 
@@ -207,10 +421,12 @@ int main()
 
 2) **Mülakat sorusu-1:** 
 
-    C++' bir sınıfın ```public``` interface'i: sadece sınıfın ```public``` bölümü değil, sınıfın ```public``` bölümündeki öğeler + başlık dosyasındaki(headre file) ```global``` bildirimlerdir.
+    C++' bir sınıfın **```public``` interface**'i: sadece sınıfın **```public``` bölümü değil**, sınıfın **```public``` bölümündeki öğeler + başlık dosyasındaki(headre file) ```global``` bildirimlerdir**.
 
 3) **Sınıf scope içinde aynı isimli değişken tanımlama:**
-    Bir **syntax hatasıdır**. Bir sınıfın scope'u içerisinde aynı isimli bir değişken tanımlanamaz.
+    Bir **syntax hatasıdır**. Bir sınıfın scope'u içerisinde **aynı isimli** bir **değişken** tanımlanamaz. 
+    
+    Sınıfın ```public```, ```private``` ve ```protected``` bölümleri yani erişim ayrıcalıklı kod alanları **bir scope değildir**.
 
     ```cpp
     class _my_class

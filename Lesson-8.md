@@ -170,7 +170,7 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
     - Eğer tam eşleşme yoksa, derleyici **dönüşüm (conversion)** ve **ileri dönüşüm (promotion)** yollarını kullanarak en yakın eşleşmeyi bulmaya çalışır.
     - Örneğin, ```int``` türündeki bir argüman, ```float``` türündeki bir parametreye dönüştürülebilir.
 
-    1) **İleri dönüşüm(Promotion):** DDaha küçük türlerin, daha büyük türlere otomatik olarak dönüştürülmesidir. Veri kaybı olmaz. İleri Dönüşüm (Promotion) Örnekleri:
+    1) **İleri dönüşüm(Promotion):** Daha küçük türlerin, daha büyük türlere otomatik olarak dönüştürülmesidir. Veri kaybı olmaz. İleri Dönüşüm (Promotion) Örnekleri:
         
         - ```char``` → ```int``` dönüşümü
         - ```int``` → ```float``` dönüşümü
