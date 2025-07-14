@@ -64,6 +64,30 @@ int main()
 }
 ```
 
+```cpp
+struct _my_str_t 
+{
+    int a, b, x;
+}
+
+void func(_my_str_t * p) { }    // C'de bu şekilde erişim sağlıyorduk.
+
+class _my_class_t
+{
+    public:    
+        void func( );
+}   //            ^~~~~ "_my_class_t *" sınıfını burada her zaman gizli bir parametre olarak tutar.
+
+int main()
+{
+    struct _my_str_t real_my_str_t;
+    func(&real_my_str_t);
+
+    _my_class_t real_my_class_t;
+    real_my_class_t.func();
+}
+```
+
 ### Access Control(Erişim Kontrolü)
 
 1) #### **```public``` (Genel):**
@@ -345,9 +369,6 @@ inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığım�
 #### Member Function ile Function Overloading:**
 
 ```cpp
-#include <iostream>
-using namespace std;
-
 class Calculator 
 {
     public:
@@ -359,6 +380,9 @@ class Calculator
 
         // Üç tam sayıyı toplayan fonksiyon
         int add(int a, int b, int c) { return a + b + c; }
+        
+        // Varsayılan argüman ile tanımlanmış beş sayıyı toplayan fonksiyon
+        int add(int a, int b, int c, int d, int e = 10) { return a + b + c + d + e; }
 };
 
 int add(double a, int b) { return a + b; }      // Bu fonkisyon "function overloading" değildir. Farklı scope'taki fonkisyonlar birbirlerini overload etmezler!
@@ -367,43 +391,211 @@ int main()
 {
     Calculator calc;  // Calculator sınıfından bir nesne oluşturuluyor
 
-    std::cout << "2 + 3 = " << calc.add(2, 3) << '\n';           // int türündeki add fonksiyonu çağrılır
-    std::cout << "2.5 + 3.5 = " << calc.add(2.5, 3.5) << '\n';   // double türündeki add fonksiyonu çağrılır
-    std::cout << "1 + 2 + 3 = " << calc.add(1, 2, 3) << '\n';    // Üç parametreli add fonksiyonu çağrılır
+    std::cout << "2 + 3 = " << calc.add(2, 3) << '\n';                          // int türündeki add fonksiyonu çağrılır
+    std::cout << "2.5 + 3.5 = " << calc.add(2.5, 3.5) << '\n';                  // double türündeki add fonksiyonu çağrılır
+    std::cout << "1 + 2 + 3 = " << calc.add(1, 2, 3) << '\n';                   // Üç parametreli add fonksiyonu çağrılır
+    
+    std::cout << "1 + 2 + 3 + 4 = " << calc.add(1, 2, 3, 4) << '\n';            // Beş parametreli add fonksiyonu çağrılır
+    
+    std::cout << "1 + 2 + 3 + 4 + 5 = " << calc.add(1, 2, 3, 4, 5) << '\n';     // Beş parametreli add fonksiyonu çağrılır
 }
 ```
 
-**1.52'de kaldım**
+**NOT-1:** **Member functions(üye fonksiyonlar)** bulundukları scope içerisinde **redeclaration(yeniden tanımlama) yapılamazlar!** **Syntax hatasına** yol açar.
+
 
 ```cpp
-struct _my_str_t 
+class my_class
 {
-    int a, b, x;
+    private:
+        int foo(double);    // Function overloading gerçekleşir
+        int foo(int);       // Function overloading gerçekleşir fakat "public" kısmında redeclaration yapıldığı için "Syntax" hatası verir
+    public:
+        int foo(int);       // Function overloading gerçekleşir fakat "private" kısmında redeclaration yapıldığı için "Syntax" hatası verir 
 }
+```
 
-void func(_my_str_t * p) { }    // C'de bu şekilde erişim sağlıyorduk.
-
-class _my_class_t
+```cpp
+class my_class
 {
-    public:    
-        void func( );
-}   //            ^~~~~ "_my_class_t *" sınıfını burada her zaman gizli bir parametre olarak tutar.
-
+    private:
+        int foo(int);
+    public:
+        int foo(double);
+}
+// Önce look-up, sonra context kontrolü en sonra access kontrolü yapılır.
 int main()
 {
-    struct _my_str_t real_my_str_t;
-    func(&real_my_str_t);
+    my_class _class;
 
-    _my_class_t real_my_class_t;
-    real_my_class_t.func();
+    _class.foo(12); // Derleyici bir fonksiyonu çağırırken önce look-up table, sonra "context" kontrolü daha sonra ise "access" kontorlü gerçekleştirdiği için. Bu Fonksiyon "syntax" hatası oluşturacak.
+
+    //  Derleyici "private" kısmında tanımlanan fonksiyonu "exact match" olarak görecek ve bu fonksiyon seçilecektir fakat bu fonksiyon "access control" kısmından geçemeyeceği için "syntax" hatası bildirecektir.
 }
 ```
 
 ---
 
+### C++'da İsim Arama(Name Lookup) Mantığı
+
+1) #### Kapsam(Scope):
+
+    İsim aramanın en temel prensibi kapsamdır (scope). Bir ismin tanımlı olduğu bölgeye "kapsam" denir. C++'da çeşitli kapsam türleri bulunur:
+
+        - **Yerel Kapsam (Local Scope)**: Bir fonksiyon veya kod bloğu (```{}```) içinde tanımlanan isimler sadece o blok içinde görünürdür.
+
+        ```cpp
+        void myFunction() 
+        {
+            int x = 10; // 'x' yerel kapsamda
+            // ...
+        } // 'x' burada kapsam dışına çıkar
+        ```
+
+        - **Sınıf Kapsamı (Class Scope)**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
+
+        ```cpp
+        class MyClass 
+        {
+            public:
+                int value; // 'value' sınıf kapsamda
+                void printValue() 
+                {
+                    // ...
+                }
+        };
+        ```
+
+        - **Namespace Kapsamı (Namespace Scope)**: Bir namespace içinde tanımlanan isimler sadece o ```namespace``` içinde veya ```using``` bildirimi ile erişilebilir.
+
+        ```cpp
+        namespace MyNamespace 
+        {
+            int globalVar; // 'globalVar' MyNamespace kapsamda
+        }
+        ```
+
+        - **Global Kapsam (Global Scope)**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
+
+        ```cpp
+        int programId; // 'programId' global kapsamda
+        ```
+
+    Derleyici, bir ismi ararken öncelikle o ismin kullanıldığı mevcut **iç kapsamlardan dış kapsamlara doğru** arama yapar.
+
+2) #### Bağımlı Olmayan İsim Arama (Unqualified Name Lookup):
+
+    Bir ismin önüne ```::``` (kapsam çözümleme operatörü) veya bir sınıf/namespace adı gibi bir niteleyici koymadan arandığı durumdur. Derleyici, bu durumda şu sırayı takip eder:
+
+    - İsmin kullanıldığı **mevcut kapsam** (fonksiyon bloğu, sınıf üye fonksiyonu vb.).
+    - Mevcut kapsamı çevreleyen **dış kapsamlar** (iç içe fonksiyon blokları, ana fonksiyon, sınıfın kendisi).
+    - Dosya kapsamı (global veya namespace).
+
+    İlk bulduğu geçerli tanımı kullanır. Eğer aynı isim birden fazla kapsamda tanımlıysa, **en içteki kapsamdaki tanım öncelik alır**.
+
+    ```cpp
+    int global_data = 10; // Global kapsam
+
+    class MyClass {
+    public:
+        int class_data = 20; // Sınıf kapsamı
+
+        void printData() {
+            int local_data = 30; // Yerel kapsam
+
+            std::cout << local_data << std::endl; // Çıktı: 30 (Yerel olan öncelikli)
+            std::cout << class_data << std::endl; // Çıktı: 20 (Sınıf üyesi)
+            std::cout << global_data << std::endl; // Çıktı: 10 (Global olan)
+        }
+    };
+
+    int main() {
+        MyClass obj;
+        obj.printData();
+        // std::cout << local_data << std::endl; // Hata! 'local_data' burada görünür değil.
+    }
+    ```
+
+3) #### Bağımlı İsim Arama (Qualified Name Lookup)
+
+    Bir ismin önüne ```::``` operatörü ile bir sınıf veya namespace adı (```NamespaceAdi::isim``` veya ```SinifAdi::isim```) gibi bir **niteleyici (qualifier)** koyularak arandığı durumdur. Bu durumda derleyici, aramayı sadece belirtilen sınıfın veya namespace'in içinde yapar.
+
+    ```cpp
+    namespace MyLibrary { int value = 100; }
+
+    class MyOtherClass 
+    {
+        public:
+            int value = 200;
+            void printValues() 
+            {
+                std::cout << value << std::endl; // Kendi sınıfının 'value'su: 200
+                std::cout << MyLibrary::value << std::endl; // MyLibrary'deki 'value': 100
+            }
+    };
+
+    int main() 
+    {
+        MyOtherClass obj;
+        obj.printValues();
+    }
+    ```
+
+4) #### Bağımlı Argüman Arama (Argument-Dependent Lookup - ADL / Koenig Lookup)
+
+    Bu özel bir isim arama türüdür ve özellikle operatör aşırı yüklemeleri ve fonksiyon şablonları için önemlidir. Bir fonksiyon çağrıldığında, eğer fonksiyon ismi niteleyici olmadan kullanılırsa (```func(arg)```), derleyici sadece mevcut kapsamda arama yapmakla kalmaz, aynı zamanda fonksiyonun argümanlarının tiplerinin tanımlandığı namespace'leri de arar.
+
+    ```cpp
+    namespace N 
+    {
+        struct S {};
+        void f(S) { std::cout << "N::f(S) çağrıldı" << std::endl; }
+    }
+
+    void f(int) { std::cout << "global f(int) çağrıldı" << std::endl; }
+
+    int main() 
+    {
+        N::S s_obj;
+        f(s_obj); // Çıktı: N::f(S) çağrıldı. ADL sayesinde 'N::f' bulundu.
+        f(5);     // Çıktı: global f(int) çağrıldı.
+    }
+    ```
+
+    Burada ```f(s_obj)``` çağrısında, ```f``` fonksiyonu ```N::f``` olarak doğrudan nitelenmediği halde, argüman olan ```s_obj```'nin tipi ```N::S``` olduğu için derleyici ```N``` namespace'ini de arar ve ```N::f(S)```'i bulur.
+
+
+#### Detaylı Örnek:
+
+    ```cpp
+    class my_class
+    {
+        private:
+            int x;              // Sınıfın private veri üyesi 'x'
+        public:
+            void foo();         // my_class'ın üye fonksiyonu
+    };
+
+    int x = 45;                 // Global kapsamdaki 'x' değişkeni
+
+    void my_class::foo()        // my_class'ın foo() fonksiyonunun tanımı
+    {
+        int x = 67;             // foo() fonksiyonunun yerel kapsamındaki 'x' değişkeni
+        
+        my_class::x = x + ::x;  // İşlemin yapıldığı kritik satır
+    }
+    ```
+
+**```my_class::x = x + ::x;``` ifadesi bu durumda şu anlama gelir:**
+
+```my_class``` sınıfının üyesi olan ```x``` = (```foo()``` fonksiyonunun yerel ```x```'i) + (```global x```'i) şeklinde nitelendirilir. Şimdi buradaki değerleriyerine koyarsak
+
+- ```my_class::x``` = ```67``` + ```45```
+- ```my_class::x``` = ```112```
+
+---
+
 ### Class Kullanımına Ait Ekstra Notlar:
-
-
 
 1) **Erişim belirleyici kullanmadan sınıf tanımlama:**
 
@@ -438,6 +630,3 @@ int main()
             double var; // Syntax hatası oluşur.
     }
     ```
-
-
-**1.15'de kaldım**
