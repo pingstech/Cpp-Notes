@@ -442,7 +442,7 @@ int main()
 
     İsim aramanın en temel prensibi kapsamdır (scope). Bir ismin tanımlı olduğu bölgeye "kapsam" denir. C++'da çeşitli kapsam türleri bulunur:
 
-        - **Yerel Kapsam (Local Scope)**: Bir fonksiyon veya kod bloğu (```{}```) içinde tanımlanan isimler sadece o blok içinde görünürdür.
+    - **Yerel Kapsam (Local Scope)**: Bir fonksiyon veya kod bloğu (```{}```) içinde tanımlanan isimler sadece o blok içinde görünürdür.
 
         ```cpp
         void myFunction() 
@@ -452,7 +452,7 @@ int main()
         } // 'x' burada kapsam dışına çıkar
         ```
 
-        - **Sınıf Kapsamı (Class Scope)**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
+    - **Sınıf Kapsamı (Class Scope)**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
 
         ```cpp
         class MyClass 
@@ -466,7 +466,7 @@ int main()
         };
         ```
 
-        - **Namespace Kapsamı (Namespace Scope)**: Bir namespace içinde tanımlanan isimler sadece o ```namespace``` içinde veya ```using``` bildirimi ile erişilebilir.
+    - **Namespace Kapsamı (Namespace Scope)**: Bir namespace içinde tanımlanan isimler sadece o ```namespace``` içinde veya ```using``` bildirimi ile erişilebilir.
 
         ```cpp
         namespace MyNamespace 
@@ -475,13 +475,13 @@ int main()
         }
         ```
 
-        - **Global Kapsam (Global Scope)**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
+    - **Global Kapsam (Global Scope)**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
 
         ```cpp
         int programId; // 'programId' global kapsamda
         ```
 
-    Derleyici, bir ismi ararken öncelikle o ismin kullanıldığı mevcut **iç kapsamlardan dış kapsamlara doğru** arama yapar.
+        Derleyici, bir ismi ararken öncelikle o ismin kullanıldığı mevcut **iç kapsamlardan dış kapsamlara doğru** arama yapar.
 
 2) #### Bağımlı Olmayan İsim Arama (Unqualified Name Lookup):
 
