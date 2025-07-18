@@ -165,4 +165,135 @@ void my_class::foo()
 
 ---
 
-1.25'de kaldım
+### ```const``` Member Functions(Sabit Üye Fonksiyonlar)
+
+```const``` üye fonksiyonların temel amacı, bir nesnenin durumunu (yani veri üyelerinin değerlerini) **okuyan** ancak **değiştirmeyen** fonksiyonları açıkça belirtmektir. Bu, aşağıdaki faydaları sağlar:
+
+1) **Veri Bütünlüğü ve Güvenlik:** Bir nesnenin, ```const``` bir bağlamda kullanıldığında (örneğin ```const``` bir referans veya işaretçi aracılığıyla erişildiğinde) veri üyelerinin yanlışlıkla değiştirilmesini engeller. Bu, özellikle büyük ve karmaşık sistemlerde veri bütünlüğünü korumak için kritik öneme sahiptir.
+
+2) **Okunabilirlik ve Niyet Açıklığı:** Fonksiyonun ismine bakmadan bile, ```const``` anahtar kelimesi sayesinde o fonksiyonun nesnenin durumunu değiştirmeyeceğini anlarsınız. Bu, kodun okunabilirliğini ve anlaşılırlığını artırır.
+
+3) **```const``` Nesnelerle Çalışma Yeteneği:** Sadece ```const``` üye fonksiyonlar, ```const``` olarak tanımlanmış nesneler üzerinden çağrılabilir. Eğer bir fonksiyon ```const``` olmasaydı ve ```const``` bir nesne üzerinden çağrılmaya çalışılsaydı derleme hatası alınırdı. Bu, ```const``` nesnelerle güvenli bir şekilde etkileşim kurmayı sağlar.
+
+```cpp
+class Kitap 
+{
+    private:
+        std::string baslik;
+        int sayfaSayisi;
+
+    public:
+        Kitap(const std::string& b, int ss) : baslik(b), sayfaSayisi(ss) {}
+
+        // Bu bir const üye fonksiyondur. Sınıfın veri üyelerini değiştiremez.
+        std::string getBaslik() const   // 'const' olabilmesi için sınıf içinde tanımlanırken fonksiyonun sonuna 'const' ifadesi eklenir
+        { 
+            return baslik;
+        }
+
+        // Bu da bir const üye fonksiyondur.
+        int getSayfaSayisi() const // 'const' olabilmesi için sınıf içinde tanımlanırken fonksiyonun sonuna 'const' ifadesi eklenir
+        { 
+            return sayfaSayisi;
+        }
+
+        // Bu const bir üye fonksiyon değildir. Sınıfın veri üyelerini değiştirebilir.
+        void setSayfaSayisi(int yeniSayfaSayisi) 
+        {
+            sayfaSayisi = yeniSayfaSayisi; // 'sayfaSayisi' değiştiriliyor
+        }
+
+        // Hatalı const fonksiyon örneği (derleme hatası verir)
+        // int getSayfaSayisiHata() const {
+        //     sayfaSayisi = 100; // Hata: 'const' fonksiyonda veri üyesi değiştirilemez
+        //     return sayfaSayisi;
+        // }
+};
+```
+
+* **```const``` Nesneler ve ```const``` Üye Fonksiyon İlişkisi**
+
+    **Yalnızca ```const``` üye fonksiyonlar, ```const``` nesneler üzerinden çağrılabilir.**
+
+    ```cpp
+    #include <string>
+
+    class Kitap 
+    {
+        private:
+            std::string baslik;
+            int sayfaSayisi;
+
+        public:
+            Kitap(const std::string& b, int ss) : baslik(b), sayfaSayisi(ss) {} // Constructor bir fonksiyondur. İlerleyen zamanlarda anlatılacak.
+            std::string getBaslik() const { return baslik; }
+            int getSayfaSayisi() const { return sayfaSayisi; }
+            void setSayfaSayisi(int yeniSayfaSayisi) { sayfaSayisi = yeniSayfaSayisi; }
+    };
+
+    int main() 
+    {
+        // Normal (non-const) bir nesne
+        Kitap roman("Yüz Yıllık Yalnızlık", 450);
+
+        // Normal nesne üzerinden hem const hem de non-const fonksiyonlar çağrılabilir.
+        std::cout << "Başlık (Normal Nesne): " << roman.getBaslik() << std::endl;
+        roman.setSayfaSayisi(460); // Sayfa sayısını değiştirebiliriz
+
+        // const bir nesne
+        const Kitap dersKitabi("C++ Programlama", 800);
+
+        // const nesne üzerinden SADECE const üye fonksiyonlar çağrılabilir.
+        std::cout << "Başlık (Const Nesne): " << dersKitabi.getBaslik() << std::endl;
+        std::cout << "Sayfa Sayısı (Const Nesne): " << dersKitabi.getSayfaSayisi() << std::endl;
+
+        // dersKitabi.setSayfaSayisi(810); // Hata! 'dersKitabi' const olduğu için
+                                        // non-const 'setSayfaSayisi' çağrılamaz.
+    }
+    ```
+
+    Bu, fonksiyonlara ```const``` referans veya işaretçi ile nesneler geçirdiğinizde büyük önem taşır. Bu sayede fonksiyonun, aldığı nesnenin durumunu değiştirmeyeceğinden emin olursunuz.
+
+#### ```mutable``` Anahtar Kelimesi (```const```'un İstisnası)
+
+Nadiren de olsa, bir ```const``` üye fonksiyon içinde dahi bazı veri üyelerini değiştirmeye ihtiyaç duyabilirsiniz (örneğin, bir önbellek sayacı veya bir kilit mekanizması gibi mantıksal olarak nesnenin durumunu değiştirmeyen ancak fiziksel olarak belleği güncelleyen üyeler). Bu tür durumlar için, veri üyesini ```mutable``` olarak işaretleyebilirsiniz.
+
+```cpp
+class Sayac 
+{
+    private:
+        int deger;
+        mutable int erisimSayisi; // Bu üye 'const' fonksiyonlarda dahi değiştirilebilir
+
+    public:
+        Sayac(int d) : deger(d), erisimSayisi(0) {}
+
+        int getDeger() const {
+            erisimSayisi++; // 'const' fonksiyonda bile 'erisimSayisi' değiştirilebilir
+            return deger;
+        }
+};
+
+// main içinde:
+// const Sayac s(10);
+// std::cout << s.getDeger() << std::endl; // erisimSayisi artırılır
+// std::cout << s.getDeger() << std::endl; // erisimSayisi tekrar artırılır
+```
+
+---
+
+**Mülakat Notları-1**
+
+```cpp
+// Setter (Mutator) functions
+void func(T *); // Nesnenin adresi gönderilir
+void foo(T &);  // Nesnenin kendisi gönderilir
+
+// ------------------------------
+
+// Getters (Accessor) functions: Salt okuma amacıyla bir nesneye erişim sağlandığı anlamını verir.
+void func(const T *);
+void foo(const T &);
+```
+
+1.53'de kaldım
