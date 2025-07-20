@@ -295,5 +295,3 @@ void foo(T &);  // Nesnenin kendisi gönderilir
 void func(const T *);
 void foo(const T &);
 ```
-
-1.53'de kaldım
