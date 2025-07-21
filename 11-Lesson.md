@@ -73,7 +73,7 @@ class Ogrenci
 
 Yapıcı fonksiyonun gövdesinden önce, iki nokta üst üste (```:```) ile belirtilen bir liste içinde veri üyelerini başlatır.
 
- Başlatıcı listesi kullanmak, üyelerin doğrudan başlatılmasını (direct initialization) sağlar, atama (assignment) işlemi yapmaz. Bu, özellikle ```const``` veri üyeleri, referans veri üyeleri ve temel tipler için daha verimli ve bazen zorunlu bir yöntemdir.
+Başlatıcı listesi kullanmak, üyelerin doğrudan başlatılmasını (direct initialization) sağlar, atama (assignment) işlemi yapmaz. Bu, özellikle ```const``` veri üyeleri, referans veri üyeleri ve temel tipler için daha verimli ve bazen zorunlu bir yöntemdir.
 
 ```cpp
 class Urun 
@@ -84,7 +84,8 @@ class Urun
 
     public:
         // Başlatıcı listesi kullanılarak tanımlanmış yapıcı
-        Urun(const std::string& ad, int kod) : urunAdi(ad), urunKodu(kod) {
+        Urun(const std::string& ad, int kod) : urunAdi(ad), urunKodu(kod) 
+        {
             std::cout << urunAdi << " (" << urunKodu << ") ürünü oluşturuldu." << std::endl;
         }
 
@@ -492,10 +493,384 @@ class my_class
 
 int main()
 {
-    my_class int a[10];
+    my_class a[100];
 }
 ```
 
 ---
 
-1.15'de kaldım
+## RAII(Resource Acquisition Is Initialization)
+
+RAII, modern C++'ın temelini oluşturan ve **kaynak yönetimini** güvenli ve otomatik hale getiren güçlü bir programlama paradigmasıdır. RAII, programınızın bellek sızıntıları, dosya kapatma unutkanlıkları, kilitlenmeyen mutex'ler gibi yaygın kaynak yönetimi hatalarını önlemesine yardımcı olur.
+
+#### Temel Prensip
+
+- **Kaynakların Edinimi (Acquisition):** Bir kaynağı (bellek, dosya tanıtıcısı, ağ bağlantısı, kilit vb.) edindiğiniz an, bu edinimi bir **nesnenin ömrüne bağlarsınız**. Bu genellikle nesnenin **yapıcı (constructor)** fonksiyonunda gerçekleşir. Yapıcı, kaynağı başarıyla edinmekten sorumludur.
+
+- **Kaynakların Serbest Bırakılması (Release):** Nesne, ömrünün sonuna geldiğinde (kapsam dışına çıktığında, ```delete``` ile silindiğinde vb.), otomatik olarak **yıkıcı (destructor)** fonksiyonu çağrılır. Yıkıcı, edinilen kaynağı güvenli ve temiz bir şekilde serbest bırakmaktan sorumludur.
+
+
+Böylece, kaynağın edinimi "başlatma" (constructor) ile, kaynağın serbest bırakılması ise "yıkım" (destructor) ile eşleştirilir.
+
+#### RAII'nin Faydaları:
+
+1) **Otomatik Kaynak Yönetimi:** Manuel olarak kaynakları serbest bırakmayı unutma riskini ortadan kaldırır. Fonksiyonlardan normal çıkış yapıldığında, istisna fırlatıldığında veya erken dönüş yapıldığında bile kaynaklar otomatik olarak temizlenir.
+
+2) **Bellek Sızıntılarını Önleme:** Dinamik olarak ayrılmış belleğin  ```delete``` ile serbest bırakılmamasından kaynaklanan yaygın hataları önler.
+
+3) **Hata Yönetimini Basitleştirme:** İstisnalar (exceptions) fırlatıldığında bile kaynakların temizlenmesini garanti eder.  ```try-catch ``` bloklarında karmaşık ```finally``` benzeri temizlik kodlarına ihtiyaç duyulmaz.
+
+4) **Güvenlik:** Kilitler gibi senkronizasyon mekanizmalarının her zaman doğru bir şekilde açılıp kapanmasını sağlar, böylece dead-lock (kilitlenme) gibi sorunların önüne geçer.
+
+5) **Kod Okunabilirliği ve Bakım Kolaylığı:** Kaynak yönetimi mantığı tek bir yerde (sınıfın yapıcı ve yıkıcısında) kapsüllendiği için kod daha temiz ve anlaşılır olur.
+
+#### RAII'nin Temel Örnekleri:
+
+C++ Standart Kütüphanesi (STL), RAII prensibinin birçok mükemmel uygulamasını içerir:
+
+1) **Akıllı İşaretçiler (Smart Pointers):**
+
+    - **```std::unique_ptr```:** Yalnızca bir sahibin olabileceği dinamik bellek alanlarını yönetir. İşaretçinin ömrü sona erdiğinde bellek otomatik olarak serbest bırakılır.
+
+    - **```std::shared_ptr```:** Belleği birden fazla sahibin paylaşmasına izin verir. Tüm shared_ptr kopyaları kapsam dışına çıktığında veya sıfırlandığında bellek serbest bırakılır.
+
+    - **```std::weak_ptr```:** shared_ptr döngüsel referanslarını kırmak için kullanılır, kaynağa sahiplik sağlamaz.
+
+    ```cpp
+    #include <memory> // Akıllı işaretçiler için
+
+    void akilliIsaretciOrnek() 
+    {
+        std::cout << "Fonksiyon başladı." << std::endl;
+        // int türünde dinamik bellek tahsis eder.
+        // unique_ptr kapsam dışına çıktığında bellek otomatik silinir.
+        std::unique_ptr<int> sayi(new int(10)); 
+
+        std::cout << "Sayı değeri: " << *sayi << std::endl;
+
+        if (true) 
+        {
+            std::unique_ptr<double> pi(new double(3.14));
+            std::cout << "Pi değeri: " << *pi << std::endl;
+        } // 'pi' burada kapsam dışına çıkar ve belleği otomatik silinir.
+
+        // Fonksiyonun ortasında bir istisna atılsa bile 'sayi' tarafından tutulan bellek serbest kalır.
+        // throw std::runtime_error("Hata oluştu!"); 
+
+        std::cout << "Fonksiyon sona eriyor." << std::endl;
+    } // 'sayi' burada kapsam dışına çıkar ve belleği otomatik silinir.
+
+    /* Çıktı örneği (bellek silme mesajları yoksa bile, C++ garantisiyle silinir):
+    Fonksiyon başladı.
+    Sayı değeri: 10
+    Pi değeri: 3.14
+    Fonksiyon sona eriyor.
+    */
+    ```
+
+    ---
+
+2) **```std::fstream``` (Dosya Akışları):** Dosya nesneleri (input/output streams) oluşturulduğunda dosyayı açar ve nesne yok edildiğinde dosyayı otomatik olarak kapatır.
+
+    ```cpp
+    #include <fstream> // Dosya işlemleri için
+
+    void dosyaOrnek() {
+        std::ofstream dosya("ornek.txt"); // Constructor dosyayı açar
+        if (dosya.is_open()) {
+            dosya << "Merhaba, RAII!" << std::endl;
+            std::cout << "Dosyaya yazıldı." << std::endl;
+        } else {
+            std::cerr << "Dosya açılamadı!" << std::endl;
+        }
+    } // 'dosya' nesnesi burada kapsam dışına çıkar ve destructor dosyayı otomatik kapatır.
+    ```
+
+    ---
+
+3) **```std::lock_guard``` ve ```std::unique_lock``` (Mutex Kilitleri):** Çoklu iş parçacığı programlamasında mutex'leri güvenli bir şekilde kilitlemek ve kilidi açmak için kullanılır. Nesne oluşturulduğunda mutex'i kilitler ve kapsam dışına çıktığında kilidi otomatik olarak serbest bırakır.
+
+    ```cpp
+    #include <mutex> // Mutex işlemleri için
+
+    std::mutex mtx; // Bir mutex nesnesi
+
+    void kilitOrnek() {
+        std::cout << "Kilit denemesi..." << std::endl;
+        std::lock_guard<std::mutex> kilit(mtx); // Constructor mutex'i kilitler
+        // Kritik bölüm: Sadece bir thread bu kısma girebilir
+        std::cout << "Kritik bölümdeyiz." << std::endl;
+        // Herhangi bir istisna atılsa bile veya fonksiyon normal tamamlansa bile,
+        // 'kilit' nesnesi kapsam dışına çıktığında mutex otomatik olarak serbest bırakılır.
+        std::cout << "Kritik bölümden çıkılıyor." << std::endl;
+    } // 'kilit' burada kapsam dışına çıkar ve destructor mutex'i açar.
+    ```
+
+    ---
+
+#### Kendi RAII Sınıfınızı Oluşturmak:
+
+Kendi özel kaynaklarınız (örneğin, C API'lerinden elde edilen tanıtıcılar) için de RAII sınıfları yazabilirsiniz. Anahtar, yapıcıda kaynağı edinmek ve yıkıcıda onu serbest bırakmaktır.
+
+```cpp
+#include <iostream>
+// varsayalım ki bu dışarıdan gelen bir C API'si
+void* acquire_resource() 
+{
+    std::cout << "Kaynak edinildi!" << std::endl; 
+    return new int(5); 
+}
+
+void release_resource(void* res) { std::cout << "Kaynak serbest bırakıldı!" << std::endl; delete static_cast<int*>(res); }
+
+class MyResource 
+{
+    private:
+        void* resource_handle;
+
+    public:
+        // Yapıcı: Kaynağı edin
+        MyResource() : resource_handle(acquire_resource()) { if (resource_handle == nullptr) { throw std::runtime_error("Kaynak edinilemedi!"); } }
+
+        // Yıkıcı: Kaynağı serbest bırak
+        ~MyResource() { if (resource_handle != nullptr) { release_resource(resource_handle); } }
+
+        // Kopya yapıcı ve atama operatörlerini engelle (veya özel olarak yönet)
+        // Kaynak sahipliği tekilse kopyalamayı genellikle yasaklarız.
+        MyResource(const MyResource&) = delete;
+        MyResource& operator=(const MyResource&) = delete;
+
+        // Taşıma yapıcı ve atama operatörlerini ekle (C++11+)
+        // Sahipliğin güvenli bir şekilde taşınmasını sağlar.
+        MyResource(MyResource&& other) noexcept : resource_handle(other.resource_handle) 
+        {
+            other.resource_handle = nullptr; // Kaynağı taşıdığımızı belirt
+        }
+        MyResource& operator=(MyResource&& other) noexcept 
+        {
+            if (this != &other) 
+            {
+                release_resource(resource_handle); // Kendi kaynağımızı serbest bırak
+                resource_handle = other.resource_handle;
+                other.resource_handle = nullptr;
+            }
+            return *this;
+        }
+};
+
+void myCustomResourceExample() {
+    std::cout << "RAII'li özel kaynak örneği başladı." << std::endl;
+    MyResource res; // Kaynak edinildi
+    // Kaynak kullanılıyor...
+    std::cout << "Kaynak kullanılıyor..." << std::endl;
+    std::cout << "RAII'li özel kaynak örneği bitti." << std::endl;
+} // 'res' nesnesi kapsam dışına çıkar ve kaynak serbest bırakılır
+
+// main() içinde çağrı:
+// myCustomResourceExample();
+/* Çıktı:
+   RAII'li özel kaynak örneği başladı.
+   Kaynak edinildi!
+   Kaynak kullanılıyor...
+   RAII'li özel kaynak örneği bitti.
+   Kaynak serbest bırakıldı!
+*/
+```
+
+---
+
+* **Örnek:**
+
+```cpp
+class my_class
+{
+    private:
+        int mx, my;
+
+    public:
+        void print() const
+        {
+            std::cout << "mx = " << mx << "my =" << my << '\n';
+        }
+};
+
+int main()
+{
+    my_class m1;        // Default init
+    m1.print();
+
+    my_class m2{};      // Value init, yapıldığında herhangi bir constructor çağırılmadan önce "zero init" denilen özel durum gerçekleştiriliyor.
+    m2.print();
+}
+```
+
+Yukarıdaki örnek ile default ve value init gösterilmiştir.
+
+---
+
+* **Örnek:**
+
+```cpp
+class my_class
+{
+    private:
+        int mx, my;
+
+    public:
+        my_class(int x)
+        {
+            std::cout << "my_class(int x) -> x = " << x <<'\n';
+        }
+};
+
+int main()
+{
+    my_class m1(10);    // direct init
+    my_class m2 = 20;   // copy init
+    my_class m3{ 57 };  // direct list init
+}
+```
+
+Yukarıdaki örnek ile direct, copy ve direct list init gösterilmiştir.
+
+---
+
+* **Örnek:**
+
+```cpp
+class my_class 
+{
+    public:
+        my_class() { std::cout << "my_class default ctor \n"; }
+        my_class(int x, int y) { std::cout << "my_class(int x, int y) -> x = " << x << " | -> y = " << y <<'\n'; }
+        my_class(double x, double y) { std::cout << "my_class(double x, double y) -> x = " << x << " | -> y = " << y <<'\n'; }
+        my_class(int x) { std::cout << "my_class(int x) -> x = " << x <<'\n'; }
+        my_class(double x) { std::cout << "my_class(double x) -> x = " << x <<'\n'; }
+};
+
+int main()
+{
+    my_class m1;            // default "my_class()" ctor çalışır.
+    my_class m2(3.456f);    // Double parametreli "my_class(double x)" ctor çalışır.
+    //my_class m3(4u);        // Syntax error
+    my_class m4(2, 4);      // Int parametreli "my_class(double x, double y)" ctor çalışır.
+    my_class m5(2., 4.);    // Double parametreli "my_class(double x)" ctor çalışır.
+}
+```
+
+Constructor fonksiyonunun "function overload" edilmesi.
+
+---
+
+* **Örnek:**
+
+```cpp
+class my_class
+{
+    my_class(int x) { std::cout << "my_class(int x) -> x = " << x <<'\n'; }
+
+    public:
+        my_class(double x) { std::cout << "my_class(double x) -> x = " << x <<'\n'; }
+};
+
+int main()
+{
+    my_class m(12); 
+/*
+--------------------------------------------------------------------------------
+Main.cpp:17:18: error: ‘my_class::my_class(int)’ is private within this context
+   17 |     my_class m(12);
+      |                  ^
+Main.cpp:6:5: note: declared private here
+    6 |     my_class(int x) { std::cout << "my_class(int x) -> x = " << x <<'\n'; }
+      |     ^~~~~~~~ 
+--------------------------------------------------------------------------------
+*/ 
+}
+```
+
+Derleyici, ```my_class m(12);``` çağrısını yaparken en iyi eşleşme olan ```my_class(int)``` yapıcısını seçer; oysa bu yapıcı sınıfın başında (public’den önce) tanımlandığı için private’dır ve erişilemez. Public olan ```my_class(double)``` yapıcısı ise dönüşüm gerektirdiği için daha düşük öncelikli olduğundan kullanılmaz ve sonuçta erişim hatası verilir.
+
+**Hatırlatma:** **```class```** içinde <u>**erişim belirtmeden**</u> tanımlanan tüm üye değişken ve fonksiyonlar **private** kabul edilir. Struct’ta ise varsayılan erişim **public**’tır!</u>
+
+---
+
+* **Örnek:**
+
+```cpp
+class my_class
+{
+    public:
+        my_class() 
+        {
+            mx = 0; 
+            my = 0; 
+            // Zero init burada gerçekleşmez çünkü bu ifade bir atamadır.        
+        }
+    
+    private:
+        int mx, my;
+};
+```
+
+**Açıklama:** yukarıdaki gibi ctor içerisinde yapılan işlem **Zero-init olmaz** bu işlem bir **atama işlemidir**.
+
+---
+
+* **Başlatıcı Liste (Initializer List) Alternatif örnekleri**
+
+    - **Örnek:**
+    
+        ```cpp
+        //api.h dosaysı içeriği
+
+        class my_class
+        {
+            public:
+                my_class() {}
+            
+            private:
+                int mx, my;
+        };
+
+        //-----------------------
+
+        //api.cpp dosaysı içeriği
+
+        my_class::my_class() : mx(10), my(20) { }   // Geleneksel (pre‑C++11 / hâlâ geçerli)
+
+        my_class::my_class() : mx{10}, my{20} { }   // Liste‑başlatma (C++11+)
+        ```
+    ---
+
+    - **Örnek:**
+
+        ```cpp
+        class my_class
+        {
+            public:
+                //my_class() : my(10), mx(my/3) {}    // Undefined behavior oluşur
+
+                my_class() : mx(10), my(mx/3) {}
+
+                void print() const { std::cout << "mx = " << mx << '\n'; }
+            
+            private:
+                int mx, my;
+        };
+
+        int main()
+        {
+            my_class _my_class;
+
+            _my_class.print();
+        }
+        ```
+
+        **Açıklama:** Burada bir kaç özel durum vardır bunlar:
+            
+        - Sınıf nesnesini elemanlarının hayata gelme sırası ctor fonksiyonundan bağımsızdır. Bildirimdeki sıralamaya göre hayata gelecekleri için önce ```mx``` sonra ```my``` değeri oluşturulacaktır.
+        
+        - Yukarda yapılmış olan ```my_class() : my(10), mx(my/3) {}``` tanımlaması bir **undefined behavior** oluşmasına yol açar! ```mx``` değeri intialize edilirken ```my``` değerinin çöp değeri(garbage value) ile intialize edilmeye çalışılmaktadır.
+
+---
