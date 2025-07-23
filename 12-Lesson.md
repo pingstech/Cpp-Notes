@@ -13,19 +13,19 @@ C++'ta program çalışırken bellek ayırıp serbest bırakmaya **dinamik belle
 #### Tek Nesne İçin
 
 ```cpp
-int* tek_sayi_ptr = new int(42); // Bir int için yer aç ve 42 ata
+int* tek_sayi_ptr = new int(42);    // Bir int için yer aç ve 42 ata
 // ... kullan
-delete tek_sayi_ptr; // Belleği geri ver
-tek_sayi_ptr = nullptr; // İşaretçiyi boş yap (güvenlik için)
+delete tek_sayi_ptr;                // Belleği serbest bırak
+tek_sayi_ptr = nullptr;             // Güvenlik için işaretçiyi sıfırla
 ```
 
 #### Dizi İçin
 
 ```cpp
-int* sayi_dizisi_ptr = new int[5]; // 5 int'lik bir dizi için yer aç
+int* sayi_dizisi_ptr = new int[5];  // 5 elemanlı int dizisi oluştur
 // ... kullan
-delete[] sayi_dizisi_ptr; // Dizi belleğini geri ver (köşeli parantezlere dikkat!)
-sayi_dizisi_ptr = nullptr; // İşaretçiyi boş yap
+delete[] sayi_dizisi_ptr;           // Dizi belleğini serbest bırak (köşeli parantezlere dikkat!)
+sayi_dizisi_ptr = nullptr;          // Güvenlik için işaretçiyi sıfırla
 ```
 
 #### Dikkat Edilmesi Gerekenler
@@ -64,8 +64,8 @@ int main() {
 
 Bu terimler benzerdir:
 
-  * **`user declared`:** Bir programcı olarak sizin açıkça bir şeyleri (değişken, fonksiyon, sınıf vb.) kodunuzda tanımladığınız anlamına gelir.
-  * **`user defined`:** Genellikle bu bildirilen şeylerin (özellikle fonksiyon ve sınıfların) içeriğini sizin yazdığınızı belirtir.
+  * **`user declared`:**  Sizin kodda tanıttığınız yapılar (değişken, fonksiyon, sınıf vb.).
+  * **`user defined`:**  İçeriği yine sizin yazdığınız fonksiyon/sınıflar (özellikle fonksiyon ve sınıfların).
 
 **Özel Durumlar: Kurucular ve Yıkıcılar**
 
@@ -100,7 +100,7 @@ public:
 };
 
 int main() {
-    Ogrenci ali("Ali", 101); // Kurucu çağrılır
+    Ogrenci ali("Ali", 101); // Constructor çağrılır
     // Program bitince 'ali' nesnesi yok edilir ve yıkıcı çağrılır.
     return 0;
 }
@@ -123,23 +123,21 @@ class VarsayilanSinif {
 public:
     int veri;
     
-    // Varsayılan (parametresiz) kurucu: Derleyiciye oluşturmasını söyle
+    // Varsayılan (parametresiz) Constructor: Derleyiciye oluşturmasını söyle
     VarsayilanSinif() = default; 
 
-    // Parametreli kurucu
-    VarsayilanSinif(int v) : veri(v) {
-        std::cout << "Parametreli kurucu cagridi: " << veri << std::endl;
-    }
+    // Parametreli Constructor
+    VarsayilanSinif(int v) : veri(v) { std::cout << "Parametreli Constructor cagridi: " << veri << std::endl; }
 
-    // Kopyalama kurucusu ve atama operatörünü varsayılan yap
+    // Kopyalama Constructor ve atama operatörünü varsayılan yap
     VarsayilanSinif(const VarsayilanSinif& diger) = default;
     VarsayilanSinif& operator=(const VarsayilanSinif& diger) = default;
 };
 
 int main() {
-    VarsayilanSinif nesne_a; // = default kurucu çağrılır
+    VarsayilanSinif nesne_a; // = default Constructor çağrılır
     nesne_a.veri = 5;
-    VarsayilanSinif nesne_b = nesne_a; // = default kopyalama kurucusu çağrılır
+    VarsayilanSinif nesne_b = nesne_a; // = default kopyalama Constructor'ı çağrılır
     nesne_b = VarsayilanSinif(10); // = default atama operatörü çağrılır
     return 0;
 }
@@ -160,7 +158,7 @@ C++11 ile geldi. Bir fonksiyonun (özellikle özel üye fonksiyonların) **kulla
 
 class TekilNesne {
 private:
-    TekilNesne() { std::cout << "TekilNesne olustu." << std::endl; } // Kurucuyu gizle
+    TekilNesne() { std::cout << "TekilNesne olustu." << std::endl; } // Constructor'ı gizle
 
     // Kopyalamayı ve atamayı yasakla
     TekilNesne(const TekilNesne&) = delete; 
@@ -176,7 +174,7 @@ public:
 int main() {
     TekilNesne& benim_nesnem = TekilNesne::ornek_getir(); // Tekil nesneye eriş
     // TekilNesne baska_nesne = benim_nesnem; // HATA: Kopyalama yasak!
-    // TekilNesne yeni_bir_nesne;             // HATA: Kurucu gizli!
+    // TekilNesne yeni_bir_nesne;             // HATA: Constructor gizli!
     return 0;
 }
 ```
@@ -197,16 +195,16 @@ Bir sınıf tanımladığınızda, C++ derleyicisi sizin için bazı özel üye 
     public:
         int id;
         std::string ad;
-        // Derleyici otomatik olarak varsayılan kurucu, kopyalama kurucusu,
+        // Derleyici otomatik olarak varsayılan Constructor, kopyalama Constructor'ı,
         // atama operatörü ve yıkıcıyı sağlayacak.
     };
 
     int main() {
-        BasitOgrenci ogrenci_1; // Dolaylı varsayılan kurucu
+        BasitOgrenci ogrenci_1; // Dolaylı varsayılan Constructor
         ogrenci_1.id = 1;
         ogrenci_1.ad = "Ayse";
 
-        BasitOgrenci ogrenci_2 = ogrenci_1; // Dolaylı varsayılan kopyalama kurucusu
+        BasitOgrenci ogrenci_2 = ogrenci_1; // Dolaylı varsayılan kopyalama Constructor'ı
         // ogrenci_1'deki veriler ogrenci_2'ye kopyalanır.
         return 0;
     }
@@ -225,7 +223,7 @@ Bir sınıf tanımladığınızda, C++ derleyicisi sizin için bazı özel üye 
     public:
         const int sabit_deger; // Sabit bir üye
 
-        SabitVeriSinif(int v) : sabit_deger(v) {} // Kurucu
+        SabitVeriSinif(int v) : sabit_deger(v) {} // Constructor
 
         // Bu sınıfta 'sabit_deger' const olduğu için,
         // derleyici otomatik atama operatörünü 'silinmiş' yapar.
@@ -258,30 +256,41 @@ C++’ta derleyici veya geliştirici tarafından sağlanan altı özel üye fonk
 #### Constructor
 
 ```cpp
-class student {
-public:
-    student() : name_str(""), age_int(0) {}
-    explicit student(int age_int) : name_str(""), age_int(age_int) {}
-    student(const std::string& name_str, int age_int)
-      : name_str(name_str), age_int(age_int) {}
-private:
-    std::string name_str;
-    int age_int;
+class student 
+{
+    public:
+        // Varsayılan yapıcı: Üye değişkenlerine boş string ve 0 değeri atar.
+        student() : name_str(""), age_int(0) {}
+
+        // Yaş parametresi ile yapıcı: Sadece yaş bilgisiyle öğrenci nesnesi oluşturur, adı boş bırakır.
+        explicit student(int age_int) : name_str(""), age_int(age_int) {}
+
+        // Ad ve yaş parametreleri ile yapıcı: Öğrenci nesnesini verilen ad ve yaş ile oluşturur.
+        student(const std::string& name_str, int age_int) : name_str(name_str), age_int(age_int) {}
+
+    private:
+        std::string name_str;
+        int age_int;
 };
 ```
 
 #### Destructor
 
 ```cpp
-class buffer_class {
-    int* data_ptr;
-public:
-    buffer_class(int size_int)
-      : data_ptr(new int[size_int]) {}
-    ~buffer_class() {
-        delete[] data_ptr;
-        data_ptr = nullptr;
-    }
+class buffer_class 
+{
+    int* data_ptr;  // Dinamik olarak ayrılacak tam sayı dizisinin işaretçisi
+
+    public:
+        // Constructor: Belirtilen boyutta dinamik bir dizi oluşturur.
+        buffer_class(int size_int) : data_ptr(new int[size_int]) {}
+
+        // Destructor: Dinamik belleği serbest bırakır ve işaretçiyi sıfırlar.
+        ~buffer_class() 
+        {
+            delete[] data_ptr;      // Dinamik belleği serbest bırak
+            data_ptr = nullptr;     // İşaretçiyi sıfırla
+        }
 };
 ```
 #### Copy Constructor (Kopyalama Kurucusu)
@@ -349,15 +358,15 @@ Destructor called here, this : 0x7ffc126b8a76
 
 ```cpp
 MyClass obj_1;
-MyClass obj_2 = obj_1; // Kopyalama kurucusu çağrılır.
-MyClass obj_3(obj_1);  // Kopyalama kurucusu çağrılır.
+MyClass obj_2 = obj_1; // Kopyalama Constructor'ı çağrılır.
+MyClass obj_3(obj_1);  // Kopyalama Constructor'ı çağrılır.
 ```
 
 - **Fonksiyona Nesne Değer Olarak Geçirildiğinde (Pass by Value):** Bir fonksiyona nesne, referans yerine değer olarak geçirildiğinde.
 
 ```cpp
 void process_object(MyClass passed_object) {
-    // passed_object oluşturulurken kopyalama kurucusu çağrılır.
+    // passed_object oluşturulurken kopyalama Constructor'ı çağrılır.
 }
 
 MyClass original_object;
@@ -370,7 +379,7 @@ process_object(original_object);
 MyClass create_object() {
     MyClass temp_object;
     // ...
-    return temp_object; // temp_object döndürülürken kopyalama kurucusu çağrılabilir.
+    return temp_object; // temp_object döndürülürken kopyalama Constructor'ı çağrılabilir.
 }
 
 MyClass new_object = create_object();
@@ -454,37 +463,45 @@ public:
 ```cpp
 #include <iostream>
 
-class Dikdortgen {
-private:
-    double genislik_degeri;
-    double yukseklik_degeri;
+class Dikdortgen 
+{
+    private:
+        double genislik_degeri;
+        double yukseklik_degeri;
 
-public:
-    // Kurucu: Negatif değerleri engeller.
-    Dikdortgen(double genislik, double yukseklik) {
-        if (genislik < 0 || yukseklik < 0) {
-            std::cerr << "Hata: Genislik/yukseklik negatif olamaz!" << std::endl;
-            genislik_degeri = 0; // Geçersiz durumda sıfır atar
-            yukseklik_degeri = 0;
-        } else {
-            genislik_degeri = genislik;
-            yukseklik_degeri = yukseklik;
+    public:
+        // Constructor: Negatif değerleri engeller.
+        Dikdortgen(double genislik, double yukseklik) 
+        {
+            if (genislik < 0 || yukseklik < 0) 
+            {
+                std::cerr << "Hata: Genislik/yukseklik negatif olamaz!" << std::endl;
+                genislik_degeri = 0; // Geçersiz durumda sıfır atar
+                yukseklik_degeri = 0;
+            }
+            else 
+            {
+                genislik_degeri = genislik;
+                yukseklik_degeri = yukseklik;
+            }
         }
-    }
 
-    // Genişlik ayarlama metodu: Negatif değeri engeller.
-    void genislik_ayarla(double yeni_genislik) {
-        if (yeni_genislik >= 0) { // Sadece pozitif/sıfır değerlere izin ver
-            genislik_degeri = yeni_genislik;
-        } else {
-            std::cerr << "Hata: Genislik negatif olamaz!" << std::endl;
+        // Genişlik ayarlama metodu: Negatif değeri engeller.
+        void genislik_ayarla(double yeni_genislik) 
+        {
+            if (yeni_genislik >= 0) // Sadece pozitif/sıfır değerlere izin ver
+            { 
+                genislik_degeri = yeni_genislik;
+            } else {
+                std::cerr << "Hata: Genislik negatif olamaz!" << std::endl;
+            }
         }
-    }
 
     // Diğer metotlar (get_genislik, alan_hesapla vb.) da invariant'ı korur.
 };
 
-int main() {
+int main() 
+{
     Dikdortgen kutu_bir(10.0, 5.0); // Geçerli
     Dikdortgen kutu_iki(-2.0, 8.0); // Hatalı, 0'a ayarlanır
 
@@ -504,18 +521,19 @@ int main() {
 <!-- end list -->
 
 ```cpp
-#include <iostream>
 #include <string>
 
 // Bu bir "agrega" struct'tır.
-struct RenkBilgisi {
+struct RenkBilgisi 
+{
     std::string ad;
     int kirmizi;
     int yesil;
     int mavi;
 };
 
-int main() {
+int main() 
+{
     // Agrega Başlatma: Üyeleri sırayla süslü parantezlerle atama
     RenkBilgisi kirmizi_renk = {"Kırmızı", 255, 0, 0};
     std::cout << "Renk: " << kirmizi_renk.ad 
@@ -523,19 +541,19 @@ int main() {
               << kirmizi_renk.yesil << "," << kirmizi_renk.mavi << ")" << std::endl;
 
     // Kendi kurucusu olsaydı bu şekilde başlatılamazdı.
-    return 0;
 }
 ```
 
 -----
 
-## **Rule of Zero:** “özel üye fonksiyonları yazma” felsefesidir. Eğer sınıfınız ham kaynak (ham işaretçi, dosya tanıtıcısı vb.) yönetmiyorsa,
-1) Destructor
-2) Copy/move constructor 
-3) Copy/move assignment
+## **Rule of Zero:** “özel üye fonksiyonları yazma” felsefesidir. 
 
-yazmayın, derleyicinin otomatik oluşturduğu fonksiyonları tercih edin. Bu, Single Responsibility Principle’a uygun olarak kaynak yönetimini RAII uyumlu tiplere (std::vector, std::string, std::unique_ptr vb.) dayanarak soyutlar.
+Eğer sınıfınız **ham kaynak (ham işaretçi, dosya tanıtıcısı vb.) yönetmiyorsa**, **destructor, copy/move constructor ve assignment operator yazmayın**, derleyicinin oluşturmasına izin verin.
 
-**Mülakat Sorusu:** 
-- Hangi durumda derleyici bir sınıfın bir "special member function" default eder
-- Nasıl default eder?
+-----
+
+## Mülakat Sorusu:
+
+* **Soru:** Hangi durumda derleyici bir sınıfın "special member function"unu default eder ve nasıl default eder?
+
+* **Cevap:** Eğer kullanıcı tarafından özel olarak tanımlanmadıysa, derleyici otomatik olarak (dolaylı şekilde) varsayılan constructor, copy constructor, copy assignment operator, destructor ve move fonksiyonlarını default olarak sağlar. Eğer sınıfta özel bir üye fonksiyon tanımlanırsa, ilgili default fonksiyonlar otomatik olarak oluşturulmayabilir. İstenirse ```= default``` ile açıkça default edilmesi sağlanır.
