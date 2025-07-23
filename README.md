@@ -1,6 +1,7 @@
-Contents of repo:
+# Contents of Cpp Notes
 
-├── [05-Lesson.md](./05-Lesson.md)
+```
+├── 05-Lesson.md
 │   ├── Decltype Operatörü
 │   │   ├── İsim Operandı Kuralları
 │   │   └── İfade Operandı Kuralları (Value Category)
@@ -15,7 +16,7 @@ Contents of repo:
 │       ├── Derleme Zamanı Sabitleri
 │       └── Runtime İşlem Kısıtlamaları
 │
-├── [06-Lesson.md](./06-Lesson.md)
+├── 06-Lesson.md
 │   ├── constexpr Fonksiyonlar
 │   │   ├── Derleme Zamanı Hesaplama
 │   │   └── Statik Değişken Kısıtlaması
@@ -29,7 +30,7 @@ Contents of repo:
 │       ├── C-Style Enum Kısıtlamaları
 │       └── Tür Güvenliği Sorunları
 │
-├── [07-Lesson.md](./07-Lesson.md)
+├── 07-Lesson.md
 │   ├── Scope Enum
 │   │   ├── enum class Sözdizimi
 │   │   ├── Underlying Type Belirleme
@@ -48,7 +49,7 @@ Contents of repo:
 │   └── [[nodiscard]] Attribute
 │       └── Geri Dönüş Değeri Zorunluluğu
 │
-├── [08-Lesson.md](./08-Lesson.md)
+├── 08-Lesson.md
 │   ├── Function Overloading Temelleri
 │   │   ├── Parametre Türü/Sayısı Farkları
 │   │   └── Geri Dönüş Türü Kısıtlaması
@@ -61,7 +62,7 @@ Contents of repo:
 │       ├── const/Referans Aşırı Yüklemesi
 │       └── Bool/Pointer Çözümlemesi
 │
-├── [09-Lesson.md](./09-Lesson.md)
+├── 09-Lesson.md
 │   ├── Class Anatomisi
 │   │   ├── Veri Üyeleri (Data Members)
 │   │   └── Üye Fonksiyonlar (Member Functions)
@@ -77,7 +78,7 @@ Contents of repo:
 │       ├── Bağımlı İsim Arama (ADL)
 │       └── Global/Local Çakışma Çözümü
 │
-├── [10-Lesson.md](./10-Lesson.md)
+├── 10-Lesson.md
 │   ├── this Pointer
 │   │   ├── Nesne Erişim Mekanizması
 │   │   ├── Zincirleme Çağrılar (Chaining)
@@ -87,7 +88,7 @@ Contents of repo:
 │       ├── const Nesne Kısıtlamaları
 │       └── mutable Anahtar Sözcüğü
 │
-├── [11-Lesson.md](./11-Lesson.md)
+├── 11-Lesson.md
 │   ├── Constructor Functions (Yapıcı Fonkisyonlar)
 │   │   ├── Definition Rules
 │   │   ├── Parameterized Constructor
@@ -108,7 +109,7 @@ Contents of repo:
 │       ├── Examples (Smart Pointers, fstream, lock_guard)
 │       └── Custom RAII Class
 │
-├── [12-Lesson.md](./12-Lesson.md)
+├── 12-Lesson.md
 │   ├── Memory Management: `new` and `delete`
 │   │   ├── Single Object
 │   │   ├── Array
@@ -132,7 +133,7 @@ Contents of repo:
 │   │   └── Aggregate
 │   └── Rule of Zero
 │
-└── [13-Lesson.md](./13-Lesson.md)
+└── 13-Lesson.md
     ├── Copy Assignment
     │   ├── Syntax
     │   ├── When Called
@@ -151,3 +152,4 @@ Contents of repo:
         ├── Compiler Choice: Move vs Copy Constructor
         ├── Dangling Pointer
         └── Interview Questions
+```
