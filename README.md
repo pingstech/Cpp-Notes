@@ -1,5 +1,7 @@
 # Contents of Cpp Notes
 
+**Note:** The first four lessons will be added as soon as possible.
+
 ```
 ├── 05-Lesson.md
 │   ├── Decltype Operatörü
@@ -153,5 +155,3 @@
         ├── Dangling Pointer
         └── Interview Questions
 ```
-
-**Note:** The first four lessons will be added as soon as possible.
