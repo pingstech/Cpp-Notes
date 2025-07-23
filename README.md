@@ -153,3 +153,5 @@
         ├── Dangling Pointer
         └── Interview Questions
 ```
+
+**Note:** The first four lessons will be added as soon as possible.
