@@ -557,6 +557,27 @@ class my_class_8
 };
 ```
 
+### C++ Özel Üye Fonksiyonları: Derleyicinin Otomatik Yazma Davranışı
+
+Aşağıdaki tablo, bir sınıfın hangi özel üye fonksiyonlarını (ilk sütun) sizin tarafınızdan tanımlamanız durumunda (veya hiç tanımlamadığınızda), derleyicinin diğer özel üye fonksiyonlarını (üst satır) otomatik olarak nasıl ele alacağını gösterir.
+
+**Anahtar:**
+* 🟢 **`defaulted` (Varsayılan):** Derleyici otomatik oluşturur ve varsayılan davranışa sahiptir.
+* 🔵 **`user declared` (Kullanıcı Tanımlı):** Fonksiyon sizin tarafınızdan açıkça tanımlanmıştır.
+* 🔴 **`deleted` (Silindi):** Derleyici bu fonksiyonu otomatik olarak silinmiş (`= delete`) olarak işaretler, yani kullanılamaz.
+* 🟣 **`not declared` (Tanımlanmadı):** Derleyici bu fonksiyonu otomatik olarak oluşturmaz.
+
+| **Kullanıcı Tanımlı Fonksiyon** | `default constructor` | `destructor`   | `copy constructor` | `copy assignment`  | `move constructor` | `move assignment`  |
+| :------------------------------ | :-------------------- | :------------- | :----------------- | :----------------- | :----------------- | :----------------- |
+| **Hiçbiri** | 🟢 `defaulted`        | 🟢 `defaulted` | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟢 `defaulted`     |
+| **`constructor`** | 🟣 `not declared`     | 🟢 `defaulted` | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟢 `defaulted`     |
+| **`default constructor`** | 🔵 `user declared`    | 🟢 `defaulted` | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟢 `defaulted`     |
+| **`destructor`** | 🟢 `defaulted`        | 🔵 `user declared` | 🟢 `defaulted`     | 🟢 `defaulted`     | 🟣 `not declared`  | 🟣 `not declared`  |
+| **`copy constructor`** | 🟣 `not declared`     | 🟢 `defaulted` | 🔵 `user declared` | 🟢 `defaulted`     | 🟣 `not declared`  | 🟣 `not declared`  |
+| **`copy assignment`** | 🟢 `defaulted`        | 🟢 `defaulted` | 🟢 `defaulted`     | 🔵 `user declared` | 🟣 `not declared`  | 🟣 `not declared`  |
+| **`move constructor`** | 🟣 `not declared`     | 🟢 `defaulted` | 🔴 `deleted`       | 🔴 `deleted`       | 🔵 `user declared` | 🟣 `not declared`  |
+| **`move assignment`** | 🟢 `defaulted`        | 🟢 `defaulted` | 🔴 `deleted`       | 🔴 `deleted`       | 🟣 `not declared`  | 🔵 `user declared` |
+
 -----
 
 ## Ekstra Bilgiler:
