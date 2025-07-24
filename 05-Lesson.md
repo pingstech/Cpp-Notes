@@ -146,7 +146,7 @@ int main()
 ```
 
 **NOT-1:** 
-```decltype(++x)``` burada bir ***unevaluated context**'te çalışır. **Yan etkiler (yani, ++x)** göz ardı edilir ve yalnızca tür çıkarımı yapılır.
+```decltype(++x)``` burada bir **unevaluated context**'te çalışır. **Yan etkiler (yani, ++x)** göz ardı edilir ve yalnızca tür çıkarımı yapılır.
 
 ```cpp
 int foo()
