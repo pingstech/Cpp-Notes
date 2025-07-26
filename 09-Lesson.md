@@ -1,632 +1,561 @@
-# 9.Ders
+# 9. Ders:
+
+**Eğitimin 12. Dersidir.**
 
 ## Class
 
-Bir tür veri yapısıdır ve iki ana bileşenden oluşur:
-- **Veri üyeleri (data members)**: Bir sınıfın içindeki değişkenlerdir.
-- **Fonksiyon üyeleri (member functions)**: Bu değişkenler üzerinde işlem yapan fonksiyonlardır.
+### Bellek Yönetimi: `new` ve `delete`
 
-### Class Definition
+C++'ta program çalışırken bellek ayırıp serbest bırakmaya **dinamik bellek yönetimi** deriz. Bunu `new` ve `delete` anahtar kelimeleriyle yaparız.
 
-Bir sınıf, ```class``` anahtar kelimesi ile tanımlanır.
+  * **`new`:** Bellekte yer açar.
+  * **`delete`:** `new` ile açılan yeri geri verir (belleği serbest bırakır).
+  * **Önemli:** `new` ve `delete`'i doğru kullanmak, **bellek sızıntılarını** (kullanılmayan belleğin boşaltılmaması) engeller.
+
+#### Tek Nesne İçin
 
 ```cpp
-class my_class
-{
-    // Bu alana  "Class scope" denir. Bu bildirilen varlıklara bu "Class"ın öğeleri(elemanları) denir.
+int* tek_sayi_ptr = new int(42);    // Bir int için yer aç ve 42 ata
+// ... kullan
+delete tek_sayi_ptr;                // Belleği serbest bırak
+tek_sayi_ptr = nullptr;             // Güvenlik için işaretçiyi sıfırla
+```
 
-    class class_obj     // Type member
-    {
+#### Dizi İçin
 
-    };
+```cpp
+int* sayi_dizisi_ptr = new int[5];  // 5 elemanlı int dizisi oluştur
+// ... kullan
+delete[] sayi_dizisi_ptr;           // Dizi belleğini serbest bırak (köşeli parantezlere dikkat!)
+sayi_dizisi_ptr = nullptr;          // Güvenlik için işaretçiyi sıfırla
+```
 
-    void class_func();  // member function
+#### Dikkat Edilmesi Gerekenler
 
-    int class_var;      // Data member
+  * `delete` sonrası işaretçiyi hemen `nullptr` yapın. Bu, aynı belleği tekrar silmeyi (çift serbest bırakma) engeller.
+  * `delete nullptr;` güvenlidir, hata vermez.
+  * `new` ile alınan belleği **her zaman** `delete` ile silmelisiniz. Silmezseniz bellek sızıntısı olur.
+  * **Asla karıştırmayın:** `new` ile ayrılanı `delete[]` ile, `new[]` ile ayrılanı `delete` ile silemezsiniz. Bu, çalışma zamanı hatasına yol açar.
+
+-----
+
+### C++'ta Bildirim ve Özel Üye Fonksiyonları
+
+#### `not declared` (Bildirilmemiş) Hatası
+
+Bir değişkeni, fonksiyonu veya başka bir şeyi kullanmaya kalktığınızda derleyici onu tanımıyorsa bu hatayı alırsınız. Temel kural: Bir şeyi kullanmadan önce **tanıtmalısınız**.
+
+  * **Çözüm:** Kullanacağınız her şeyi (değişkenin türü ve adı, fonksiyonun dönüş türü, adı ve parametreleri gibi) **bildirin**. Ayrıca, kullandığınız yerde erişilebilir (kapsam içinde) olmalı.
+
+<!-- end list -->
+
+```cpp
+#include <iostream>
+
+int main() {
+    // int benim_degiskenim; // Bu yorum satırı olmasaydı hata olmazdı
+    benim_degiskenim = 10; // Hata: 'benim_degiskenim' bildirilmemiş
+    // benim_fonksiyonum(); // Hata: 'benim_fonksiyonum' bildirilmemiş
+    return 0;
 }
 ```
 
-**Bir sınıf aşağıdaki özelliklere sahiptir:**
+-----
 
-1) **Veri Üyeleri (Data Members)**:
-    - Bir sınıf, değişkenlerin bulunduğu bir yapı olabilir. Bu değişkenler veri üyeleri olarak bilinir.
-    - Veri üyeleri private (özel) veya public (genel) olabilir.
+#### `user declared` (Kullanıcı Tarafından Bildirilmiş) & `user defined` (Kullanıcı Tanımlı)
 
-2) **Fonksiyon Üyeleri (Member Functions)**:
-    - Sınıf içindeki fonksiyonlar, sınıfın veri üyeleri üzerinde işlem yapmak için kullanılır.
-    - Bu fonksiyonlar da ```private``` veya ```public``` olabilir.
+Bu terimler benzerdir:
 
-3) **Nesne (Object)**:
-    - Sınıf, bir şablon sağlar; ancak bir sınıfın **nesneleri**, sınıfın örnekleridir.
-    - **Nesneler**, sınıfın veri ve fonksiyon üyelerini kullanabilir.
+  * **`user declared`:**  Sizin kodda tanıttığınız yapılar (değişken, fonksiyon, sınıf vb.).
+  * **`user defined`:**  İçeriği yine sizin yazdığınız fonksiyon/sınıflar (özellikle fonksiyon ve sınıfların).
 
-4) **Access Control (Erişim Kontrolü)**:
-    - ```public```: Sınıf dışından erişilebilir.
-    - ```private```: Yalnızca sınıf içinden erişilebilir.
-    - ```protected```: Bu erişim düzeyi, türetilmiş sınıfların erişmesine izin verir.
+**Özel Durumlar: Kurucular ve Yıkıcılar**
+
+Sınıflar için özel öneme sahip fonksiyonlardır. Nesne oluşturulduğunda veya yok edildiğinde otomatik çalışırlar.
+
+  * **Kullanıcı Tanımlı Kurucu:** Nesnenin başlangıç ayarlarını yapar. Siz yazmazsanız, derleyici otomatik bir tane oluşturur.
+
+  * **Kullanıcı Tanımlı Yıkıcı:** Nesne silindiğinde (ömrü bittiğinde) kaynakları temizler (örneğin `new` ile ayrılmış belleği `delete` eder). Siz yazmazsanız, derleyici otomatik bir tane oluşturur.
+
+<!-- end list -->
 
 ```cpp
-struct data_t 
-{ 
-    int a, b, c;
+#include <iostream>
+#include <string>
+
+class Ogrenci {
+public:
+    std::string isim;
+    int numara;
+
+    // Kullanıcı tanımlı kurucu: Nesne oluşturulurken çalışır.
+    Ogrenci(std::string ogrenci_adi, int ogrenci_numarasi) {
+        isim = ogrenci_adi;
+        numara = ogrenci_numarasi;
+        std::cout << "Ogrenci nesnesi olusturuldu: " << isim << std::endl;
+    }
+
+    // Kullanıcı tanımlı yıkıcı: Nesne yok edilirken çalışır.
+    ~Ogrenci() {
+        std::cout << "Ogrenci nesnesi yok edildi: " << isim << std::endl;
+    }
 };
 
-int main()
-{
-    data_t _my_data;
-    _my_data.a = 10;        // Bu şekilde erişim sağlayacaktık.
-
-    data_t _my_data_p;    
-    data* p = &_my_data_p;  // Bu şekilde tanımlama yaparsak 2 şekilde erişim sağlayabiliriz.
-
-    (*p).a = 10;            // 1. erişim yoludur. Bir ifade de bir ismi '.' operatörünün sağında(qualified name) kullanmışsak, derleyici önce '.' operatörünün sol operandı olan ifadenin hangi sınıf türünden olduğunu anlayacak(sınıf türünden değilse "Syntax" hatası oluşacak). Sağ operandı olan ismi o sınıfın scope'u içerisinde arayacak(Scope içerisinde bulamazsa yine "Syntax" hatası oluşacak).
-    p->b = 12;              // 2. erişim yoludur. '.' operatörü ile aynı yolu izler fakat '->' operatörünün sol operandı muhakkak "sınıf türünden pointer" olmalıdır!
+int main() {
+    Ogrenci ali("Ali", 101); // Constructor çağrılır
+    // Program bitince 'ali' nesnesi yok edilir ve yıkıcı çağrılır.
+    return 0;
 }
 ```
+
+-----
+
+#### `= default` (Varsayılan Olarak Ayarla)
+
+C++11 ile geldi. Derleyiciye, özel üye fonksiyonlar (kurucular, yıkıcılar, kopyalama/atama operatörleri) için **kendi varsayılan uygulamasını oluşturmasını** açıkça söylemek için kullanılır. Siz özel bir fonksiyon tanımladığınızda derleyici bazen diğer varsayılanları oluşturmayı bırakabilir; `= default` bunu engeller.
+
+  * **Ne Zaman Kullanılır?** Kendi kodunuzu yazmak yerine, derleyicinin sunduğu standart davranışı istediğinizde.
+
+<!-- end list -->
 
 ```cpp
-struct _my_str_t 
-{
-    int a, b, x;
-}
+#include <iostream>
 
-void func(_my_str_t * p) { }    // C'de bu şekilde erişim sağlıyorduk.
+class VarsayilanSinif {
+public:
+    int veri;
+    
+    // Varsayılan (parametresiz) Constructor: Derleyiciye oluşturmasını söyle
+    VarsayilanSinif() = default; 
 
-class _my_class_t
-{
-    public:    
-        void func( );
-}   //            ^~~~~ "_my_class_t *" sınıfını burada her zaman gizli bir parametre olarak tutar.
+    // Parametreli Constructor
+    VarsayilanSinif(int v) : veri(v) { std::cout << "Parametreli Constructor cagridi: " << veri << std::endl; }
 
-int main()
-{
-    struct _my_str_t real_my_str_t;
-    func(&real_my_str_t);
+    // Kopyalama Constructor ve atama operatörünü varsayılan yap
+    VarsayilanSinif(const VarsayilanSinif& diger) = default;
+    VarsayilanSinif& operator=(const VarsayilanSinif& diger) = default;
+};
 
-    _my_class_t real_my_class_t;
-    real_my_class_t.func();
+int main() {
+    VarsayilanSinif nesne_a; // = default Constructor çağrılır
+    nesne_a.veri = 5;
+    VarsayilanSinif nesne_b = nesne_a; // = default kopyalama Constructor'ı çağrılır
+    nesne_b = VarsayilanSinif(10); // = default atama operatörü çağrılır
+    return 0;
 }
 ```
 
-### Access Control(Erişim Kontrolü)
+-----
 
-1) #### **```public``` (Genel):**
+#### `= delete` (Silinmiş Olarak Ayarla)
 
-    - ```public``` üyeler sınıf dışından erişilebilir.
-    - Bu üyeler, sınıf dışındaki herhangi bir fonksiyon veya nesne tarafından kullanılabilir.
+C++11 ile geldi. Bir fonksiyonun (özellikle özel üye fonksiyonların) **kullanımını tamamen yasaklar**. Bu fonksiyonu çağırmaya çalışan kod, derleme hatası alır.
 
-    **Örnek:**
+  * **Ne Zaman Kullanılır?** Nesnenizin kopyalanmasını veya atanmasını istemediğinizde (örneğin, tekil (Singleton) desenlerde veya kaynak yönetimi yapan sınıflarda).
 
-    ```cpp
-    class MyClass 
-    {
-        public:
-            int x;  // public veri üyesi
+<!-- end list -->
 
-            void setX(int value)    // public fonksiyon
-            {  
-                x = value;
-            }
+```cpp
+#include <iostream>
 
-            int getX() // public fonksiyon
-            {  
-                return x;
-            }
-    };
+class TekilNesne {
+private:
+    TekilNesne() { std::cout << "TekilNesne olustu." << std::endl; } // Constructor'ı gizle
 
-    int main() 
-    {
-        MyClass obj;  
-        obj.x = 10;  // public veri üyesine dışarıdan erişim
-        std::cout << "X değeri: " << obj.getX() << '\n';  // public fonksiyon kullanımı
+    // Kopyalamayı ve atamayı yasakla
+    TekilNesne(const TekilNesne&) = delete; 
+    TekilNesne& operator=(const TekilNesne&) = delete; 
+
+public:
+    static TekilNesne& ornek_getir() {
+        static TekilNesne tek_ornek; // Sadece bir kez oluşur
+        return tek_ornek;
     }
-    ```
-    - Burada, ```x``` ```public``` olarak tanımlandığı için ```main``` fonksiyonunda dışarıdan erişilebilir.
-    - ```setX``` ve ```getX``` fonksiyonları da ```public``` olduğu için dışarıdan çağrılabilir.
+};
 
-    ---
+int main() {
+    TekilNesne& benim_nesnem = TekilNesne::ornek_getir(); // Tekil nesneye eriş
+    // TekilNesne baska_nesne = benim_nesnem; // HATA: Kopyalama yasak!
+    // TekilNesne yeni_bir_nesne;             // HATA: Constructor gizli!
+    return 0;
+}
+```
 
-2) #### **```private``` (Özel):**
+-----
 
-    - ```private``` üyeler sadece sınıfın içinde bulunan fonksiyonlar tarafından erişilebilir.
-    - ```private``` veriler, sınıf dışından erişilemez ve yalnızca sınıf içindeki fonksiyonlarla işlenebilir.
+#### `implicitly declared` (Dolaylı Olarak Bildirilmiş)
 
-    **Örnek:**
+Bir sınıf tanımladığınızda, C++ derleyicisi sizin için bazı özel üye fonksiyonları (kurucu, yıkıcı, kopyalama/taşıma operatörleri) **otomatik olarak** oluşturabilir. Siz bunları yazmasanız bile derleyici sizin yerinize "dolaylı olarak" var kabul eder.
 
-    ```cpp
-    class MyClass 
-    {
-        private:
-            int x;  // private veri üyesi
-
-        public:
-            void setX(int value) // public fonksiyon
-            {  
-                x = value;
-            }
-
-            int getX() // public fonksiyon
-            {  
-                return x;
-            }
-    };
-
-    int main() 
-    {
-        MyClass obj;
-        // obj.x = 10;  // HATA! private veri üyelerine dışarıdan erişilemez
-        obj.setX(10);  // public fonksiyon ile erişim sağlanır
-        std::cout << "X değeri: " << obj.getX() << '\n';  // private veri üyesine erişim, public fonksiyon ile yapılır
-    }
-    ```
-    - ```x``` değişkeni ```private``` olarak tanımlanmıştır, bu nedenle ```main``` fonksiyonunda doğrudan erişilemez.
-
-    - Ancak ```setX``` ve ```getX``` gibi ```public``` fonksiyonlar kullanılarak erişim sağlanabilir.
-
-    ---
-
-3) #### **```protected``` (Korunmuş):**
-    - ```protected``` üyeler, sınıf dışından erişilemez, ancak bu üyeler türeyen sınıflar tarafından erişilebilir. Bu, kalıtım (inheritance) ile türetilen sınıflara erişim izni verir.
+  * **`implicitly declared default` (Dolaylı Varsayılan):** Siz herhangi bir özel üye fonksiyonu (kurucu, yıkıcı vb.) tanımlamazsanız, derleyici size otomatik olarak varsayılan bir kurucu, kopyalama kurucusu, atama operatörü ve yıkıcı sağlar.
 
     ```cpp
     #include <iostream>
-    using namespace std;
+    #include <string>
 
-    class Base 
-    {
-        protected:
-            int x;  // protected veri üyesi
-
-        public:
-            void setX(int value) // public fonksiyon
-            {  
-                x = value;
-            }
-
-            int getX() // public fonksiyon
-            {  
-                return x;
-            }
-    };
-
-    class Derived : public Base 
-    {
-        public:
-            void display() 
-            {
-                std::cout << "X değeri (türetilmiş sınıf): " << x << '\n';  // protected üyeye erişim
-            }
-    };
-
-    int main() 
-    {
-        Derived obj;
-        obj.setX(10);  // Base sınıfının public fonksiyonu ile erişim
-        obj.display();  // Derived sınıfının fonksiyonu ile protected üyeye erişim
-    }
-    ```
-    - Burada, ```x``` ```protected``` olarak tanımlandığı için ```Base``` sınıfının dışında doğrudan erişilemez, ancak ```Derived``` sınıfından erişilebilir.
-
-    - ```setX``` fonksiyonu ```Base``` sınıfından çağrılabilir, bu da ```protected``` veriye dolaylı erişim sağlar.
-
-    ---
-
-| **Erişim Belirleyicisi** | **Erişim Durumu**                                     |
-| ------------------------ | ----------------------------------------------------- |
-| **`public`**             | Sınıf içinden ve dışından erişilebilir.               |
-| **`private`**            | Yalnızca sınıf içinden erişilebilir.                  |
-| **`protected`**          | Sınıf içinden ve türetilmiş sınıflardan erişilebilir. |
-
-### Member Function
-
-Bir sınıfın içine dahil edilmiş fonksiyonlardır ve bu fonksiyonlar sınıfın nesneleri üzerinde işlem yapar.
-
-```cpp
-// 
-// api.h dosyası
-class _my_class()
-{
+    class BasitOgrenci {
     public:
-        void func();    // Sınıfın içinde tanımladığımız için "inline" anahtar kelimesi ile fonksiyonu göstermemize gerek yoktur. "Implicite inline" olarak orada bulunur.
-}
-
-inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığımız için "inline" kullanmak zorundayız.
-```
-
-1) **Temel Bildirim ve Tanım:**
-
-    ```cpp
-    class Araba 
-    {
-        public: // Erişim belirleyici
-            // Üye fonksiyon bildirimi (declaration)
-            void hizlan(int artis);
-
-            // Inline tanım (doğrudan sınıf içinde)
-            void frenYap() 
-            {
-                hiz -= 10;
-                if (hiz < 0) hiz = 0; // Hız negatif olamaz
-            }
-
-        private:
-            int hiz = 0; // Üye değişken
-    };
-
-    // Sınıf dışında tanım (definition) → "Araba::" scope'u zorunlu!
-    void Araba::hizlan(int artis) {
-        hiz += artis; // Üye değişkene doğrudan erişim
-    }
-    ```
-    ---
-
-2) **Erişim Kuralları(```public``` vs ```private```):**  
-
-    Üye fonksiyonların dışarıdan çağrılabilmesi için public olmalıdır.
-
-    ```cpp
-    int main() 
-    {
-        Araba tesla;
-        tesla.hizlan(50); // public → Geçerli
-        tesla.frenYap();   // public → Geçerli
-
-        // tesla.hiz = 100; // HATA! private üyeye dışarıdan erişilemez
-        // Üye değişkenlere sadece sınıfın KENDİ fonksiyonları erişebilir.
-    }
-    ```
-    ---
-
-3) **```const``` Üye Fonksiyonlar:**
-
-    Nesnenin durumunu değiştirmeyen fonksiyonlar ```const``` ile işaretlenir.
-
-    ```cpp
-    class Araba 
-    {
-        public:
-            // 3.1 const üye fonksiyon → içeride üye değişken değiştirilemez
-            int mevcutHiz() const {
-                // hiz = 0; // HATA! const fonksiyon içinde üye değiştirilemez
-                return hiz;
-            }
-
-        private:
-            int hiz;
-    };
-
-    int main() 
-    {
-        const Araba sabitAraba; // const nesne
-        // sabitAraba.hizlan(10); // HATA! const nesne sadece const fonksiyon çağırabilir
-        sabitAraba.mevcutHiz(); // Geçerli (const fonksiyon)
-    }
-    ```
-    ---
-
-4) **```static``` Üye Fonksiyonlar:**
-
-    Nesneye değil, sınıfa ait fonksiyonlar. İçeride this yoktur.
-
-    ```cpp
-    class Araba 
-    {
-        public:
-            static int toplamArabaSayisi() 
-            {
-                return sayac; // Sadece static üyelere erişebilir
-            }
-
-            Araba() { sayac++; } // Kurucu (constructor)
-
-        private:
-            static int sayac; // Sınıf genelinde paylaşılan değişken
-    };
-
-    int Araba::sayac = 0; // Static değişkenin tanımı (zorunlu)
-
-    int main() 
-    {
-        Araba a1, a2;
-        // Nesne olmadan çağırma
-        std::cout << Araba::toplamArabaSayisi(); // Çıktı: 2
-    }
-    ```
-    ---
-
-5) **Tanım Yerleri: Inline vs Dışarıda**
-
-    - **Inline**: Sınıf içinde tanım → Derleyici optimizasyonu.
-    - **Dışarıda**: Büyük fonksiyonlar için → ```SınıfAdı::fonksiyon``` syntax'ı zorunlu.
-
-    ```cpp
-    class Araba 
-    {
-        public:
-            void korna_cal(); // Sadece bildirim
-    };
-
-    // Dışarıda tanım → "Araba::" unutulursa LINK HATASI!
-    void Araba::korna_cal() {
-        std::cout << "Beep!";
-    }
-    ```
----
-
-**Özet Tablo: Kritik Kurallar**
-| Özellik             | Syntax Kuralı                         | Sık Hata                     |
-|---------------------|---------------------------------------|------------------------------|
-| **Sınıf Dışı Tanım**| `void Sınıf::fonksiyon() { ... }`     | `Sınıf::` unutma → Tanımsızlık hatası! |
-| **`const` Fonksiyon**| `int get() const { ... }`            | `const` nesneler için zorunlu |
-| **`static` Fonksiyon**| `static void foo();` → `this` yok!  | Static üye değişken gerektirir |
-| **Erişim**          | `private` fonksiyon → Sadece sınıf içi | Dışarıdan çağırma hatası    |
-
-> ✅ **En İyi Uygulama:**  
-> - Nesne durumu değişmiyorsa **`const`** ekle.  
-> - Sınıf geneli işlemler için **`static`** kullan.  
-> - Büyük fonksiyonları **sınıf dışında tanımla** (kod okunabilirliği).
-
-#### Member Function ile Function Overloading:**
-
-```cpp
-class Calculator 
-{
-    public:
-        // İki tam sayıyı toplayan fonksiyon
-        int add(int a, int b) { return a + b; }
-
-        // İki ondalıklı sayıyı toplayan fonksiyon
-        double add(double a, double b) { return a + b; }
-
-        // Üç tam sayıyı toplayan fonksiyon
-        int add(int a, int b, int c) { return a + b + c; }
-        
-        // Varsayılan argüman ile tanımlanmış beş sayıyı toplayan fonksiyon
-        int add(int a, int b, int c, int d, int e = 10) { return a + b + c + d + e; }
-};
-
-int add(double a, int b) { return a + b; }      // Bu fonkisyon "function overloading" değildir. Farklı scope'taki fonkisyonlar birbirlerini overload etmezler!
-
-int main() 
-{
-    Calculator calc;  // Calculator sınıfından bir nesne oluşturuluyor
-
-    std::cout << "2 + 3 = " << calc.add(2, 3) << '\n';                          // int türündeki add fonksiyonu çağrılır
-    std::cout << "2.5 + 3.5 = " << calc.add(2.5, 3.5) << '\n';                  // double türündeki add fonksiyonu çağrılır
-    std::cout << "1 + 2 + 3 = " << calc.add(1, 2, 3) << '\n';                   // Üç parametreli add fonksiyonu çağrılır
-    
-    std::cout << "1 + 2 + 3 + 4 = " << calc.add(1, 2, 3, 4) << '\n';            // Beş parametreli add fonksiyonu çağrılır
-    
-    std::cout << "1 + 2 + 3 + 4 + 5 = " << calc.add(1, 2, 3, 4, 5) << '\n';     // Beş parametreli add fonksiyonu çağrılır
-}
-```
-
-**NOT-1:** **Member functions(üye fonksiyonlar)** bulundukları scope içerisinde **redeclaration(yeniden tanımlama) yapılamazlar!** **Syntax hatasına** yol açar.
-
-
-```cpp
-class my_class
-{
-    private:
-        int foo(double);    // Function overloading gerçekleşir
-        int foo(int);       // Function overloading gerçekleşir fakat "public" kısmında redeclaration yapıldığı için "Syntax" hatası verir
-    public:
-        int foo(int);       // Function overloading gerçekleşir fakat "private" kısmında redeclaration yapıldığı için "Syntax" hatası verir 
-}
-```
-
-```cpp
-class my_class
-{
-    private:
-        int foo(int);
-    public:
-        int foo(double);
-}
-// Önce look-up, sonra context kontrolü en sonra access kontrolü yapılır.
-int main()
-{
-    my_class _class;
-
-    _class.foo(12); // Derleyici bir fonksiyonu çağırırken önce look-up table, sonra "context" kontrolü daha sonra ise "access" kontorlü gerçekleştirdiği için. Bu Fonksiyon "syntax" hatası oluşturacak.
-
-    //  Derleyici "private" kısmında tanımlanan fonksiyonu "exact match" olarak görecek ve bu fonksiyon seçilecektir fakat bu fonksiyon "access control" kısmından geçemeyeceği için "syntax" hatası bildirecektir.
-}
-```
-
----
-
-### C++'da İsim Arama(Name Lookup) Mantığı
-
-1) #### Kapsam(Scope):
-
-    İsim aramanın en temel prensibi kapsamdır (scope). Bir ismin tanımlı olduğu bölgeye "kapsam" denir. C++'da çeşitli kapsam türleri bulunur:
-
-    - **Yerel Kapsam (Local Scope)**: Bir fonksiyon veya kod bloğu (```{}```) içinde tanımlanan isimler sadece o blok içinde görünürdür.
-
-        ```cpp
-        void myFunction() 
-        {
-            int x = 10; // 'x' yerel kapsamda
-            // ...
-        } // 'x' burada kapsam dışına çıkar
-        ```
-
-    - **Sınıf Kapsamı (Class Scope)**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
-
-        ```cpp
-        class MyClass 
-        {
-            public:
-                int value; // 'value' sınıf kapsamda
-                void printValue() 
-                {
-                    // ...
-                }
-        };
-        ```
-
-    - **Namespace Kapsamı (Namespace Scope)**: Bir namespace içinde tanımlanan isimler sadece o ```namespace``` içinde veya ```using``` bildirimi ile erişilebilir.
-
-        ```cpp
-        namespace MyNamespace 
-        {
-            int globalVar; // 'globalVar' MyNamespace kapsamda
-        }
-        ```
-
-    - **Global Kapsam (Global Scope)**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
-
-        ```cpp
-        int programId; // 'programId' global kapsamda
-        ```
-
-        Derleyici, bir ismi ararken öncelikle o ismin kullanıldığı mevcut **iç kapsamlardan dış kapsamlara doğru** arama yapar.
-
-2) #### Bağımlı Olmayan İsim Arama (Unqualified Name Lookup):
-
-    Bir ismin önüne ```::``` (kapsam çözümleme operatörü) veya bir sınıf/namespace adı gibi bir niteleyici koymadan arandığı durumdur. Derleyici, bu durumda şu sırayı takip eder:
-
-    - İsmin kullanıldığı **mevcut kapsam** (fonksiyon bloğu, sınıf üye fonksiyonu vb.).
-    - Mevcut kapsamı çevreleyen **dış kapsamlar** (iç içe fonksiyon blokları, ana fonksiyon, sınıfın kendisi).
-    - Dosya kapsamı (global veya namespace).
-
-    İlk bulduğu geçerli tanımı kullanır. Eğer aynı isim birden fazla kapsamda tanımlıysa, **en içteki kapsamdaki tanım öncelik alır**.
-
-    ```cpp
-    int global_data = 10; // Global kapsam
-
-    class MyClass {
-    public:
-        int class_data = 20; // Sınıf kapsamı
-
-        void printData() {
-            int local_data = 30; // Yerel kapsam
-
-            std::cout << local_data << std::endl; // Çıktı: 30 (Yerel olan öncelikli)
-            std::cout << class_data << std::endl; // Çıktı: 20 (Sınıf üyesi)
-            std::cout << global_data << std::endl; // Çıktı: 10 (Global olan)
-        }
+        int id;
+        std::string ad;
+        // Derleyici otomatik olarak varsayılan Constructor, kopyalama Constructor'ı,
+        // atama operatörü ve yıkıcıyı sağlayacak.
     };
 
     int main() {
-        MyClass obj;
-        obj.printData();
-        // std::cout << local_data << std::endl; // Hata! 'local_data' burada görünür değil.
+        BasitOgrenci ogrenci_1; // Dolaylı varsayılan Constructor
+        ogrenci_1.id = 1;
+        ogrenci_1.ad = "Ayse";
+
+        BasitOgrenci ogrenci_2 = ogrenci_1; // Dolaylı varsayılan kopyalama Constructor'ı
+        // ogrenci_1'deki veriler ogrenci_2'ye kopyalanır.
+        return 0;
     }
     ```
 
-3) #### Bağımlı İsim Arama (Qualified Name Lookup)
+  * **`implicitly declared delete` (Dolaylı Silinmiş):** Bazı durumlarda, siz bir özel üye fonksiyonu tanımladığınızda veya sınıfınızda belirli koşullar varsa, derleyici diğer bazı özel üye fonksiyonlarını **otomatik olarak yasaklar (`= delete` gibi)**. Bu, sınıfın mantıksal tutarlılığını korumak içindir.
 
-    Bir ismin önüne ```::``` operatörü ile bir sınıf veya namespace adı (```NamespaceAdi::isim``` veya ```SinifAdi::isim```) gibi bir **niteleyici (qualifier)** koyularak arandığı durumdur. Bu durumda derleyici, aramayı sadece belirtilen sınıfın veya namespace'in içinde yapar.
+      * **Örnek:** Eğer sınıfınızda `const` bir veri üyesi varsa, derleyici varsayılan atama operatörünü otomatik olarak yasaklar. Çünkü `const` (sabit) bir üyeye atama yapılamaz.
+
+    <!-- end list -->
 
     ```cpp
-    namespace MyLibrary { int value = 100; }
+    #include <iostream>
 
-    class MyOtherClass 
-    {
-        public:
-            int value = 200;
-            void printValues() 
-            {
-                std::cout << value << std::endl; // Kendi sınıfının 'value'su: 200
-                std::cout << MyLibrary::value << std::endl; // MyLibrary'deki 'value': 100
-            }
+    class SabitVeriSinif {
+    public:
+        const int sabit_deger; // Sabit bir üye
+
+        SabitVeriSinif(int v) : sabit_deger(v) {} // Constructor
+
+        // Bu sınıfta 'sabit_deger' const olduğu için,
+        // derleyici otomatik atama operatörünü 'silinmiş' yapar.
+        // Yani `SabitVeriSinif& operator=(const SabitVeriSinif&)` çağrılamaz.
     };
 
-    int main() 
-    {
-        MyOtherClass obj;
-        obj.printValues();
+    int main() {
+        SabitVeriSinif nesne_a(5);
+        SabitVeriSinif nesne_b(10);
+        // nesne_a = nesne_b; // HATA: Atama operatörü dolaylı olarak silinmiş!
+        return 0;
     }
     ```
 
-4) #### Bağımlı Argüman Arama (Argument-Dependent Lookup - ADL / Koenig Lookup)
+-----
 
-    Bu özel bir isim arama türüdür ve özellikle operatör aşırı yüklemeleri ve fonksiyon şablonları için önemlidir. Bir fonksiyon çağrıldığında, eğer fonksiyon ismi niteleyici olmadan kullanılırsa (```func(arg)```), derleyici sadece mevcut kapsamda arama yapmakla kalmaz, aynı zamanda fonksiyonun argümanlarının tiplerinin tanımlandığı namespace'leri de arar.
+### Özel Üye Fonksiyonları
 
-    ```cpp
-    namespace N 
-    {
-        struct S {};
-        void f(S) { std::cout << "N::f(S) çağrıldı" << std::endl; }
-    }
+C++’ta derleyici veya geliştirici tarafından sağlanan altı özel üye fonksiyon vardır. Bunlar nesne yaşam döngüsünü ve kaynak yönetimini kontrol eder.
 
-    void f(int) { std::cout << "global f(int) çağrıldı" << std::endl; }
+| Fonksiyon            | Söz Dizimi                                 | Ne Zaman Çağrılır?                                       |
+| -------------------- | ------------------------------------------ | -------------------------------------------------------- |
+| **Constructor**      | `class_name(args);`                        | Nesne yaratılırken                                       |
+| **Destructor**       | `~class_name();`                           | Nesne ömrü bittiğinde                                    |
+| **Copy Constructor** | `class_name(const class_name& other);`     | Başlatma, değer geçişi, döndürülen nesne                 |
+| **Copy Assignment**  | `class_name& operator=(other);`            | Var olan iki nesne arasında atama                        |
+| **Move Constructor** | `class_name(class_name&& other) noexcept;` | Geçici nesne oluşturulurken, `std::move` kullanıldığında |
+| **Move Assignment**  | `class_name& operator=(other&&) noexcept;` | Var olan nesneye geçici nesne atandığında                |
 
-    int main() 
-    {
-        N::S s_obj;
-        f(s_obj); // Çıktı: N::f(S) çağrıldı. ADL sayesinde 'N::f' bulundu.
-        f(5);     // Çıktı: global f(int) çağrıldı.
-    }
-    ```
+#### Constructor
 
-    Burada ```f(s_obj)``` çağrısında, ```f``` fonksiyonu ```N::f``` olarak doğrudan nitelenmediği halde, argüman olan ```s_obj```'nin tipi ```N::S``` olduğu için derleyici ```N``` namespace'ini de arar ve ```N::f(S)```'i bulur.
+```cpp
+class student 
+{
+    public:
+        // Varsayılan yapıcı: Üye değişkenlerine boş string ve 0 değeri atar.
+        student() : name_str(""), age_int(0) {}
 
+        // Yaş parametresi ile yapıcı: Sadece yaş bilgisiyle öğrenci nesnesi oluşturur, adı boş bırakır.
+        explicit student(int age_int) : name_str(""), age_int(age_int) {}
 
-#### Detaylı Örnek:
+        // Ad ve yaş parametreleri ile yapıcı: Öğrenci nesnesini verilen ad ve yaş ile oluşturur.
+        student(const std::string& name_str, int age_int) : name_str(name_str), age_int(age_int) {}
 
-    ```cpp
-    class my_class
-    {
-        private:
-            int x;              // Sınıfın private veri üyesi 'x'
-        public:
-            void foo();         // my_class'ın üye fonksiyonu
-    };
+    private:
+        std::string name_str;
+        int age_int;
+};
+```
 
-    int x = 45;                 // Global kapsamdaki 'x' değişkeni
+#### Destructor
 
-    void my_class::foo()        // my_class'ın foo() fonksiyonunun tanımı
-    {
-        int x = 67;             // foo() fonksiyonunun yerel kapsamındaki 'x' değişkeni
-        
-        my_class::x = x + ::x;  // İşlemin yapıldığı kritik satır
-    }
-    ```
+```cpp
+class buffer_class 
+{
+    int* data_ptr;  // Dinamik olarak ayrılacak tam sayı dizisinin işaretçisi
 
-**```my_class::x = x + ::x;``` ifadesi bu durumda şu anlama gelir:**
+    public:
+        // Constructor: Belirtilen boyutta dinamik bir dizi oluşturur.
+        buffer_class(int size_int) : data_ptr(new int[size_int]) {}
 
-```my_class``` sınıfının üyesi olan ```x``` = (```foo()``` fonksiyonunun yerel ```x```'i) + (```global x```'i) şeklinde nitelendirilir. Şimdi buradaki değerleriyerine koyarsak
+        // Destructor: Dinamik belleği serbest bırakır ve işaretçiyi sıfırlar.
+        ~buffer_class() 
+        {
+            delete[] data_ptr;      // Dinamik belleği serbest bırak
+            data_ptr = nullptr;     // İşaretçiyi sıfırla
+        }
+};
+```
+#### Copy Constructor (Kopyalama Kurucusu)
 
-- ```my_class::x``` = ```67``` + ```45```
-- ```my_class::x``` = ```112```
+Bir sınıfın **aynı türden başka bir nesnesini parametre olarak alan** bir kurucu fonksiyondur.
 
----
+```cpp
+class my_class
+{
+    public: 
+        my_class()  // Default Constructor
+        {
+            std::cout << "Default ctor called here, this : " << this << '\n';
+        }
 
-### Class Kullanımına Ait Ekstra Notlar:
+        my_class(const my_class& ref)   // Copy Constructor
+        {
+            std::cout << "Copy Constructor called here, this : " << this << '\n';
+            std::cout << "&ref in Copy Constructor : " << &ref << '\n';
+        }
 
-1) **Erişim belirleyici kullanmadan sınıf tanımlama:**
+        ~my_class()  // Destructor
+        {
+            std::cout << "Destructor called here, this : " << this << '\n';
+        }
+};
 
-    ```cpp
-    class _my_class
-    {
-        // Bu scope'ta "private" veya"public" anahtar sözcüğü kullanılmamışsa ve "class" anahtar sözcüğü kullanılarak sınıf oluşturulmışsa, Class'ın sınıfı "private" olur
-    }
+void foo(my_class)  
+{
 
-    struct _my_struct
-    {
-        // Struct anahtar sözcüğü ile sınıf tanımlanmışsa sınıf "public" olur
-    }
-    ```
+}
 
-2) **Mülakat sorusu-1:** 
-
-    C++' bir sınıfın **```public``` interface**'i: sadece sınıfın **```public``` bölümü değil**, sınıfın **```public``` bölümündeki öğeler + başlık dosyasındaki(headre file) ```global``` bildirimlerdir**.
-
-3) **Sınıf scope içinde aynı isimli değişken tanımlama:**
-    Bir **syntax hatasıdır**. Bir sınıfın scope'u içerisinde **aynı isimli** bir **değişken** tanımlanamaz. 
+int main()
+{
+    std::cout << " ============>| Main Start |<============\n\n";
     
-    Sınıfın ```public```, ```private``` ve ```protected``` bölümleri yani erişim ayrıcalıklı kod alanları **bir scope değildir**.
+    my_class _my_class;
+    std::cout << "&_my_class : " << &_my_class << '\n';
 
-    ```cpp
-    class _my_class
-    {
-        private:
-            int var;
-        
-        public:
-            double var; // Syntax hatası oluşur.
+    foo(_my_class); // Başka bir sınıf nesnesin parametre olarak oluşturulduğu için burada "Copy Consturctor" gerçekleşir. Bu yüzden çıktımızı aldığımızda sadece 1 tane "default ctor" görürüz.
+
+    std::cout << "\n ============>| Main End |<============\n\n";
+}
+
+/*
+Output:
+
+ ============>| Main Start |<============
+
+Default ctor called here, this : 0x7ffc126b8a76
+&_my_class : 0x7ffc126b8a76
+Copy Constructor called here, this : 0x7ffc126b8a77
+&ref in Copy Constructor : 0x7ffc126b8a76
+Destructor called here, this : 0x7ffc126b8a77
+
+ ============>| Main End |<============
+
+Destructor called here, this : 0x7ffc126b8a76
+*/
+```
+
+##### Copy Constructor'ın çağırıldığı durumlar
+
+- **Nesne Başlangıç Değeriyle Oluşturulduğunda:** Bir nesne, başka bir mevcut nesne kullanılarak ilk değer ataması ile oluşturulduğunda.
+
+```cpp
+MyClass obj_1;
+MyClass obj_2 = obj_1; // Kopyalama Constructor'ı çağrılır.
+MyClass obj_3(obj_1);  // Kopyalama Constructor'ı çağrılır.
+```
+
+- **Fonksiyona Nesne Değer Olarak Geçirildiğinde (Pass by Value):** Bir fonksiyona nesne, referans yerine değer olarak geçirildiğinde.
+
+```cpp
+void process_object(MyClass passed_object) {
+    // passed_object oluşturulurken kopyalama Constructor'ı çağrılır.
+}
+
+MyClass original_object;
+process_object(original_object);
+```
+
+- **Fonksiyondan Nesne Değer Olarak Döndürüldüğünde (Return by Value):** Bir fonksiyon, yerel bir nesneyi değer olarak döndürdüğünde (modern C++ derleyicilerinde RVO/NRVO optimizasyonları ile bu durum bazen atlanabilir, ancak kavramsal olarak kopyalama burada gerçekleşir).
+
+```cpp
+MyClass create_object() {
+    MyClass temp_object;
+    // ...
+    return temp_object; // temp_object döndürülürken kopyalama Constructor'ı çağrılabilir.
+}
+
+MyClass new_object = create_object();
+```
+
+**Örnek**
+
+```cpp
+class my_class
+{
+    //...
+}
+
+int main()
+{
+    my_class x;         // Default ctor çağırılır.
+    my_class c1 = x;    // Copy Constructor çağırılır.
+    my_class c2(x);     // Copy Constructor çağırılır.
+    my_class c3{x};     // Copy Constructor çağırılır.
+
+    auto c4 = x;        // Copy Constructor çağırılır.
+    auto c5(x);         // Copy Constructor çağırılır.
+    auto c6{x};         // Copy Constructor çağırılır.
+}
+```
+
+**NOT:** Derleyicinin örtülü olarak (implicity) bildirdiği, ve tanımladığı herhangi bir **special member function** şu özelliklere sahiptir; sınıfın non-static, inline, public member functionlarıdır!
+
+-----
+
+## Değer Tipi(Value Type)
+
+Bir değer tipi, veriyi doğrudan içeren bir değişkendir. Kopyalandığında veya atandığında, verinin kendisi kopyalanır. Orijinal ve kopya bağımsızdır; birindeki değişiklik diğerini etkilemez.
+
+- **Örnek:** ```int```, ```double```, basit ```struct```'lar.
+
+```cpp
+int a = 10;
+int b = a; // 'a'nın değeri 'b'ye kopyalanır.
+b = 20;    // 'b' değişir, 'a' (10) aynı kalır.
+```
+
+-----
+
+## Değer Semantiği (Value Semantics)
+
+Bir sınıfın veya türün, tıpkı değer tipleri gibi davranacak şekilde tasarlanmasıdır. Yani, bir nesne kopyalandığında veya atandığında, tüm kaynakları (bellek, dosyalar vb.) dahil tam ve bağımsız bir kopyası oluşturulur. Özellikle dinamik bellek kullanan sınıflar için bu, derin kopyalama (deep copy) yapılmasını gerektirir
+
+- **Gereklilik:** Kopyalama kurucusu, atama operatörü ve yıkıcının (destructor) doğru implementasyonu
+
+```cpp
+class MyString {
+public:
+    char* data;
+
+    // Kurucu, Kopyalama Kurucusu (derin kopya), Atama Operatörü (derin kopya), Yıkıcı
+    // Bunlar MyString'e değer semantiği kazandırır.
+
+    // Örnek Kopyalama Kurucusu:
+    MyString(const MyString& other) {
+        data = new char[strlen(other.data) + 1];
+        strcpy(data, other.data); // Yeni belleğe kopyala
     }
-    ```
+};
+```
+
+**Özetle:** **Değer tipi** veriyi doğrudan içeren bir kategoriyken, **değer semantiği** ise bir sınıfın kopyalandığında veya atandığında tamamen bağımsız, eksiksiz bir kopya oluşturmasını sağlayan **tasarım prensibidir.**
+
+-----
+
+## Özel Kelimeler
+
+### **Invariant (Sınıf İnvariantı)**
+
+**İnvariant**, bir sınıfın içindeki verilerin her zaman uyması gereken bir **kuraldır**. Nesne oluşturulduğunda ve kullanıldığında bu kural asla bozulmamalıdır. Sınıfın tüm metotları bu kuralı korumalıdır.
+
+  * **Örnek:** Bir dikdörtgen sınıfında genişlik ve yüksekliğin asla negatif olmaması bir invarianttır.
+
+<!-- end list -->
+
+```cpp
+#include <iostream>
+
+class Dikdortgen 
+{
+    private:
+        double genislik_degeri;
+        double yukseklik_degeri;
+
+    public:
+        // Constructor: Negatif değerleri engeller.
+        Dikdortgen(double genislik, double yukseklik) 
+        {
+            if (genislik < 0 || yukseklik < 0) 
+            {
+                std::cerr << "Hata: Genislik/yukseklik negatif olamaz!" << std::endl;
+                genislik_degeri = 0; // Geçersiz durumda sıfır atar
+                yukseklik_degeri = 0;
+            }
+            else 
+            {
+                genislik_degeri = genislik;
+                yukseklik_degeri = yukseklik;
+            }
+        }
+
+        // Genişlik ayarlama metodu: Negatif değeri engeller.
+        void genislik_ayarla(double yeni_genislik) 
+        {
+            if (yeni_genislik >= 0) // Sadece pozitif/sıfır değerlere izin ver
+            { 
+                genislik_degeri = yeni_genislik;
+            } else {
+                std::cerr << "Hata: Genislik negatif olamaz!" << std::endl;
+            }
+        }
+
+    // Diğer metotlar (get_genislik, alan_hesapla vb.) da invariant'ı korur.
+};
+
+int main() 
+{
+    Dikdortgen kutu_bir(10.0, 5.0); // Geçerli
+    Dikdortgen kutu_iki(-2.0, 8.0); // Hatalı, 0'a ayarlanır
+
+    kutu_bir.genislik_ayarla(-3.0); // Hata verir, genişlik değişmez
+    return 0;
+}
+```
+
+-----
+
+### **Aggregate (Agrega)**
+
+**Agrega**, C++'ta çok basit, sadece veri tutan bir sınıf veya yapıdır. Karmaşık kurucusu, özel/korumalı üyesi, sanal fonksiyonu veya temel sınıfı olmaz. Üyelerini `{}` (küme parantezleri) ile sırayla kolayca başlatabilirsiniz.
+
+  * **Örnek:** Basit bir renk bilgisi yapısı.
+
+<!-- end list -->
+
+```cpp
+#include <string>
+
+// Bu bir "agrega" struct'tır.
+struct RenkBilgisi 
+{
+    std::string ad;
+    int kirmizi;
+    int yesil;
+    int mavi;
+};
+
+int main() 
+{
+    // Agrega Başlatma: Üyeleri sırayla süslü parantezlerle atama
+    RenkBilgisi kirmizi_renk = {"Kırmızı", 255, 0, 0};
+    std::cout << "Renk: " << kirmizi_renk.ad 
+              << " RGB: (" << kirmizi_renk.kirmizi << "," 
+              << kirmizi_renk.yesil << "," << kirmizi_renk.mavi << ")" << std::endl;
+
+    // Kendi kurucusu olsaydı bu şekilde başlatılamazdı.
+}
+```
+
+-----
+
+## **Rule of Zero:** “özel üye fonksiyonları yazma” felsefesidir. 
+
+Eğer sınıfınız **ham kaynak (ham işaretçi, dosya tanıtıcısı vb.) yönetmiyorsa**, **destructor, copy/move constructor ve assignment operator yazmayın**, derleyicinin oluşturmasına izin verin.
+
+-----
+
+## Mülakat Sorusu:
+
+* **Soru:** Hangi durumda derleyici bir sınıfın "special member function"unu default eder ve nasıl default eder?
+
+* **Cevap:** Eğer kullanıcı tarafından özel olarak tanımlanmadıysa, derleyici otomatik olarak (dolaylı şekilde) varsayılan constructor, copy constructor, copy assignment operator, destructor ve move fonksiyonlarını default olarak sağlar. Eğer sınıfta özel bir üye fonksiyon tanımlanırsa, ilgili default fonksiyonlar otomatik olarak oluşturulmayabilir. İstenirse ```= default``` ile açıkça default edilmesi sağlanır.

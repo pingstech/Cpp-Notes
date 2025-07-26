@@ -1,291 +1,634 @@
 # 6.Ders
-## ```constexpr``` Functions
 
-```constexpr``` anahtar kelimesi, sadece sabitler (constants) ile değil, fonksiyon tanımlarında da kullanılabilir. Bu tür fonksiyonlar, yalnızca **derleme zamanında** hesaplanabilen işlemler içerir.
+**Eğitimin 9. Dersidir.**
 
-- ```constexpr``` ile işaretlenmiş fonksiyonlar, **derleme zamanında** hesaplanabilir. Bu, programın çalışması sırasında değil, derleme aşamasında hesaplanan sonuçların kullanılmasını sağlar.
+## Class
 
-- ```constexpr``` fonksiyonlar yalnızca **sabit ifadelerle** çalışabilir. Fonksiyonun tamamı **sabit değerlere** dayanmalıdır.
+Bir tür veri yapısıdır ve iki ana bileşenden oluşur:
+- **Veri üyeleri (data members)**: Bir sınıfın içindeki değişkenlerdir.
+- **Fonksiyon üyeleri (member functions)**: Bu değişkenler üzerinde işlem yapan fonksiyonlardır.
 
-- ```constexpr``` fonksiyonlar, ```const``` fonksiyonlardan farklıdır. Bir const fonksiyon yalnızca bir nesnenin sabit olduğunu belirtirken, ```constexpr``` fonksiyonun değeri derleme zamanında hesaplanabilir.
+### Class Definition
 
-```cpp
-constexpr int x_func(int x)
-{
-    return x * x;
-}
-
-constexpr int y_func(int x)
-{
-    // Bu şekilde tanımlanmış bir fonksiyon, derleyici hatasına yol açar. 
-    // "Static" değişkenler, derleme zamanında hesaplanamadığı için, 
-    // "non-automatic storage" hatası oluşur. Çünkü statik değişkenlerin değeri runtime'da belirlenir.
-    static int y = x;
-    return y * y - 3;
-}
-
-```
-
-**NOT-1:** Her fonksiyon ```constexpr``` fonksiyonu olamaz.
-- ```constexpr```fonksiyonlar, statik ömürlü yerel değişkenler içeremez.
-
-**NOT-2:** Eğer bir fonksiyon, parametrelerine sabit ifadelerle çağrılırsa, fonksiyonun **geri dönüş değeri derleme zamanında** hesaplanır.
+Bir sınıf, ```class``` anahtar kelimesi ile tanımlanır.
 
 ```cpp
-constexpr int ndigit(int x)
+class my_class
 {
-    if (x == 0) { return 1; }
+    // Bu alana  "Class scope" denir. Bu bildirilen varlıklara bu "Class"ın öğeleri(elemanları) denir.
 
-    int digit_count{};
-
-    while (x)
+    class class_obj     // Type member
     {
-        ++digit_count;
-        x /= 10;
-    }
 
-    return digit_count;
-}
+    };
 
-constexpr bool isprime(int val)
-{
-    if (val < 2) { return false; }
+    void class_func();  // member function
 
-    if (val % 2 == 0) { return val == 2; }
-    if (val % 3 == 0) { return val == 3; }
-    if (val % 5 == 0) { return val == 5; }
-
-    for (int i{ 7 }; i * i <= val; i += 2)
-    {
-        if (val % i == 0) { return false; }        
-    }
-
-    return true;
-}
-
-int main()
-{
-    int a[ndigit(234234)]{};    // Sol taraftaki ifade ile "int a[6]{};" yazmamız arasında bir fark yoktur.  
-    
-    const int x = 1234;
-    const int y = 1234;
-
-    ndigit(x * y - 19); // Fonksiyon parametreleri sabit değerdir. Bundan dolayı bir hata ile karşılaşmayız.
-
-    const int z = 82345;
-    const int r = 12191;
-
-    constexpr auto b = isprime (z + r - 19);
+    int class_var;      // Data member
 }
 ```
 
----
+**Bir sınıf aşağıdaki özelliklere sahiptir:**
 
-## ODR -One definition Rule (Tek tanımlama kuralı)
+1) **Veri Üyeleri (Data Members)**:
+    - Bir sınıf, değişkenlerin bulunduğu bir yapı olabilir. Bu değişkenler veri üyeleri olarak bilinir.
+    - Veri üyeleri private (özel) veya public (genel) olabilir.
 
-Bir öğenin (değişken, fonksiyon, sınıf, vb.) yalnızca **bir kez** tanımlanabileceğini belirten temel bir kuraldır. Bu kural, bir öğenin birden fazla tanımının **çakışmaması gerektiğini** garanti eder. Eğer bir öğe birden fazla kez tanımlanırsa, derleyici bir "**linker error**" verir.
+2) **Fonksiyon Üyeleri (Member Functions)**:
+    - Sınıf içindeki fonksiyonlar, sınıfın veri üyeleri üzerinde işlem yapmak için kullanılır.
+    - Bu fonksiyonlar da ```private``` veya ```public``` olabilir.
 
-- C++'ta bir fonksiyonun birden fazla tanımı olursa, bu ODR kuralını ihlal eder ve derleme zamanında hataya yol açar.
+3) **Nesne (Object)**:
+    - Sınıf, bir şablon sağlar; ancak bir sınıfın **nesneleri**, sınıfın örnekleridir.
+    - **Nesneler**, sınıfın veri ve fonksiyon üyelerini kullanabilir.
 
-```cpp
-// func.cpp dosyası
-#include <iostream>
-
-void foo() // Tanım 1
-{   
-    std::cout << "Hello from foo!" << std::endl;
-}
-
-int main() {
-    foo();
-    return 0;
-}
-
-// func_duplicate.cpp dosyası
-#include <iostream>
-
-void foo()  // Tanım 2, aynı fonksiyonu tekrar tanımlıyor
-{   
-    std::cout << "Hello from foo again!" << std::endl;
-}
-
-int main() 
-{
-    foo();
-    return 0;
-}
-```
-
-**NOT-1:** Yukarıdaki örnekte, ```foo()``` fonksiyonu **aynı adı taşıyan iki farklı dosyada** iki kez tanımlanmış. Bu durum **ODR kuralını** ihlal eder ve **linker error**'a neden olur. Derleyici **bu iki farklı tanımın çakıştığını** fark eder ve hata verir.
-
-**Doğru Kullanımı:**
+4) **Access Control (Erişim Kontrolü)**:
+    - ```public```: Sınıf dışından erişilebilir.
+    - ```private```: Yalnızca sınıf içinden erişilebilir.
+    - ```protected```: Bu erişim düzeyi, türetilmiş sınıfların erişmesine izin verir.
 
 ```cpp
-// foo.h (Başlık dosyası)
-#ifndef FOO_H
-#define FOO_H
-
-void foo();   // Fonksiyon bildirimi (declaration)
-
-#endif
-
-/* -------------------------------------- */
-
-// foo.cpp (Kaynak dosyası)
-#include "foo.h"
-#include <iostream>
-
-void foo()  // Fonksiyon tanımı (definition)
-{   
-    std::cout << "Hello from foo!" << std::endl;
-}
-
-/* -------------------------------------- */
-
-// main.cpp
-#include "foo.h"
-
-int main() 
-{
-    foo();
-    return 0;
-}
-```
-
-- ```foo.h``` başlık dosyasındaki **declaration** (bildirim) birden fazla dosyada paylaşılabilir.
-- ```foo.cpp``` dosyasındaki **definition** (tanım) sadece **bir dosyada** yapılmalıdır
-- Bu kullanım **ODR'yi ihlal etmez** çünkü fonksiyon sadece **bir kez tanımlanır**.
-
-
-```cpp
-// api.c dosyası
-inline int foo(int x, int y)
-{
-    return x * y + 5;
-}
-
-// app.c dosyası
-inline int foo(int x, int y)
-{
-    return x * y + 5;
-}
-```
-
-**NOT-3:** **inline anahtar** kelimesi ile tanımlanmış bir fonksiyon birden fazla dosya içerisinde tekrar edilebilir(token by token aynı olmalıdır). **ODR(One Definition Rule) ihlal edilmemiş olur**!
-
-### Hangi tanımlar ODR'yi ihlal etmez?
-
-1) **Inline fonksiyon** tanımları
-2) **Inline değişen** tanımları(C++17)
-3) **User-defined types** tanımları
-4) **```constexpr```** fonksiyonlar
-
----
-
-## Inline Expansion
-
-```inline``` anahtar kelimesiyle işaretlenmiş fonksiyonların **derleyici tarafından fonksiyon çağrısı** yerine **fonksiyonun içeriği**'nin **yerine yerleştirilmesi** işlemidir. Bu sayede **fonksiyon çağrısı yapılmaz**, bunun yerine fonksiyonun kodu **doğrudan** çağrıldığı yere eklenir.
-
-- ```inline``` fonksiyonlar, **küçük ve sıkça çağrılan** fonksiyonlar için genellikle kullanılır. **Büyük fonksiyonlar için** ```inline``` genişletmesi yapıldığında, **kod boyutunun** artmasına ve performansın **tersine etkilenmesine** yol açabilir.
-
-### Inline Expansion Nasıl Çalışır?
-
-- **Fonksiyon çağrısı yerine** fonksiyonun **gövdesi derleyici tarafından çağrıldığı yere eklenir**.
-- Fonksiyonun **gövdeleri** sadece **derleme zamanında** eklenir. Yani, runtime'da işleme yapılmaz.
-- **Inline fonksiyonlar**, genellikle **başlık dosyalarında tanımlanır**, çünkü şablonlar ve inline fonksiyonlar çoğu zaman birden fazla dosyada kullanılır.
-
-⚠️**NOT-1:** Fonksiyonun ```inline``` anahtar kelimesi ile tanımlanması, **inline expand** edileceği garantisi kesinlikle vermez!
-
-```cpp
-inline int add(int a, int b) // Inline fonksiyon tanımı
-{
-    return a + b;
-}
-
-int main() 
-{
-    int result = add(5, 3);  // Fonksiyon çağrısı yerine fonksiyon gövdesi yerleştirilir
-    std::cout << "Sum: " << result << std::endl;
-    return 0;
-}
-```
- 
-**NOT-2:** ```add``` fonksiyonu **inline** olarak işaretlenmiştir. Bu, derleyicinin fonksiyon çağrısını doğrudan fonksiyonun içeriğiyle **değiştirmesini** sağlar. Yani, ```add(5, 3)``` çağrısı yerine derleyici ```5 + 3``` işlemini doğrudan ekler.
-
-```cpp
-// api.h dosyası 
-
-inline int g = 10; // api.h dosyasını birden çok kere include edilse dahi run-time'da bir adet 'g' değişkeni oluşacak.
-
-```
-
-**NOT-3:** Yukarıda yapılmış olan tanım Cpp'ın 2017 standartı ile hayatımıza girmiştir. Global değişkenler için ```inline``` anahtar sözcüğü kullanılabiliyor.
-
----
-
-## Enumaration Types
-
-Sabit sayısal değerlerin isimlendirilmiş bir koleksiyonunu tanımlamak için kullanılan bir veri türüdür. **```enum```** türleri, bir grup sabit değeri isimlendirerek daha okunabilir ve yönetilebilir hale getirir.
-
-```cpp
-enum Color {Blue, Black, White, Pruple, Red}; // C'de kullanımı
-
-int main()
-{
-    Color my_color;
-    my_color = 3;   // C'de bu atama geçerlidir, fakat C++'da böyle bir atama yapılamaz! 
-                    // C++'da sadece enum türünde tanımlanmış bir değişkene, enum tipinde tanımlanmış bir değer atanabilir!
-}
-
-```
-
-### C++ dilinde(modern C++ öncesi), enum türlerinin istenmeyen özellikleri:
-
-1) Underliying-type'ın (baz tür) derleyiciye bağlı için enum türleri başlık dosyalarında incomplete type olarak kullanılamıyor.
-
-```cpp
-// api.h dosyası
-
-enum Color;
-
-struct Data
-{
-  //...
-  Color mc
+struct data_t 
+{ 
+    int a, b, c;
 };
 
-// Bu kod C'de geçerlidir fakat C++'da, enum türlerinin alt türlerinin derleyiciye bağlı olması nedeniyle, enum türlerinin incomplete-type olarak kullanılmasına engel olur.
-```
-
-2) Aritmetik türlerden, enum türlerine örtülü dönüşüm olmamasına rağmen farklı enum türleri arasında örtülü dönüşüm olmamasına rağmen farklı enum türlerinden aritmetik türlere örtülü dönüşüm var.
-
-```cpp
-enum Color {Blue, Black, White, Pruple, Red};
-enum Pos {On, Off, Hold};
-
 int main()
 {
-  Color c;
-  // ...
-  c = Off; // C++'da bu geçerli değil!
+    data_t _my_data;
+    _my_data.a = 10;        // Bu şekilde erişim sağlayacaktık.
 
-  Color my_color = Black;
-  int ival;
-  // ...
-  ival = mycolor; // C++'da bu geçerli!
+    data_t _my_data_p;    
+    data* p = &_my_data_p;  // Bu şekilde tanımlama yaparsak 2 şekilde erişim sağlayabiliriz.
+
+    (*p).a = 10;            // 1. erişim yoludur. Bir ifade de bir ismi '.' operatörünün sağında(qualified name) kullanmışsak, derleyici önce '.' operatörünün sol operandı olan ifadenin hangi sınıf türünden olduğunu anlayacak(sınıf türünden değilse "Syntax" hatası oluşacak). Sağ operandı olan ismi o sınıfın scope'u içerisinde arayacak(Scope içerisinde bulamazsa yine "Syntax" hatası oluşacak).
+    p->b = 12;              // 2. erişim yoludur. '.' operatörü ile aynı yolu izler fakat '->' operatörünün sol operandı muhakkak "sınıf türünden pointer" olmalıdır!
 }
 ```
 
-3) Enumaratörlerin ayrı bir scopeları yoktur.
+```cpp
+struct _my_str_t 
+{
+    int a, b, x;
+}
 
-```cpp 
+void func(_my_str_t * p) { }    // C'de bu şekilde erişim sağlıyorduk.
+
+class _my_class_t
+{
+    public:    
+        void func( );
+}   //            ^~~~~ "_my_class_t *" sınıfını burada her zaman gizli bir parametre olarak tutar.
+
+int main()
+{
+    struct _my_str_t real_my_str_t;
+    func(&real_my_str_t);
+
+    _my_class_t real_my_class_t;
+    real_my_class_t.func();
+}
+```
+
+### Access Control(Erişim Kontrolü)
+
+1) #### **```public``` (Genel):**
+
+    - ```public``` üyeler sınıf dışından erişilebilir.
+    - Bu üyeler, sınıf dışındaki herhangi bir fonksiyon veya nesne tarafından kullanılabilir.
+
+    **Örnek:**
+
+    ```cpp
+    class MyClass 
+    {
+        public:
+            int x;  // public veri üyesi
+
+            void setX(int value)    // public fonksiyon
+            {  
+                x = value;
+            }
+
+            int getX() // public fonksiyon
+            {  
+                return x;
+            }
+    };
+
+    int main() 
+    {
+        MyClass obj;  
+        obj.x = 10;  // public veri üyesine dışarıdan erişim
+        std::cout << "X değeri: " << obj.getX() << '\n';  // public fonksiyon kullanımı
+    }
+    ```
+    - Burada, ```x``` ```public``` olarak tanımlandığı için ```main``` fonksiyonunda dışarıdan erişilebilir.
+    - ```setX``` ve ```getX``` fonksiyonları da ```public``` olduğu için dışarıdan çağrılabilir.
+
+    ---
+
+2) #### **```private``` (Özel):**
+
+    - ```private``` üyeler sadece sınıfın içinde bulunan fonksiyonlar tarafından erişilebilir.
+    - ```private``` veriler, sınıf dışından erişilemez ve yalnızca sınıf içindeki fonksiyonlarla işlenebilir.
+
+    **Örnek:**
+
+    ```cpp
+    class MyClass 
+    {
+        private:
+            int x;  // private veri üyesi
+
+        public:
+            void setX(int value) // public fonksiyon
+            {  
+                x = value;
+            }
+
+            int getX() // public fonksiyon
+            {  
+                return x;
+            }
+    };
+
+    int main() 
+    {
+        MyClass obj;
+        // obj.x = 10;  // HATA! private veri üyelerine dışarıdan erişilemez
+        obj.setX(10);  // public fonksiyon ile erişim sağlanır
+        std::cout << "X değeri: " << obj.getX() << '\n';  // private veri üyesine erişim, public fonksiyon ile yapılır
+    }
+    ```
+    - ```x``` değişkeni ```private``` olarak tanımlanmıştır, bu nedenle ```main``` fonksiyonunda doğrudan erişilemez.
+
+    - Ancak ```setX``` ve ```getX``` gibi ```public``` fonksiyonlar kullanılarak erişim sağlanabilir.
+
+    ---
+
+3) #### **```protected``` (Korunmuş):**
+    - ```protected``` üyeler, sınıf dışından erişilemez, ancak bu üyeler türeyen sınıflar tarafından erişilebilir. Bu, kalıtım (inheritance) ile türetilen sınıflara erişim izni verir.
+
+    ```cpp
+    #include <iostream>
+    using namespace std;
+
+    class Base 
+    {
+        protected:
+            int x;  // protected veri üyesi
+
+        public:
+            void setX(int value) // public fonksiyon
+            {  
+                x = value;
+            }
+
+            int getX() // public fonksiyon
+            {  
+                return x;
+            }
+    };
+
+    class Derived : public Base 
+    {
+        public:
+            void display() 
+            {
+                std::cout << "X değeri (türetilmiş sınıf): " << x << '\n';  // protected üyeye erişim
+            }
+    };
+
+    int main() 
+    {
+        Derived obj;
+        obj.setX(10);  // Base sınıfının public fonksiyonu ile erişim
+        obj.display();  // Derived sınıfının fonksiyonu ile protected üyeye erişim
+    }
+    ```
+    - Burada, ```x``` ```protected``` olarak tanımlandığı için ```Base``` sınıfının dışında doğrudan erişilemez, ancak ```Derived``` sınıfından erişilebilir.
+
+    - ```setX``` fonksiyonu ```Base``` sınıfından çağrılabilir, bu da ```protected``` veriye dolaylı erişim sağlar.
+
+    ---
+
+| **Erişim Belirleyicisi** | **Erişim Durumu**                                     |
+| ------------------------ | ----------------------------------------------------- |
+| **`public`**             | Sınıf içinden ve dışından erişilebilir.               |
+| **`private`**            | Yalnızca sınıf içinden erişilebilir.                  |
+| **`protected`**          | Sınıf içinden ve türetilmiş sınıflardan erişilebilir. |
+
+### Member Function
+
+Bir sınıfın içine dahil edilmiş fonksiyonlardır ve bu fonksiyonlar sınıfın nesneleri üzerinde işlem yapar.
+
+```cpp
+// 
 // api.h dosyası
-enum traffic_light {Red, Yellow, Green};
+class _my_class()
+{
+    public:
+        void func();    // Sınıfın içinde tanımladığımız için "inline" anahtar kelimesi ile fonksiyonu göstermemize gerek yoktur. "Implicite inline" olarak orada bulunur.
+}
 
-// app.h dosyası
-enum screen_color {Magenta, White, Black, Red};
+inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığımız için "inline" kullanmak zorundayız.
+```
 
-// Her iki başlık dosyası include edildiğinde, "Red" in ayrı bir scope'u olmadığı için bu kod derlendiğinde "Syntax hatası" olur.
+1) **Temel Bildirim ve Tanım:**
+
+    ```cpp
+    class Araba 
+    {
+        public: // Erişim belirleyici
+            // Üye fonksiyon bildirimi (declaration)
+            void hizlan(int artis);
+
+            // Inline tanım (doğrudan sınıf içinde)
+            void frenYap() 
+            {
+                hiz -= 10;
+                if (hiz < 0) hiz = 0; // Hız negatif olamaz
+            }
+
+        private:
+            int hiz = 0; // Üye değişken
+    };
+
+    // Sınıf dışında tanım (definition) → "Araba::" scope'u zorunlu!
+    void Araba::hizlan(int artis) {
+        hiz += artis; // Üye değişkene doğrudan erişim
+    }
+    ```
+    ---
+
+2) **Erişim Kuralları(```public``` vs ```private```):**  
+
+    Üye fonksiyonların dışarıdan çağrılabilmesi için public olmalıdır.
+
+    ```cpp
+    int main() 
+    {
+        Araba tesla;
+        tesla.hizlan(50); // public → Geçerli
+        tesla.frenYap();   // public → Geçerli
+
+        // tesla.hiz = 100; // HATA! private üyeye dışarıdan erişilemez
+        // Üye değişkenlere sadece sınıfın KENDİ fonksiyonları erişebilir.
+    }
+    ```
+    ---
+
+3) **```const``` Üye Fonksiyonlar:**
+
+    Nesnenin durumunu değiştirmeyen fonksiyonlar ```const``` ile işaretlenir.
+
+    ```cpp
+    class Araba 
+    {
+        public:
+            // 3.1 const üye fonksiyon → içeride üye değişken değiştirilemez
+            int mevcutHiz() const {
+                // hiz = 0; // HATA! const fonksiyon içinde üye değiştirilemez
+                return hiz;
+            }
+
+        private:
+            int hiz;
+    };
+
+    int main() 
+    {
+        const Araba sabitAraba; // const nesne
+        // sabitAraba.hizlan(10); // HATA! const nesne sadece const fonksiyon çağırabilir
+        sabitAraba.mevcutHiz(); // Geçerli (const fonksiyon)
+    }
+    ```
+    ---
+
+4) **```static``` Üye Fonksiyonlar:**
+
+    Nesneye değil, sınıfa ait fonksiyonlar. İçeride this yoktur.
+
+    ```cpp
+    class Araba 
+    {
+        public:
+            static int toplamArabaSayisi() 
+            {
+                return sayac; // Sadece static üyelere erişebilir
+            }
+
+            Araba() { sayac++; } // Kurucu (constructor)
+
+        private:
+            static int sayac; // Sınıf genelinde paylaşılan değişken
+    };
+
+    int Araba::sayac = 0; // Static değişkenin tanımı (zorunlu)
+
+    int main() 
+    {
+        Araba a1, a2;
+        // Nesne olmadan çağırma
+        std::cout << Araba::toplamArabaSayisi(); // Çıktı: 2
+    }
+    ```
+    ---
+
+5) **Tanım Yerleri: Inline vs Dışarıda**
+
+    - **Inline**: Sınıf içinde tanım → Derleyici optimizasyonu.
+    - **Dışarıda**: Büyük fonksiyonlar için → ```SınıfAdı::fonksiyon``` syntax'ı zorunlu.
+
+    ```cpp
+    class Araba 
+    {
+        public:
+            void korna_cal(); // Sadece bildirim
+    };
+
+    // Dışarıda tanım → "Araba::" unutulursa LINK HATASI!
+    void Araba::korna_cal() {
+        std::cout << "Beep!";
+    }
+    ```
+---
+
+**Özet Tablo: Kritik Kurallar**
+| Özellik             | Syntax Kuralı                         | Sık Hata                     |
+|---------------------|---------------------------------------|------------------------------|
+| **Sınıf Dışı Tanım**| `void Sınıf::fonksiyon() { ... }`     | `Sınıf::` unutma → Tanımsızlık hatası! |
+| **`const` Fonksiyon**| `int get() const { ... }`            | `const` nesneler için zorunlu |
+| **`static` Fonksiyon**| `static void foo();` → `this` yok!  | Static üye değişken gerektirir |
+| **Erişim**          | `private` fonksiyon → Sadece sınıf içi | Dışarıdan çağırma hatası    |
+
+> ✅ **En İyi Uygulama:**  
+> - Nesne durumu değişmiyorsa **`const`** ekle.  
+> - Sınıf geneli işlemler için **`static`** kullan.  
+> - Büyük fonksiyonları **sınıf dışında tanımla** (kod okunabilirliği).
+
+#### Member Function ile Function Overloading:**
+
+```cpp
+class Calculator 
+{
+    public:
+        // İki tam sayıyı toplayan fonksiyon
+        int add(int a, int b) { return a + b; }
+
+        // İki ondalıklı sayıyı toplayan fonksiyon
+        double add(double a, double b) { return a + b; }
+
+        // Üç tam sayıyı toplayan fonksiyon
+        int add(int a, int b, int c) { return a + b + c; }
+        
+        // Varsayılan argüman ile tanımlanmış beş sayıyı toplayan fonksiyon
+        int add(int a, int b, int c, int d, int e = 10) { return a + b + c + d + e; }
+};
+
+int add(double a, int b) { return a + b; }      // Bu fonkisyon "function overloading" değildir. Farklı scope'taki fonkisyonlar birbirlerini overload etmezler!
+
+int main() 
+{
+    Calculator calc;  // Calculator sınıfından bir nesne oluşturuluyor
+
+    std::cout << "2 + 3 = " << calc.add(2, 3) << '\n';                          // int türündeki add fonksiyonu çağrılır
+    std::cout << "2.5 + 3.5 = " << calc.add(2.5, 3.5) << '\n';                  // double türündeki add fonksiyonu çağrılır
+    std::cout << "1 + 2 + 3 = " << calc.add(1, 2, 3) << '\n';                   // Üç parametreli add fonksiyonu çağrılır
+    
+    std::cout << "1 + 2 + 3 + 4 = " << calc.add(1, 2, 3, 4) << '\n';            // Beş parametreli add fonksiyonu çağrılır
+    
+    std::cout << "1 + 2 + 3 + 4 + 5 = " << calc.add(1, 2, 3, 4, 5) << '\n';     // Beş parametreli add fonksiyonu çağrılır
+}
+```
+
+**NOT-1:** **Member functions(üye fonksiyonlar)** bulundukları scope içerisinde **redeclaration(yeniden tanımlama) yapılamazlar!** **Syntax hatasına** yol açar.
+
+
+```cpp
+class my_class
+{
+    private:
+        int foo(double);    // Function overloading gerçekleşir
+        int foo(int);       // Function overloading gerçekleşir fakat "public" kısmında redeclaration yapıldığı için "Syntax" hatası verir
+    public:
+        int foo(int);       // Function overloading gerçekleşir fakat "private" kısmında redeclaration yapıldığı için "Syntax" hatası verir 
+}
+```
+
+```cpp
+class my_class
+{
+    private:
+        int foo(int);
+    public:
+        int foo(double);
+}
+// Önce look-up, sonra context kontrolü en sonra access kontrolü yapılır.
+int main()
+{
+    my_class _class;
+
+    _class.foo(12); // Derleyici bir fonksiyonu çağırırken önce look-up table, sonra "context" kontrolü daha sonra ise "access" kontorlü gerçekleştirdiği için. Bu Fonksiyon "syntax" hatası oluşturacak.
+
+    //  Derleyici "private" kısmında tanımlanan fonksiyonu "exact match" olarak görecek ve bu fonksiyon seçilecektir fakat bu fonksiyon "access control" kısmından geçemeyeceği için "syntax" hatası bildirecektir.
+}
 ```
 
 ---
+
+### C++'da İsim Arama(Name Lookup) Mantığı
+
+1) #### Kapsam(Scope):
+
+    İsim aramanın en temel prensibi kapsamdır (scope). Bir ismin tanımlı olduğu bölgeye "kapsam" denir. C++'da çeşitli kapsam türleri bulunur:
+
+    - **Yerel Kapsam (Local Scope)**: Bir fonksiyon veya kod bloğu (```{}```) içinde tanımlanan isimler sadece o blok içinde görünürdür.
+
+        ```cpp
+        void myFunction() 
+        {
+            int x = 10; // 'x' yerel kapsamda
+            // ...
+        } // 'x' burada kapsam dışına çıkar
+        ```
+
+    - **Sınıf Kapsamı (Class Scope)**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
+
+        ```cpp
+        class MyClass 
+        {
+            public:
+                int value; // 'value' sınıf kapsamda
+                void printValue() 
+                {
+                    // ...
+                }
+        };
+        ```
+
+    - **Namespace Kapsamı (Namespace Scope)**: Bir namespace içinde tanımlanan isimler sadece o ```namespace``` içinde veya ```using``` bildirimi ile erişilebilir.
+
+        ```cpp
+        namespace MyNamespace 
+        {
+            int globalVar; // 'globalVar' MyNamespace kapsamda
+        }
+        ```
+
+    - **Global Kapsam (Global Scope)**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
+
+        ```cpp
+        int programId; // 'programId' global kapsamda
+        ```
+
+        Derleyici, bir ismi ararken öncelikle o ismin kullanıldığı mevcut **iç kapsamlardan dış kapsamlara doğru** arama yapar.
+
+2) #### Bağımlı Olmayan İsim Arama (Unqualified Name Lookup):
+
+    Bir ismin önüne ```::``` (kapsam çözümleme operatörü) veya bir sınıf/namespace adı gibi bir niteleyici koymadan arandığı durumdur. Derleyici, bu durumda şu sırayı takip eder:
+
+    - İsmin kullanıldığı **mevcut kapsam** (fonksiyon bloğu, sınıf üye fonksiyonu vb.).
+    - Mevcut kapsamı çevreleyen **dış kapsamlar** (iç içe fonksiyon blokları, ana fonksiyon, sınıfın kendisi).
+    - Dosya kapsamı (global veya namespace).
+
+    İlk bulduğu geçerli tanımı kullanır. Eğer aynı isim birden fazla kapsamda tanımlıysa, **en içteki kapsamdaki tanım öncelik alır**.
+
+    ```cpp
+    int global_data = 10; // Global kapsam
+
+    class MyClass {
+    public:
+        int class_data = 20; // Sınıf kapsamı
+
+        void printData() {
+            int local_data = 30; // Yerel kapsam
+
+            std::cout << local_data << std::endl; // Çıktı: 30 (Yerel olan öncelikli)
+            std::cout << class_data << std::endl; // Çıktı: 20 (Sınıf üyesi)
+            std::cout << global_data << std::endl; // Çıktı: 10 (Global olan)
+        }
+    };
+
+    int main() {
+        MyClass obj;
+        obj.printData();
+        // std::cout << local_data << std::endl; // Hata! 'local_data' burada görünür değil.
+    }
+    ```
+
+3) #### Bağımlı İsim Arama (Qualified Name Lookup)
+
+    Bir ismin önüne ```::``` operatörü ile bir sınıf veya namespace adı (```NamespaceAdi::isim``` veya ```SinifAdi::isim```) gibi bir **niteleyici (qualifier)** koyularak arandığı durumdur. Bu durumda derleyici, aramayı sadece belirtilen sınıfın veya namespace'in içinde yapar.
+
+    ```cpp
+    namespace MyLibrary { int value = 100; }
+
+    class MyOtherClass 
+    {
+        public:
+            int value = 200;
+            void printValues() 
+            {
+                std::cout << value << std::endl; // Kendi sınıfının 'value'su: 200
+                std::cout << MyLibrary::value << std::endl; // MyLibrary'deki 'value': 100
+            }
+    };
+
+    int main() 
+    {
+        MyOtherClass obj;
+        obj.printValues();
+    }
+    ```
+
+4) #### Bağımlı Argüman Arama (Argument-Dependent Lookup - ADL / Koenig Lookup)
+
+    Bu özel bir isim arama türüdür ve özellikle operatör aşırı yüklemeleri ve fonksiyon şablonları için önemlidir. Bir fonksiyon çağrıldığında, eğer fonksiyon ismi niteleyici olmadan kullanılırsa (```func(arg)```), derleyici sadece mevcut kapsamda arama yapmakla kalmaz, aynı zamanda fonksiyonun argümanlarının tiplerinin tanımlandığı namespace'leri de arar.
+
+    ```cpp
+    namespace N 
+    {
+        struct S {};
+        void f(S) { std::cout << "N::f(S) çağrıldı" << std::endl; }
+    }
+
+    void f(int) { std::cout << "global f(int) çağrıldı" << std::endl; }
+
+    int main() 
+    {
+        N::S s_obj;
+        f(s_obj); // Çıktı: N::f(S) çağrıldı. ADL sayesinde 'N::f' bulundu.
+        f(5);     // Çıktı: global f(int) çağrıldı.
+    }
+    ```
+
+    Burada ```f(s_obj)``` çağrısında, ```f``` fonksiyonu ```N::f``` olarak doğrudan nitelenmediği halde, argüman olan ```s_obj```'nin tipi ```N::S``` olduğu için derleyici ```N``` namespace'ini de arar ve ```N::f(S)```'i bulur.
+
+
+#### Detaylı Örnek:
+
+    ```cpp
+    class my_class
+    {
+        private:
+            int x;              // Sınıfın private veri üyesi 'x'
+        public:
+            void foo();         // my_class'ın üye fonksiyonu
+    };
+
+    int x = 45;                 // Global kapsamdaki 'x' değişkeni
+
+    void my_class::foo()        // my_class'ın foo() fonksiyonunun tanımı
+    {
+        int x = 67;             // foo() fonksiyonunun yerel kapsamındaki 'x' değişkeni
+        
+        my_class::x = x + ::x;  // İşlemin yapıldığı kritik satır
+    }
+    ```
+
+**```my_class::x = x + ::x;``` ifadesi bu durumda şu anlama gelir:**
+
+```my_class``` sınıfının üyesi olan ```x``` = (```foo()``` fonksiyonunun yerel ```x```'i) + (```global x```'i) şeklinde nitelendirilir. Şimdi buradaki değerleriyerine koyarsak
+
+- ```my_class::x``` = ```67``` + ```45```
+- ```my_class::x``` = ```112```
+
+---
+
+### Class Kullanımına Ait Ekstra Notlar:
+
+1) **Erişim belirleyici kullanmadan sınıf tanımlama:**
+
+    ```cpp
+    class _my_class
+    {
+        // Bu scope'ta "private" veya"public" anahtar sözcüğü kullanılmamışsa ve "class" anahtar sözcüğü kullanılarak sınıf oluşturulmışsa, Class'ın sınıfı "private" olur
+    }
+
+    struct _my_struct
+    {
+        // Struct anahtar sözcüğü ile sınıf tanımlanmışsa sınıf "public" olur
+    }
+    ```
+
+2) **Mülakat sorusu-1:** 
+
+    C++' bir sınıfın **```public``` interface**'i: sadece sınıfın **```public``` bölümü değil**, sınıfın **```public``` bölümündeki öğeler + başlık dosyasındaki(headre file) ```global``` bildirimlerdir**.
+
+3) **Sınıf scope içinde aynı isimli değişken tanımlama:**
+    Bir **syntax hatasıdır**. Bir sınıfın scope'u içerisinde **aynı isimli** bir **değişken** tanımlanamaz. 
+    
+    Sınıfın ```public```, ```private``` ve ```protected``` bölümleri yani erişim ayrıcalıklı kod alanları **bir scope değildir**.
+
+    ```cpp
+    class _my_class
+    {
+        private:
+            int var;
+        
+        public:
+            double var; // Syntax hatası oluşur.
+    }
+    ```

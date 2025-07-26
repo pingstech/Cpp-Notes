@@ -3,7 +3,7 @@
 **Note:** The first four lessons will be added as soon as possible.
 
 ```
-├── 05-Lesson.md
+├── 02-Lesson.md
 │   ├── Decltype Operatörü
 │   │   ├── İsim Operandı Kuralları
 │   │   └── İfade Operandı Kuralları (Value Category)
@@ -18,7 +18,7 @@
 │       ├── Derleme Zamanı Sabitleri
 │       └── Runtime İşlem Kısıtlamaları
 │
-├── 06-Lesson.md
+├── 03-Lesson.md
 │   ├── constexpr Fonksiyonlar
 │   │   ├── Derleme Zamanı Hesaplama
 │   │   └── Statik Değişken Kısıtlaması
@@ -32,7 +32,7 @@
 │       ├── C-Style Enum Kısıtlamaları
 │       └── Tür Güvenliği Sorunları
 │
-├── 07-Lesson.md
+├── 04-Lesson.md
 │   ├── Scope Enum
 │   │   ├── enum class Sözdizimi
 │   │   ├── Underlying Type Belirleme
@@ -51,7 +51,7 @@
 │   └── [[nodiscard]] Attribute
 │       └── Geri Dönüş Değeri Zorunluluğu
 │
-├── 08-Lesson.md
+├── 05-Lesson.md
 │   ├── Function Overloading Temelleri
 │   │   ├── Parametre Türü/Sayısı Farkları
 │   │   └── Geri Dönüş Türü Kısıtlaması
@@ -64,7 +64,7 @@
 │       ├── const/Referans Aşırı Yüklemesi
 │       └── Bool/Pointer Çözümlemesi
 │
-├── 09-Lesson.md
+├── 06-Lesson.md
 │   ├── Class Anatomisi
 │   │   ├── Veri Üyeleri (Data Members)
 │   │   └── Üye Fonksiyonlar (Member Functions)
@@ -80,7 +80,7 @@
 │       ├── Bağımlı İsim Arama (ADL)
 │       └── Global/Local Çakışma Çözümü
 │
-├── 10-Lesson.md
+├── 07-Lesson.md
 │   ├── this Pointer
 │   │   ├── Nesne Erişim Mekanizması
 │   │   ├── Zincirleme Çağrılar (Chaining)
@@ -90,7 +90,7 @@
 │       ├── const Nesne Kısıtlamaları
 │       └── mutable Anahtar Sözcüğü
 │
-├── 11-Lesson.md
+├── 08-Lesson.md
 │   ├── Constructor Functions (Yapıcı Fonkisyonlar)
 │   │   ├── Definition Rules
 │   │   ├── Parameterized Constructor
@@ -111,7 +111,7 @@
 │       ├── Examples (Smart Pointers, fstream, lock_guard)
 │       └── Custom RAII Class
 │
-├── 12-Lesson.md
+├── 09-Lesson.md
 │   ├── Memory Management: `new` and `delete`
 │   │   ├── Single Object
 │   │   ├── Array
@@ -135,7 +135,7 @@
 │   │   └── Aggregate
 │   └── Rule of Zero
 │
-└── 13-Lesson.md
+└── 10-Lesson.md
     ├── Copy Assignment
     │   ├── Syntax
     │   ├── When Called
