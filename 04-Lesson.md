@@ -1,7 +1,5 @@
 # 4.Ders
 
-**Eğitimin 7. Dersidir.**
-
 ## Scope Enum
 
 Enum türlerini **daha güvenli ve anlaşılır** hale getirmek için C++11 ile eklenmiş bir özelliktir. **```enum class```**, enum türlerinin **global alanda birbirine çakışmasını engeller** ve güçlü tür denetimi sağlar. Bu, büyük projelerde kodun okunabilirliğini artırır ve hata olasılıklarını azaltır.

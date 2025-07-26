@@ -1,7 +1,5 @@
 # 3.Ders
 
-**Eğitimin 6. Dersidir.**
-
 ## ```constexpr``` Functions
 
 ```constexpr``` anahtar kelimesi, sadece sabitler (constants) ile değil, fonksiyon tanımlarında da kullanılabilir. Bu tür fonksiyonlar, yalnızca **derleme zamanında** hesaplanabilen işlemler içerir.

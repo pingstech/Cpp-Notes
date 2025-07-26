@@ -1,7 +1,5 @@
 # 5.Ders
 
-**Eğitimin 8. Dersidir.**
-
 ## Function Overloading
 
 Farklı parametrelerle aynı isme sahip fonksiyonlar oluşturmanıza olanak tanır. Bu, fonksiyonlar arasında parametre türü veya sayısı gibi farklar olabilir.

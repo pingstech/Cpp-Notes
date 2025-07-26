@@ -1,7 +1,5 @@
 # 9. Ders:
 
-**Eğitimin 12. Dersidir.**
-
 ## Class
 
 ### Bellek Yönetimi: `new` ve `delete`

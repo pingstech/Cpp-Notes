@@ -1,7 +1,5 @@
 # 6.Ders
 
-**Eğitimin 9. Dersidir.**
-
 ## Class
 
 Bir tür veri yapısıdır ve iki ana bileşenden oluşur:

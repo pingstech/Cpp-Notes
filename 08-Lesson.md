@@ -1,7 +1,5 @@
 # 8.Ders
 
-**Eğitimin 11. Dersidir.**
-
 ## Class
 
 ### Constructor Functions(Yapıcı Fonkisyonlar)

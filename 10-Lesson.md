@@ -1,7 +1,5 @@
 # 10. Ders
 
-**Eğitimin 13. Dersidir.**
-
 ## Class
 
 ### Özel Üye Fonksiyonları(Special Member Function)

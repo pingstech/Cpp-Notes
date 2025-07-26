@@ -1,7 +1,5 @@
 # 7.Ders
 
-**Eğitimin 10. Dersidir.**
-
 ## Class
 
 ### ```this``` Keyword(Anahtar Kelimesi):
