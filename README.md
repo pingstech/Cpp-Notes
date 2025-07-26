@@ -1,7 +1,5 @@
 # Contents of Cpp Notes
 
-**Note:** The first four lessons will be added as soon as possible.
-
 ```
 ├── 01-Lesson.md
 │   ├── Genel C++ Kavramları, Pointer'lar ve Referanslar
