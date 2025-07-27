@@ -315,4 +315,163 @@ Taşınmış duruma geçen bir nesnenin önceki kaynaklarını (örneğin, `data
 
 -----
 
-01.25'de kaldım
+### Conversion Constructor (Dönüşüm Yapıcısı)
+
+**Giriş:**
+C++'da, bir sınıfın nesnesini, farklı bir veri tipinden (örneğin, bir `int` veya `std::string`) otomatik olarak oluşturmaya olanak tanıyan özel yapıcılara **"Dönüşüm Yapıcısı" (Conversion Constructor)** denir. Bu yapıcılar, belirli durumlarda türler arası otomatik dönüşümlere izin verir.
+
+-----
+
+#### Dönüşüm Yapıcısı Nedir?
+
+Bir dönüşüm yapıcısı, **tek bir parametre alan** (veya ilk parametresi tek bir zorunlu argüman olan ve kalanları varsayılan değerli olan) bir yapıcıdır. Bu tek parametre, yapıcının ait olduğu sınıftan farklı bir türdedir. Derleyici, bu türde bir değerden sınıfın bir nesnesini otomatik olarak oluşturmak için bu yapıcıyı kullanabilir.
+
+**Örnek:**
+Aşağıdaki `my_number` sınıfı, bir `int` değerinden otomatik olarak nasıl oluşturulabileceğini gösteriyor.
+
+```cpp
+#include <iostream>
+
+class my_number 
+{
+private:
+    int value_; // Sınıfın tuttuğu sayı değeri
+
+public:
+    // Dönüşüm Yapıcısı: int türünden my_number nesnesi oluşturur.
+    // Tek bir parametre (int) aldığı için dönüşüm yapıcısı olarak görev yapar.
+    my_number(int val) : value_(val) 
+    {
+        std::cout << "Conversion Constructor: my_number(" << value_ << ") created." << std::endl;
+    }
+
+    // Normal Yapıcı (opsiyonel, sadece karışıklığı önlemek için ek bilgi)
+    my_number() : value_(0) 
+    {
+        std::cout << "Default Constructor: my_number() created." << std::endl;
+    }
+
+    // Değeri yazdıran yardımcı fonksiyon
+    void print_value() const { std::cout << "my_number Value: " << value_ << std::endl; }
+
+    // Toplama işlemi (örnek kullanım için)
+    my_number add(const my_number& other) const 
+    {
+        return my_number(this->value_ + other.value_); // Ara sonuç olarak yeni bir my_number döner
+    }
+};
+
+int main() 
+{
+    std::cout << "--- Main Başlangıcı ---" << std::endl;
+
+    // Durum 1: Doğrudan Dönüşüm Yapıcısını Çağırma
+    // Açıkça int değerinden my_number nesnesi oluşturulur.
+    my_number num1(10);
+    num1.print_value();
+
+    std::cout << "\n--- Durum 2: Otomatik Dönüşüm (Implicit Conversion) ---" << std::endl;
+    // '20' bir int değeridir. Derleyici, my_number'a bir int parametresi alan yapıcı
+    // olduğunu fark eder ve otomatik olarak my_number nesnesi oluşturur.
+    my_number num2 = 20; // my_number(20) çağrısı otomatik olarak yapılır.
+    num2.print_value();
+
+    std::cout << "\n--- Durum 3: Fonksiyon Çağrılarında Otomatik Dönüşüm ---" << std::endl;
+    // add fonksiyonu my_number nesnesi bekler.
+    // '5' int değeri otomatik olarak my_number(5) şeklinde dönüştürülür.
+    num1.add(5).print_value(); // my_number(10).add(my_number(5)) -> my_number(15)
+
+    std::cout << "\n--- Main Sonu ---" << std::endl;
+    return 0;
+}
+```
+
+#### Dönüşüm Yapıcısının Kullanım Amaçları ve Özellikleri:
+
+  * **Otomatik Tip Dönüşümü (Implicit Conversion):** En temel amacı, belirli bir türdeki değerden sınıfın bir nesnesini otomatik olarak oluşturulmasına izin vermektir. Bu, kodu daha kısa ve okunaklı hale getirebilir.
+  * **Esneklik:** Fonksiyonlara sınıfın kendi türünden nesne beklerken, farklı ama dönüştürülebilir bir türde argüman geçirilmesine olanak tanır.
+  * **Tek Parametre Kuralı:** Bir yapıcı, ancak **tek bir parametre** aldığında (veya ek parametrelerin varsayılan değerleri olduğunda) dönüşüm yapıcısı olarak kabul edilir.
+  * **`explicit` Anahtar Kelimesi:** Otomatik dönüşümleri istemediğinizde (`implicit conversion`), dönüşüm yapıcısının önüne `explicit` anahtar kelimesi koyarak bu dönüşümleri engelleyebilirsiniz. Bu durumda sadece doğrudan (`explicit`) oluşturmaya izin verilir.
+      * `explicit my_number(int val);` olarak tanımlansaydı, `my_number num2 = 20;` veya `num1.add(5);` satırları derleme hatası verirdi. Yalnızca `my_number num2(20);` veya `num1.add(my_number(5));` gibi açıkça dönüşüm belirtilen kullanımlara izin verilirdi.
+
+**⚠️ DİKKAT:**
+Otomatik dönüşüm yapıcıları bazen beklenmedik veya istenmeyen dönüşümlere yol açarak kodda mantık hatalarına neden olabilir. Bu yüzden, otomatik dönüşümlerin gerçekten faydalı ve güvenli olduğundan emin değilseniz, `explicit` anahtar kelimesini kullanmak iyi bir programlama pratiğidir.
+
+-----
+
+-----
+
+### Örtülü Dönüşüm Sekansları (Implicit Conversion Sequences)
+
+**Giriş:**
+C++ derleyicisi, belirli durumlarda bir veri tipini başka bir veri tipine sizin açıkça belirtmenize gerek kalmadan otomatik olarak dönüştürebilir. Bu otomatik dönüşümlere **örtülü dönüşüm (implicit conversion)** denir. Ancak, bu dönüşümler rastgele yapılmaz; belirli kurallara ve sekanslara (sıralamalara) uyarlar.
+
+-----
+
+#### Temel Kavramlar:
+
+1.  **Standart Dönüşüm (Standard Conversion):** C++ dilinin kendiliğinden yapabildiği temel tip dönüşümleridir. Bunlar şunları içerir:
+
+      * **Kimlik Dönüşümü (Identity Conversion):** Tipi değiştirmeden yapılan "dönüşüm" (yani aynı tip).
+      * **Lvalue-to-Rvalue Dönüşümü:** Bir değişkenin değerini elde etme (örneğin, `int x = 5; int y = x;` burada `x`'in değeri `y`'ye atanmadan önce rvalue'ye dönüşür).
+      * **Nitelik Ekleme/Çıkarma (Qualification Conversion):** `const` veya `volatile` gibi niteleyicilerin eklenmesi (örneğin, `int`'ten `const int`'e).
+      * **Sayısal Yükseltmeler (Numeric Promotions):** Daha küçük tam sayı tiplerinin (`char`, `short`) `int`'e yükseltilmesi.
+      * **Sayısal Dönüşümler:** Farklı sayısal tipler arası dönüşümler (örneğin, `int`'ten `double`'a).
+
+2.  **Kullanıcı Tanımlı Dönüşüm (User-Defined Conversion):** Sizin bir sınıf içinde tanımladığınız özel dönüşümlerdir. İki ana yolu vardır:
+
+      * **Dönüşüm Yapıcısı (Conversion Constructor):** Tek bir parametre alan (veya ilk parametresi zorunlu olup kalanları varsayılan değerli olan) bir yapıcıdır. Bu yapıcı, kendi sınıfını başka bir tipten oluşturur. Örnekteki `B(A)` gibi.
+      * **Dönüşüm Operatörü (Conversion Operator):** Bir sınıfın nesnesini başka bir tipe dönüştürmek için kullanılan özel bir üye fonksiyondur (örneğin, `operator int() const;` gibi). (Bu örnekte kullanılmamıştır.)
+
+-----
+
+Derleyicinin **otomatik olarak (örtülü)** yapabileceği dönüşüm sekanslarının en fazla bir kullanıcı tanımlı dönüşüm içerebileceğini ifade eder. Bu, aşağıdaki iki ana yapıya izin verir:
+
+1.  **`user-defined conversion + standart conversion`**
+
+      * Önce bir kullanıcı tanımlı dönüşüm gerçekleşir (örneğin, bir dönüşüm yapıcısı çağrılır).
+      * Ardından, bu dönüşümün sonucunda oluşan tip, hedef tipe bir standart dönüşümle ulaşır.
+
+2.  **`standart conversion + user-defined conversion`**
+
+      * Önce başlangıçtaki tip, bir standart dönüşümle (örneğin, `const` eklenerek veya bir yükseltme yapılarak) başka bir tipe dönüşür.
+      * Ardından, bu standart dönüşümün sonucunda oluşan tip, bir kullanıcı tanımlı dönüşüm (örneğin, bir dönüşüm yapıcısı) ile hedef tipe ulaşır.
+
+Bu iki senaryoda da **yalnızca bir adet kullanıcı tanımlı dönüşüme** izin verilir. İki veya daha fazla kullanıcı tanımlı dönüşüm içeren bir zincir, derleyici tarafından otomatik olarak yapılmaz; açıkça belirtilmesi gerekir.
+
+-----
+
+**Örnek Üzerinden İnceleme:**
+
+Şimdi örneğinizdeki kodu bu kurallar ışığında inceleyelim:
+
+```cpp
+class A{}; // A sınıfı
+class B{
+public:
+    B();    // Varsayılan yapıcı
+    B(A);   // A sınıfından B sınıfına dönüşüm yapıcı (User-Defined Conversion)
+};
+
+int main() {
+    B bx = A{}; // <-- Burada dönüşüm gerçekleşiyor.
+}
+```
+
+**`B bx = A{};` Satırında Neler Oluyor?**
+
+1.  **`A{}`:** Bu ifade, bir `A` sınıfı nesnesi (geçici bir nesne) oluşturur. Bu, kaynak tipimizdir.
+
+2.  **`B bx = ...`:** `bx` adlı bir `B` sınıfı nesnesini başlatmaya çalışıyoruz. Bu, hedef tipimizdir.
+
+3.  Derleyici, `A` tipinden `B` tipine bir yol bulmaya çalışır:
+
+      * **Uygulanan Sekans:** **`user-defined conversion + standart conversion`** sekansı burada devreye girer.
+        1.  **Kullanıcı Tanımlı Dönüşüm (User-Defined Conversion):** `A` nesnesi, `B` sınıfının `B(A)` dönüşüm yapıcısı aracılığıyla bir `B` nesnesine dönüştürülür. (Yani, `B(A{})` çağrısı otomatik olarak yapılır.) Bu, sekansımızdaki tek kullanıcı tanımlı dönüşümdür.
+        2.  **Standart Dönüşüm (Standard Conversion):** `B(A{})` çağrısından dönen geçici `B` nesnesi (bir "prvalue") daha sonra `bx` adlı `B` nesnesini başlatmak için kullanılır. Bu, bir tür "kimlik dönüşümü" veya "prvalue'dan başlatma" gibi bir standart dönüşümdür.
+
+Derleyici, bu tek kullanıcı tanımlı dönüşümü içeren zinciri otomatik olarak yapabildiği için, `B bx = A{};` ifadesi hatasız bir şekilde derlenir ve çalışır.
+
+-----
+
+2.05'de kaldım
