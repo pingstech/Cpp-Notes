@@ -401,7 +401,7 @@ Otomatik dönüşüm yapıcıları bazen beklenmedik veya istenmeyen dönüşüm
 
 -----
 
-### Örtülü Dönüşüm Sekansları (Implicit Conversion Sequences)
+### Implicit Conversion Sequences (Örtülü Dönüşüm Sekansları)
 
 **Giriş:**
 C++ derleyicisi, belirli durumlarda bir veri tipini başka bir veri tipine sizin açıkça belirtmenize gerek kalmadan otomatik olarak dönüştürebilir. Bu otomatik dönüşümlere **örtülü dönüşüm (implicit conversion)** denir. Ancak, bu dönüşümler rastgele yapılmaz; belirli kurallara ve sekanslara (sıralamalara) uyarlar.
@@ -474,4 +474,113 @@ Derleyici, bu tek kullanıcı tanımlı dönüşümü içeren zinciri otomatik o
 
 -----
 
-2.05'de kaldım
+### Explicit Constructor (Açık Yapıcı)
+
+**Giriş:**
+C++'da bir **dönüşüm yapıcısı** (yani tek parametre alan bir yapıcı), otomatik (örtülü) tür dönüşümlerine izin verir. Ancak bu durum, bazen beklenmedik veya istenmeyen dönüşümlere yol açabilir. İşte bu istenmeyen örtülü dönüşümleri engellemek için **`explicit`** anahtar kelimesi kullanılır. Bir yapıcı `explicit` olarak işaretlendiğinde, yalnızca **açıkça (explicitly)** çağrıldığında kullanılabilir; örtülü dönüşümler için kullanılamaz.
+
+-----
+
+#### Explicit Constructor Nedir?
+
+`explicit` anahtar kelimesi, tek parametre alan bir yapıcıya uygulandığında, o yapıcının **örtülü dönüşümler (implicit conversions)** yapmasını engeller. Bu, derleyicinin belirli bir tipten sınıfın bir nesnesini otomatik olarak oluşturmasına izin vermez; nesneyi oluşturmak için her zaman açık bir çağrı veya açık bir tür dönüşümü (casting) gereklidir.
+
+**Örnek:**
+
+Aşağıdaki `MyItem` sınıfı, `explicit` anahtar kelimesinin bir dönüşüm yapıcısını nasıl etkilediğini gösteriyor:
+
+```cpp
+#include <iostream>
+#include <string>
+
+class my_item 
+{
+    private:
+        int item_value_; // Öğe değeri
+        std::string item_name_; // Öğe adı
+
+    public:
+        // Varsayılan yapıcı
+        my_item() : item_value_(0), item_name_("Default") { std::cout << "Default Constructor: " << item_name_ << " (" << item_value_ << ")" << std::endl; }
+
+        // Explicit Dönüşüm Yapıcısı: int türünden my_item nesnesi oluşturur.
+        // 'explicit' olduğu için, sadece açıkça çağrılabilir, örtülü dönüşümlere izin vermez.
+        explicit my_item(int val) : item_value_(val), item_name_("Item from int") { std::cout << "Explicit Constructor: " << item_name_ << " (" << item_value_ << ")" << std::endl; }
+
+        // String'den öğe oluşturan (explicit olmayan) bir yapıcı
+        my_item(const std::string& name) : item_value_(0), item_name_(name) { std::cout << "String Constructor: " << item_name_ << std::endl; }
+
+        // Değeri yazdıran yardımcı fonksiyon
+        void print_info() const {
+            std::cout << "MyItem Info: " << item_name_ << " (Value: " << item_value_ << ")" << std::endl; }
+
+        // Toplama işlemi için fonksiyon - my_item nesnesi bekler
+        // Not: my_item objesi beklediği için, int tipindeki argümanları örtülü dönüştürebiliriz.
+        // Ancak my_item(int) explicit olduğu için, bu tür örtülü dönüşümler engellenir.
+        my_item add_value(const my_item& other) const 
+        {
+            // Bu satırda, 'explicit' yapıcı kullanıldığı için, 'other.item_value_' doğrudan
+            // my_item'a örtülü olarak dönüştürülemez. Bu nedenle toplama işlemi için farklı bir yaklaşım gerekir.
+            // Basitlik adına, burada direkt int değerlerini topluyoruz.
+            return my_item(this->item_value_ + other.item_value_); // Dönen nesne için yine explicit çağrı gerekir
+        }
+};
+
+// my_item nesnesi bekleyen bir fonksiyon
+void process_item(my_item item) 
+{
+    std::cout << "Processing item: ";
+    item.print_info();
+}
+
+int main() 
+{
+    std::cout << "--- Main Başlangıcı ---" << std::endl;
+
+    // Durum 1: Explicit Yapıcının Doğrudan Çağrılması (Doğru Kullanım)
+    // Açıkça int değerinden my_item nesnesi oluşturulur.
+    my_item item1(10); // OK: Doğrudan başlatma
+    item1.print_info();
+
+    // Durum 2: Örtülü Dönüşümün Engellenmesi (Derleme Hatası)
+    // my_item(int) explicit olduğu için bu satır derleme hatası verir.
+    // my_item item2 = 20; // HATA: copy-initialization is not allowed for explicit constructors
+
+    // Durum 3: Açık Dönüşüm (Explicit Cast) Kullanarak Oluşturma (Doğru Kullanım)
+    // int değerini açıkça my_item tipine dönüştürüyoruz.
+    my_item item3 = static_cast<my_item>(30); // OK: Explicit cast
+    item3.print_info();
+
+    std::cout << "\n--- Durum 4: Fonksiyon Argümanı Olarak Örtülü Dönüşüm (Derleme Hatası) ---" << std::endl;
+    // process_item fonksiyonu my_item beklerken int gönderme.
+    // 'explicit' yapıcı olduğu için bu da derleme hatası verir.
+    // process_item(40); // HATA: implicit conversion not allowed
+
+    // Durum 5: Fonksiyon Argümanı Olarak Açık Dönüşüm (Doğru Kullanım)
+    process_item(my_item(50)); // OK: Doğrudan başlatma (geçici nesne oluşturarak)
+    process_item(static_cast<my_item>(60)); // OK: Explicit cast
+    
+    std::cout << "\n--- Durum 6: String Yapıcının Örtülü Kullanımı (Explicit Değil) ---" << std::endl;
+    my_item item_from_string = "Hello"; // OK: String constructor explicit değil
+    item_from_string.print_info();
+
+    std::cout << "\n--- Main Sonu ---" << std::endl;
+    return 0;
+}
+```
+
+#### Explicit Constructor'ın Kullanım Amaçları ve Özellikleri:
+
+  * **Ne Yapar?** Tek parametre alan bir yapıcıyı, sadece açıkça çağrılmaya zorlar. Örtülü (implicit) dönüşümleri tamamen engeller.
+  * **Neden Kullanılır?**
+      * **Belirsizlikleri Önler:** Derleyicinin farklı dönüşüm yolları arasında seçim yapmakta zorlandığı durumlarda belirsizliği ortadan kaldırır.
+      * **İstenmeyen Dönüşümleri Engeller:** Bazen otomatik dönüşümler mantıksal hatalara yol açabilir veya kodun okunabilirliğini düşürebilir. `explicit` kullanarak bu tür "kazara" dönüşümlerin önüne geçilir.
+      * **Kod Niyetini Açıkça Belirtir:** Bir dönüşümün sadece programcının bilinçli isteğiyle gerçekleşmesini sağlar.
+  * **Nasıl Çalışır?** Derleyici, bir `explicit` yapıcıyı aşağıdaki durumlarda kullanamaz:
+      * Kopyalama Başlatma (Copy Initialization): `MyItem item2 = 20;`
+      * Fonksiyon Argümanı Geçirme: `process_item(40);`
+      * Fonksiyon Dönüş Değeri: Bir fonksiyonun `MyItem` döndürmesi beklenirken `int` döndürülmesi.
+      * Aynı zamanda, `explicit` anahtar kelimesi sadece tek parametre alan yapıcılar için geçerlidir. Birden fazla parametre alan veya varsayılan yapıcılarda kullanılması anlamsızdır veya hataya yol açabilir.
+
+**⚠️ DİKKAT:**
+`explicit` sadece **örtülü** dönüşümleri engeller, **açık** dönüşümleri (`static_cast<my_item>(30)` veya `my_item(50)` gibi) engellemez. Bu sayede, gerekli durumlarda tipi dönüştürme esnekliği korunur ancak bu dönüşümün her zaman bilinçli bir eylem olduğu vurgulanır.
