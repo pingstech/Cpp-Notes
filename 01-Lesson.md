@@ -225,10 +225,110 @@ int main() {
 }
 ```
 
-**Değer Kategorileri:**
+### Değer Kategorileri (Value Categories)
 
-  * **L-Value**: Bellekte adı olan, yeniden erişilebilir değerlerdir. Örnek: `x`, `++x`, `arr[]`
-  * **R-Value**: Geçici, adı olmayan, tek kullanımlık değerlerdir. Örnek: `x++`, `42`, `foo()`
+Bir ifadelerin davranışı ve bellekteki temsili, "değer kategorileri" kavramıyla belirlenir. Bu kavram, hem dilin semantiğini anlamak hem de derleyicinin optimizasyonlarını kavrayabilmek için kritik öneme sahiptir.
+
+C++11 ile birlikte daha da zenginleşen bu yapı, modern C++'ın temel taşı olan **move semantics**, **perfect forwarding**, **std::move** gibi kavramların temelini oluşturur.
+
+### 1. Temel Kavramlar
+
+C++ ifadeleri, temel olarak iki ana kategoriye ayrılır:
+
+#### **1.1 glvalue (generalized lvalue)**
+Bir nesnenin bellekteki yerini temsil eder. Bu kategoriye hem klasik **lvalue** hem de **xvalue** dahildir.
+
+#### **1.2 prvalue (pure rvalue)**
+Geçici, isimlendirilmemiş değerleri temsil eder. Literaller, döndürülüp hemen kullanılan değerler bu sınıftadır.
+
+Bunlardan türeyen asıl kategoriler şunlardır:
+
+| Kategori  | Açıklama                                                       | Örnekler                          |
+|----------|----------------------------------------------------------------|-----------------------------------|
+| lvalue   | Bellekte bir adresi olan ve ismi olan değer                    | `x`, `foo() = 5`, `arr[i]`        |
+| xvalue   | Taşınabilir kaynaklar, belleği serbest bırakmaya uygun değerler| `std::move(x)`, `baz()`           |
+| prvalue  | Geçici değer, isimlendirilmemiş literal                        | `10`, `x + y`, `foo()`            |
+
+**Not:** Tüm lvalue'lar aynı zamanda glvalue'dir. xvalue'lar da glvalue'dir, ancak taşınabilirliğe uygundurlar.
+
+### 2. Fonksiyonlara Göre İnceleme
+
+```cpp
+int foo() { return 10; }                // prvalue döndürür
+int& bar() { static int x = 20; return x; } // lvalue döndürür
+int&& baz() { return 30; }              // prvalue döndürür, rvalue referansa bağlanabilir
+```
+
+- `foo()` çağrısı bir geçici değer döner: **prvalue**
+- `bar()` çağrısı bir isimli değişkenin referansını döner: **lvalue**
+- `baz()` fonksiyonu prvalue döner ama rvalue referans döndüğü için çağrı sonucu **xvalue** gibi işlenebilir.
+
+### 3. Uygulamalı Örnek Kod
+
+```cpp
+int main() {
+    int x = 5;                 // lvalue
+    int y = x;                 // x, lvalue olarak kullanılır
+    int z = 10;                // 10, prvalue
+
+    int& r1 = x;               // lvalue referansı, geçerli
+    // int& r2 = 10;           // HATA! prvalue, non-const lvalue referansa bağlanamaz
+
+    const int& r3 = 10;        // Geçerli. const lvalue referansı prvalue'ya bağlanabilir
+
+    int&& rr1 = 20;            // prvalue -> rvalue referans (rr1 = lvalue)
+    int&& rr2 = foo();         // foo() -> prvalue
+
+    int&& rr4 = std::move(x);  // std::move(x) -> xvalue
+
+    std::cout << "Değer Kategorileri\n";
+    std::cout << "-------------------\n";
+    std::cout << "İfade        | Kategori\n";
+    std::cout << "-------------|-----------\n";
+    std::cout << "x            | lvalue\n";
+    std::cout << "10           | prvalue\n";
+    std::cout << "x + 10       | prvalue\n";
+    std::cout << "++x          | lvalue\n";
+    std::cout << "x++          | prvalue\n";
+    std::cout << "bar()        | lvalue\n";
+    std::cout << "foo()        | prvalue\n";
+    std::cout << "std::move(x) | xvalue\n";
+
+    return 0;
+}
+```
+
+### 4. Değer Kategorisi Tablosu
+
+| İfade         | Kategori |
+|---------------|----------|
+| `x`           | lvalue   |
+| `10`          | prvalue  |
+| `x + 10`      | prvalue  |
+| `++x`         | lvalue   |
+| `x++`         | prvalue  |
+| `bar()`       | lvalue   |
+| `foo()`       | prvalue  |
+| `std::move(x)`| xvalue   |
+
+### 5. Profesyonel İpuçları
+
+- **prvalue** değerleri doğrudan rvalue referansına bağlayabilirsin (`int&& r = foo();`)
+- **lvalue**'lar sadece `T&` türüyle bağlanabilirken, **xvalue**'lar `T&&` ile uyumludur.
+- `std::move()` asla taşımayı garanti etmez — yalnızca "taşınabilir" olduğunu belirtir.
+- Bir değişkenin türü `T&&` olsa da, kendisi **lvalue** kabul edilir. Bu nedenle forwarding işlemlerinde `std::forward` tercih edilir.
+
+### 6. Uygulamalı Analoji
+
+- **lvalue**: Evdeki koltuk. Sabit bir yerleşimi vardır. Onu tanır ve tekrar kullanabilirsin.
+- **prvalue**: Pizza kuryesinden gelen tek kullanımlık pizza kutusu. Geçicidir.
+- **xvalue**: Taşınmak üzere hazırlanmış koltuk. Yeri bellidir ama artık elden çıkarılmak üzeredir.
+
+**NOT:**
+
+* **L-Value**: Bellekte adı olan, yeniden erişilebilir değerlerdir. Örnek: `x`, `++x`, `arr[]`
+* **R-Value**: Geçici, adı olmayan, tek kullanımlık değerlerdir. Örnek: `x++`, `42`, `foo()`
+---
 
 ### Type Deduction (Tip Çıkarımı)
 
