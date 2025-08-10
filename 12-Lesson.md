@@ -537,4 +537,4 @@ int main() {
 
 **Özetle:** RVO, derleyicinin kopya/taşıma işlemlerini ortadan kaldırmak için kullandığı daha geniş bir optimizasyon kategorisidir. NRVO ise, bu genel kategorinin, fonksiyon içindeki belirli bir adlandırılmış yerel değişkenin döndürüldüğü durumlar için geçerli olan özel bir türüdür. Her ikisi de performans iyileştirmeyi ve gereksiz nesne oluşturma/yok etme maliyetini azaltmayı hedefler.
 
-1.13'de kaldım
+1.45'de kaldım
