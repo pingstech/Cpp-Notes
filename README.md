@@ -20,11 +20,16 @@
 │   │   ├── Referans Türleri ve Bağlanma
 │   │   └── Pointer ve Referans Semantiği
 │   ├── Scope Kaçağı, Tip Çıkarımı ve `using`
-│   │   ├── Scope Kaçağı (Scope Leakage)
-│   │   ├── Değer Kategorileri
-│   │   ├── Type Deduction (Tip Çıkarımı)
-│   │   ├── `auto` ve `const` İlişkisi
-│   │   └── `Using`: `typedef` Alternatifi
+│   │   └── Scope Kaçağı (Scope Leakage)
+│   ├── Değer Kategorileri (Value Categories)
+│   │   ├── Kategori Hiyerarşisi
+│   │   ├── lvalue (Left-hand Value)
+│   │   ├── prvalue (Pure rvalue)
+│   │   ├── xvalue (eXpiring Value)
+│   │   └── Karma Kategoriler
+│   ├── Type Deduction (Tip Çıkarımı)
+│   ├── `auto` ve `const` İlişkisi
+│   ├── `Using`: `typedef` Alternatifi
 │   └── Referans Katlama (Reference Collapsing) ve Universal Referanslar
 │       └── Reference Collapsing (Referans Katlama)
 │

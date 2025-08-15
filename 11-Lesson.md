@@ -211,7 +211,6 @@ int main()
 
 ### Moved-From State (Taşınmış Nesne Durumu)
 
-**Giriş:**
 C++'da, bir nesnenin sahip olduğu kaynaklar (örneğin, dinamik bellek, dosya tanıtıcısı gibi) başka bir nesneye "taşındığında", orijinal nesne arkasında özel bir durumda kalır. Bu duruma **"Taşınmış Nesne Durumu" (Moved-From State)** denir. Bu durum, taşıma semantiği (move semantics) ile doğrudan ilgilidir ve kaynak yönetiminde önemlidir.
 
 -----
@@ -315,7 +314,6 @@ Taşınmış duruma geçen bir nesnenin önceki kaynaklarını (örneğin, `data
 
 ### Conversion Constructor (Dönüşüm Yapıcısı)
 
-**Giriş:**
 C++'da, bir sınıfın nesnesini, farklı bir veri tipinden (örneğin, bir `int` veya `std::string`) otomatik olarak oluşturmaya olanak tanıyan özel yapıcılara **"Dönüşüm Yapıcısı" (Conversion Constructor)** denir. Bu yapıcılar, belirli durumlarda türler arası otomatik dönüşümlere izin verir.
 
 -----
@@ -401,7 +399,6 @@ Otomatik dönüşüm yapıcıları bazen beklenmedik veya istenmeyen dönüşüm
 
 ### Implicit Conversion Sequences (Örtülü Dönüşüm Sekansları)
 
-**Giriş:**
 C++ derleyicisi, belirli durumlarda bir veri tipini başka bir veri tipine sizin açıkça belirtmenize gerek kalmadan otomatik olarak dönüştürebilir. Bu otomatik dönüşümlere **örtülü dönüşüm (implicit conversion)** denir. Ancak, bu dönüşümler rastgele yapılmaz; belirli kurallara ve sekanslara (sıralamalara) uyarlar.
 
 -----
@@ -474,7 +471,6 @@ Derleyici, bu tek kullanıcı tanımlı dönüşümü içeren zinciri otomatik o
 
 ### Explicit Constructor (Açık Yapıcı)
 
-**Giriş:**
 C++'da bir **dönüşüm yapıcısı** (yani tek parametre alan bir yapıcı), otomatik (örtülü) tür dönüşümlerine izin verir. Ancak bu durum, bazen beklenmedik veya istenmeyen dönüşümlere yol açabilir. İşte bu istenmeyen örtülü dönüşümleri engellemek için **`explicit`** anahtar kelimesi kullanılır. Bir yapıcı `explicit` olarak işaretlendiğinde, yalnızca **açıkça (explicitly)** çağrıldığında kullanılabilir; örtülü dönüşümler için kullanılamaz.
 
 -----

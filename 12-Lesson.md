@@ -2,7 +2,6 @@
 
 ### Copy Elision
 
-**Giriş:**
 **Copy Elision (Kopya İptali/Elemesi)**, C++ derleyicisinin gereksiz nesne kopyalama veya taşıma işlemlerini tamamen ortadan kaldırarak performansı artıran bir optimizasyondur. Nesne doğrudan nihai varış noktasında ("in-place") inşa edilir. C++17 standardından itibaren belirli Copy Elision senaryoları **zorunlu hale gelmiştir**. Eğitmeninizin bahsettiği durumları aşağıda inceleyelim:
 
 -----
@@ -245,7 +244,6 @@ Copy Elision, performans için kritik bir optimizasyondur. İlk iki durum (geçi
 
 ## Temporary Materialization
 
-**Giriş:**
 C++'da rvalue'ler (geçici değerler) normalde bellekte kalıcı bir konuma sahip değildir ve doğrudan adresleri alınamaz. Ancak, belirli durumlarda, özellikle C++17 ile birlikte, bir rvalue'nin bir `prvalue`'nin (pure rvalue) geçici bir nesneye dönüştürülerek bellekte bir konuma sahip olması sağlanır. Bu sürece **"Geçici Malzemeleştirme" (Temporary Materialization)** denir.
 
 -----

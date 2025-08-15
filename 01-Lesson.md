@@ -223,109 +223,228 @@ int main() {
 }
 ```
 
-### Değer Kategorileri (Value Categories)
+## Değer Kategorileri (Value Categories)
 
-Bir ifadelerin davranışı ve bellekteki temsili, "değer kategorileri" kavramıyla belirlenir. Bu kavram, hem dilin semantiğini anlamak hem de derleyicinin optimizasyonlarını kavrayabilmek için kritik öneme sahiptir.
+C++ dilinde her ifade (expression) **değer kategorileri** ile sınıflandırılır. Bu kategoriler, ifadelerin nasıl davranacağını ve bellekte nasıl temsil edileceğini belirler.
 
-C++11 ile birlikte daha da zenginleşen bu yapı, modern C++'ın temel taşı olan **move semantics**, **perfect forwarding**, **std::move** gibi kavramların temelini oluşturur.
+**Temel Soru:** Bir ifade bellekte sabit bir yere mi sahip, yoksa geçici mi?
 
-### 1. Temel Kavramlar
+---
 
-C++ ifadeleri, temel olarak iki ana kategoriye ayrılır:
+### Kategori Hiyerarşisi
 
-#### **1.1 glvalue (generalized lvalue)**
-Bir nesnenin bellekteki yerini temsil eder. Bu kategoriye hem klasik **lvalue** hem de **xvalue** dahildir.
-
-#### **1.2 prvalue (pure rvalue)**
-Geçici, isimlendirilmemiş değerleri temsil eder. Literaller, döndürülüp hemen kullanılan değerler bu sınıftadır.
-
-Bunlardan türeyen asıl kategoriler şunlardır:
-
-| Kategori  | Açıklama                                                       | Örnekler                          |
-|----------|----------------------------------------------------------------|-----------------------------------|
-| lvalue   | Bellekte bir adresi olan ve ismi olan değer                    | `x`, `foo() = 5`, `arr[i]`        |
-| xvalue   | Taşınabilir kaynaklar, belleği serbest bırakmaya uygun değerler| `std::move(x)`, `baz()`           |
-| prvalue  | Geçici değer, isimlendirilmemiş literal                        | `10`, `x + y`, `foo()`            |
-
-**Not:** Tüm lvalue'lar aynı zamanda glvalue'dir. xvalue'lar da glvalue'dir, ancak taşınabilirliğe uygundurlar.
-
-### 2. Fonksiyonlara Göre İnceleme
-
-```cpp
-int foo() { return 10; }                // prvalue döndürür
-int& bar() { static int x = 20; return x; } // lvalue döndürür
-int&& baz() { return 30; }              // prvalue döndürür, rvalue referansa bağlanabilir
+```
+           expression
+          /           \
+     glvalue           rvalue
+    /       \         /      \
+lvalue     xvalue  xvalue   prvalue
 ```
 
-- `foo()` çağrısı bir geçici değer döner: **prvalue**
-- `bar()` çağrısı bir isimli değişkenin referansını döner: **lvalue**
-- `baz()` fonksiyonu prvalue döner ama rvalue referans döndüğü için çağrı sonucu **xvalue** gibi işlenebilir.
+**Ana Kategoriler:**
+- **lvalue**: Bellekte sabit adresi olan
+- **prvalue**: Geçici, kimliği olmayan  
+- **xvalue**: Kimliği olan ama taşınacak
 
-### 3. Uygulamalı Örnek Kod
+---
 
+### 1. lvalue (Left-hand Value)
+
+**Basit Tanım:** Bellekte kalıcı adresi olan, isimlendirilmiş değerler
+
+#### Özellikleri:
+- ✅ Adres alınabilir (`&` operatörü)
+- ✅ Sol tarafta kullanılabilir (atama)
+- ✅ Birden fazla kez erişilebilir
+
+#### Örnekler:
 ```cpp
+int x = 10;           // x → lvalue
+x = 20;               // Sol tarafta kullanım OK
+
+int arr[5];
+arr[0] = 100;         // arr[0] → lvalue
+
+std::string name = "Ali";
+name = "Veli";        // name → lvalue
+
+++x;                  // ++x → lvalue (kendini döndürür)
+```
+
+#### Analoji:
+**Evindeki koltuk** - Sabit bir yeri var, adresini biliyorsun, istediğin zaman kullanabilirsin.
+
+---
+
+### 2. prvalue (Pure rvalue)
+
+**Basit Tanım:** Geçici, kimliği olmayan değerler
+
+#### Özellikleri:
+- ❌ Adres alınamaz
+- ❌ Sol tarafta kullanılamaz
+- ✅ const lvalue reference'a bağlanabilir
+
+#### Örnekler:
+```cpp
+42                    // prvalue literal
+3.14                  // prvalue literal
+x + y                 // prvalue (hesaplama sonucu)
+x++                   // prvalue (eski değeri döndürür)
+getString()           // prvalue (fonksiyon değer döndürürse)
+
+// const reference'a bağlama
+const int& ref = 42;  // OK - prvalue'yu uzatır
+```
+
+#### Analoji:
+**Pizza kuryesinin kutusu** - Geçici, kullan-at, adresini bilmiyorsun.
+
+---
+
+### 3. xvalue (eXpiring Value)
+
+**Basit Tanım:** Kimliği olan ama taşınmak üzere olan değerler
+
+#### Özellikleri:
+- ✅ Kimlik sahibi (glvalue özelliği)
+- ✅ Taşınabilir (rvalue özelliği)
+- ❌ Direkt adres alınamaz
+
+#### Örnekler:
+```cpp
+std::move(x)          // x'i xvalue yapar
+static_cast<T&&>(x)   // Cast ile xvalue
+
+// Fonksiyon rvalue& döndürürse
+T&& getRvalue() { return std::move(obj); }
+getRvalue()           // xvalue döner
+```
+
+#### Analoji:
+**Taşınmaya hazır koltuk** - Hâlâ koltuk ama artık başka yere gidecek.
+
+---
+
+### 4. Karma Kategoriler
+
+#### glvalue (Generalized lvalue)
+**lvalue + xvalue** = Kimlik sahibi ifadeler
+```cpp
+int x = 10;           // x → lvalue → glvalue
+std::move(x)          // xvalue → glvalue
+```
+
+#### rvalue (Right-hand value) 
+**prvalue + xvalue** = Geçici veya taşınabilir ifadeler
+```cpp
+42                    // prvalue → rvalue
+std::move(x)          // xvalue → rvalue
+```
+
+---
+
+#### Pratik Belirleme Tablosu
+
+| İfade | Kategori | Neden |
+|-------|----------|--------|
+| `x` | lvalue | Değişken ismi |
+| `42` | prvalue | Literal |
+| `x + y` | prvalue | Hesaplama sonucu |
+| `++x` | lvalue | Değişkenin kendisini döndürür |
+| `x++` | prvalue | Eski değeri geçici olarak döndürür |
+| `func()` | prvalue | Değer dönen fonksiyon |
+| `getRef()` | lvalue | lvalue& dönen fonksiyon |
+| `std::move(x)` | xvalue | Taşıma için hazırlanmış |
+| `"string"` | lvalue | String literal (özel durum) |
+
+---
+
+### Kod Örnekleri
+
+#### Temel Örnekler:
+```cpp
+#include <iostream>
+#include <utility>
+
+int getValue() { return 42; }
+int& getRef() { static int x = 10; return x; }
+
 int main() {
-    int x = 5;                 // lvalue
-    int y = x;                 // x, lvalue olarak kullanılır
-    int z = 10;                // 10, prvalue
-
-    int& r1 = x;               // lvalue referansı, geçerli
-    // int& r2 = 10;           // HATA! prvalue, non-const lvalue referansa bağlanamaz
-
-    const int& r3 = 10;        // Geçerli. const lvalue referansı prvalue'ya bağlanabilir
-
-    int&& rr1 = 20;            // prvalue -> rvalue referans (rr1 = lvalue)
-    int&& rr2 = foo();         // foo() -> prvalue
-
-    int&& rr4 = std::move(x);  // std::move(x) -> xvalue
-
-    std::cout << "Değer Kategorileri\n";
-    std::cout << "-------------------\n";
-    std::cout << "İfade        | Kategori\n";
-    std::cout << "-------------|-----------\n";
-    std::cout << "x            | lvalue\n";
-    std::cout << "10           | prvalue\n";
-    std::cout << "x + 10       | prvalue\n";
-    std::cout << "++x          | lvalue\n";
-    std::cout << "x++          | prvalue\n";
-    std::cout << "bar()        | lvalue\n";
-    std::cout << "foo()        | prvalue\n";
-    std::cout << "std::move(x) | xvalue\n";
-
+    int x = 5;
+    
+    // lvalue örnekleri
+    std::cout << "=== lvalue Örnekleri ===" << std::endl;
+    x = 10;                    // x sol tarafta - OK
+    int* ptr = &x;             // Adres alma - OK
+    getRef() = 20;             // Fonksiyon lvalue döndürüyor - OK
+    
+    // prvalue örnekleri  
+    std::cout << "=== prvalue Örnekleri ===" << std::endl;
+    const int& ref1 = 42;      // const ref'a bağlama - OK
+    const int& ref2 = x + 5;   // Hesaplama sonucu - OK
+    // int& ref3 = 42;         // HATA! non-const ref'a bağlanamaz
+    
+    // xvalue örnekleri
+    std::cout << "=== xvalue Örnekleri ===" << std::endl;
+    int&& rref = std::move(x); // Move - OK
+    std::cout << "x after move: " << x << std::endl; // x hâlâ kullanılabilir
+    
     return 0;
 }
 ```
 
-### 4. Değer Kategorisi Tablosu
+#### Reference Binding Kuralları:
+```cpp
+#include <string>
 
-| İfade         | Kategori |
-|---------------|----------|
-| `x`           | lvalue   |
-| `10`          | prvalue  |
-| `x + 10`      | prvalue  |
-| `++x`         | lvalue   |
-| `x++`         | prvalue  |
-| `bar()`       | lvalue   |
-| `foo()`       | prvalue  |
-| `std::move(x)`| xvalue   |
+int main() {
+    std::string str = "Hello";
+    
+    // lvalue binding
+    std::string& lref = str;              // lvalue → lvalue&
+    const std::string& cref1 = str;      // lvalue → const lvalue&
+    
+    // rvalue binding  
+    std::string&& rref1 = "World";       // prvalue → rvalue&
+    std::string&& rref2 = std::move(str);// xvalue → rvalue&
+    const std::string& cref2 = "Temp";   // prvalue → const lvalue&
+    
+    // HATALAR
+    // std::string& lref2 = "Error";     // HATA: prvalue → lvalue&
+    // std::string&& rref3 = str;        // HATA: lvalue → rvalue&
+    
+    return 0;
+}
+```
 
-### 5. Profesyonel İpuçları
+---
 
-- **prvalue** değerleri doğrudan rvalue referansına bağlayabilirsin (`int&& r = foo();`)
-- **lvalue**'lar sadece `T&` türüyle bağlanabilirken, **xvalue**'lar `T&&` ile uyumludur.
-- `std::move()` asla taşımayı garanti etmez — yalnızca "taşınabilir" olduğunu belirtir.
-- Bir değişkenin türü `T&&` olsa da, kendisi **lvalue** kabul edilir. Bu nedenle forwarding işlemlerinde `std::forward` tercih edilir.
+### Özet Tablo
 
-### 6. Uygulamalı Analoji
+| Kategori | Kimlik | Geçici | Adres | Sol Taraf | Örnek |
+|----------|--------|--------|-------|-----------|--------|
+| **lvalue** | ✅ | ❌ | ✅ | ✅ | `x`, `++x` |
+| **prvalue** | ❌ | ✅ | ❌ | ❌ | `42`, `x+y` |
+| **xvalue** | ✅ | ✅ | ❌ | ❌ | `std::move(x)` |
 
-- **lvalue**: Evdeki koltuk. Sabit bir yerleşimi vardır. Onu tanır ve tekrar kullanabilirsin.
-- **prvalue**: Pizza kuryesinden gelen tek kullanımlık pizza kutusu. Geçicidir.
-- **xvalue**: Taşınmak üzere hazırlanmış koltuk. Yeri bellidir ama artık elden çıkarılmak üzeredir.
+---
 
-**NOT:**
+### Hızlı Hatırlatma
 
-* **L-Value**: Bellekte adı olan, yeniden erişilebilir değerlerdir. Örnek: `x`, `++x`, `arr[]`
-* **R-Value**: Geçici, adı olmayan, tek kullanımlık değerlerdir. Örnek: `x++`, `42`, `foo()`
+#### Basit Test Soruları:
+1. **Adresini alabilir miyim?** → Evet ise **lvalue** olabilir
+2. **Sol tarafta kullanabilir miyim?** → Evet ise **lvalue**
+3. **Geçici mi?** → Evet ise **rvalue** (prvalue veya xvalue)
+4. **`std::move` kullandım mı?** → Evet ise **xvalue**
+
+#### Pratik İpuçları:
+- **Değişken isimleri**: Hep **lvalue**
+- **Literaller**: Genelde **prvalue** (string literal hariç)
+- **Fonksiyon sonuçları**: Dönüş türüne bağlı
+- **`std::move` sonucu**: Her zaman **xvalue**
+- **Hesaplamalar**: Genelde **prvalue**
+
 ---
 
 ### Type Deduction (Tip Çıkarımı)
