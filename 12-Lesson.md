@@ -1,7 +1,5 @@
 # 12. Ders
 
-**Eğitimin 15. Dersidir.**
-
 ### Copy Elision
 
 **Giriş:**

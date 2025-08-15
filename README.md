@@ -2,33 +2,33 @@
 
 ```
 ├── 01-Lesson.md
-│   ├── Genel C++ Kavramları, Pointer'lar ve Referanslar
-│   │   ├── Bilinmesi Gereken C Konuları
-│   │   ├── Referanslar (Reference)
-│   │   ├── Dizi Pointer'ları
-│   │   └── `a` ve `&a` Arasındaki Fark
-│   ├── Semantik ve Sık Geçen Semantik Türleri
-│   │   ├── `int a[10];` Dizisinin Fonksiyon Dönüş Tipi
-│   │   ├── Semantik: Bir dil öğesinin (değişken, ifade vb.) gerçek davranışını tanımlar.
-│   │   ├── C++'ta Sık Geçen Semantik Türleri
-│   │   ├── `std::move`: Geçici nesnelerden kaynakları çalmak veya verimli nesne transferi yapmak.
-│   │   └── Pointer ve Referans Karşılaştırması
-│   ├── `const` Niteleyicisi ve Referansların Davranışı
-│   │   ├── Top Level `const` (Üst Seviye `const`)
-│   │   ├── Low Level `const` (Alt Seviye `const`)
-│   │   ├── Fonksiyonlarda Referans Dönüşü
-│   │   ├── Referans Türleri ve Bağlanma
-│   │   └── Pointer ve Referans Semantiği
-│   ├── Scope Kaçağı, Tip Çıkarımı ve `using`
-│   │   ├── Scope Kaçağı (Scope Leakage)
-│   │   ├── Değer Kategorileri
-│   │   ├── Type Deduction (Tip Çıkarımı)
-│   │   ├── `auto` ve `const` İlişkisi
-│   │   └── `Using`: `typedef` Alternatifi
-│   └── Referans Katlama (Reference Collapsing) ve Universal Referanslar
-│       └── Reference Collapsing (Referans Katlama)
+│   ├── Genel C++ Kavramları, Pointer'lar ve Referanslar
+│   │   ├── Bilinmesi Gereken C Konuları
+│   │   ├── Referanslar (Reference)
+│   │   ├── Dizi Pointer'ları
+│   │   └── `a` ve `&a` Arasındaki Fark
+│   ├── Semantik ve Sık Geçen Semantik Türleri
+│   │   ├── `int a[10];` Dizisinin Fonksiyon Dönüş Tipi
+│   │   ├── Semantik: Bir dil öğesinin (değişken, ifade vb.) gerçek davranışını tanımlar.
+│   │   ├── C++'ta Sık Geçen Semantik Türleri
+│   │   ├── `std::move`: Geçici nesnelerden kaynakları çalmak veya verimli nesne transferi yapmak.
+│   │   └── Pointer ve Referans Karşılaştırması
+│   ├── `const` Niteleyicisi ve Referansların Davranışı
+│   │   ├── Top Level `const` (Üst Seviye `const`)
+│   │   ├── Low Level `const` (Alt Seviye `const`)
+│   │   ├── Fonksiyonlarda Referans Dönüşü
+│   │   ├── Referans Türleri ve Bağlanma
+│   │   └── Pointer ve Referans Semantiği
+│   ├── Scope Kaçağı, Tip Çıkarımı ve `using`
+│   │   ├── Scope Kaçağı (Scope Leakage)
+│   │   ├── Değer Kategorileri
+│   │   ├── Type Deduction (Tip Çıkarımı)
+│   │   ├── `auto` ve `const` İlişkisi
+│   │   └── `Using`: `typedef` Alternatifi
+│   └── Referans Katlama (Reference Collapsing) ve Universal Referanslar
+│       └── Reference Collapsing (Referans Katlama)
 │
-├── 02-Lesson.md
+├── 02-Lesson.md (5. Ders videosu)
 │   ├── Decltype Operatörü
 │   │   ├── İsim Operandı Kuralları
 │   │   └── İfade Operandı Kuralları (Value Category)
@@ -160,23 +160,35 @@
 │   │   └── Aggregate
 │   └── Rule of Zero
 │
-└── 10-Lesson.md
-    ├── Copy Assignment
-    │   ├── Syntax
-    │   ├── When Called
-    │   └── Example
-    ├── Move Constructor
-    │   ├── Syntax
-    │   ├── When Called
-    │   └── Example
-    ├── Move Assignment
-    │   ├── Syntax
-    │   ├── When Called
-    │   └── Example
-    ├── Rules for Compiler-Generated Special Member Functions
-    └── Extra Information
-        ├── `std::move` Alternative
-        ├── Compiler Choice: Move vs Copy Constructor
-        ├── Dangling Pointer
-        └── Interview Questions
+├── 10-Lesson.md
+│   ├── Copy Assignment
+│   │   ├── Syntax
+│   │   ├── When Called
+│   │   └── Example
+│   ├── Move Constructor
+│   │   ├── Syntax
+│   │   ├── When Called
+│   │   └── Example
+│   ├── Move Assignment
+│   │   ├── Syntax
+│   │   ├── When Called
+│   │   └── Example
+│   ├── Rules for Compiler-Generated Special Member Functions
+│   └── Extra Information
+│       ├── `std::move` Alternative
+│       ├── Compiler Choice: Move vs Copy Constructor
+│       ├── Dangling Pointer
+│       └── Interview Questions
+│
+└── 12-Lesson.md
+    ├── Copy Elision
+    │   ├── Geçici Nesneleri Fonksiyonlara Parametre Olarak Geçirme (Zorunlu - C++17)
+    │   ├── Fonksiyonlardan Geçici Nesne Döndürme (Zorunlu - C++17)
+    │   └── Otomatik Depolama Sınıfına Sahip Bir Nesneyi Döndürme (Optimizasyon - NRVO)
+    ├── Temporary Materialization
+    │   ├── Temporary Materialization Nedir?
+    │   └── Temporary Materialization'ın Kullanım Amaçları ve Özellikleri
+    └── Return Value Optimization (RVO) ve Named Return Value Optimization (NRVO)
+        ├── Return Value Optimization (RVO)
+        └── Named Return Value Optimization (NRVO)
 ```

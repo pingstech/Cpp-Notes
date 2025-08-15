@@ -1,7 +1,5 @@
 # 11. Ders
 
-**Eğitimin 14. Dersidir.**
-
 ## Class
 
 ### Move-Only Types(Sadece Taşınabilir Tipler)

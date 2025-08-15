@@ -1,7 +1,5 @@
 # 2.Ders
 
-**Eğitimin 5. Dersidir.**
-
 ## Decltype
 
 "```decltype```" operatörü, operandının türünü almak için kullanılır. Bu, bir isim veya bir ifade üzerinden tür çıkarımı yapılmasına olanak sağlar. İki farklı kural seti vardır:

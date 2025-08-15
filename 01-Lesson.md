@@ -1,7 +1,5 @@
 # Ders-1
 
-**Eğitimin 1=4 arasi dersleriridir.**
-
 ## Genel C++ Kavramları, Pointer'lar ve Referanslar
 
 ### Bilinmesi Gereken C Konuları
