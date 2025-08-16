@@ -1,8 +1,8 @@
 # 11. Ders
 
-## Class
+## Classes (Sınıflar)
 
-### Move-Only Types(Sadece Taşınabilir Tipler)
+### Move-Only Types (Sadece Taşınabilir Tipler)
 
 C++'da nesneler genellikle kopyalanabilir veya taşınabilir özelliklere sahiptir. "Move-only type" (taşınabilir-sadece tip) ise, adı üzerinde, **yalnızca taşınabilen ancak kopyalanamayan** bir nesne türünü ifade eder.
 
@@ -107,20 +107,21 @@ Elinizde çok özel bir anahtar var olduğunu düşünün. Bu anahtarın kopyas�
 
 **⚠️ DİKKAT:** Bir nesne "move-only" ise, onu kopyalamaya çalışmak **derleyici hatasına** neden olacaktır. Bu, programınızın daha güvenli olmasını sağlar çünkü yanlışlıkla kaynakların çift sahipliğini oluşturmanızı engeller.
 
-**⚠️ DİKKAT:** Asla ama asla move memberlar **`= delete;` edilmemelidir!** Çünkü Copy işlemleri bloklanmış olur.
+**⚠️ DİKKAT:** Asla ama asla move memberlar **`= delete;` edilmemelidir\!** Çünkü Copy işlemleri bloklanmış olur.
 
 -----
 
-### Temporaray Objects (Geçici Nesneler)
+### Temporary Objects (Geçici Nesneler)
 
 Bazen program çalışırken kısa bir süre için var olan, adı olmayan (anonim) ve belirli bir ifadenin sonucunda oluşan nesneler bulunur. Bu nesnelere **"Geçici Nesneler"** denir. Genellikle bir ifade tamamlandıktan hemen sonra yok olurlar.
 
-####  Geçici Nesneler Nasıl Oluşturulur?
+#### Geçici Nesneler Nasıl Oluşturulur?
 
-1) **Fonksiyonların Geri Dönüş Değerleri:** Bir fonksiyon bir nesne döndürdüğünde, bu nesne genellikle geçici bir nesne olarak oluşturulur.
-2) **Tür Dönüşümleri (Casting):** Bir türü başka bir türe dönüştürdüğünüzde, yeni türde geçici bir nesne oluşabilir.
-3) **İfadelerdeki Ara Sonuçlar**: Karmaşık ifadelerde, ara işlemlerin sonuçları geçici nesneler olarak depolanabilir.
+  * **Fonksiyonların Geri Dönüş Değerleri:** Bir fonksiyon bir nesne döndürdüğünde, bu nesne genellikle geçici bir nesne olarak oluşturulur.
+  * **Tür Dönüşümleri (Casting):** Bir türü başka bir türe dönüştürdüğünüzde, yeni türde geçici bir nesne oluşabilir.
+  * **İfadelerdeki Ara Sonuçlar**: Karmaşık ifadelerde, ara işlemlerin sonuçları geçici nesneler olarak depolanabilir.
 
+<!-- end list -->
 
 ```cpp
 class my_class 
@@ -213,8 +214,6 @@ int main()
 
 C++'da, bir nesnenin sahip olduğu kaynaklar (örneğin, dinamik bellek, dosya tanıtıcısı gibi) başka bir nesneye "taşındığında", orijinal nesne arkasında özel bir durumda kalır. Bu duruma **"Taşınmış Nesne Durumu" (Moved-From State)** denir. Bu durum, taşıma semantiği (move semantics) ile doğrudan ilgilidir ve kaynak yönetiminde önemlidir.
 
------
-
 #### Taşınmış Nesne Durumu Nasıl Oluşturulur?
 
 Taşınmış nesne durumu, bir **taşıma işlemi** (move operation) sonucunda ortaya çıkar. Bu işlemler genellikle şunları içerir:
@@ -222,8 +221,6 @@ Taşınmış nesne durumu, bir **taşıma işlemi** (move operation) sonucunda o
 1.  **Taşıma Yapıcı (Move Constructor):** Bir nesne, başka bir nesnenin kaynaklarını "çalarak" (taşıyarak) oluşturulduğunda.
 2.  **Taşıma Atama Operatörü (Move Assignment Operator):** Bir nesne, başka bir nesnenin kaynaklarını "çalarak" (taşıyarak) değer atadığında.
 3.  **`std::move` Kullanımı:** `std::move` fonksiyonu, bir nesnenin taşınabilir olduğunu derleyiciye bildirir ve taşıma yapıcı/atama operatörünün çağrılmasına olanak tanır. `std::move` aslında taşıma yapmaz, sadece bir nesneyi "rvalue reference" olarak işaretler.
-
------
 
 **Örnek Kod:**
 
@@ -293,30 +290,26 @@ int main()
 }
 ```
 
------
-
 #### Taşınmış Nesne Durumu (Moved-From State) Nedir?
 
   * **Ne Yapar?** Bir nesnenin "taşınmış durumu", o nesnenin sahip olduğu kaynakların (bellek, dosya işaretçisi gibi) başka bir nesneye devredildiği andaki halidir. Taşınma işlemi bittiğinde, orijinal nesne artık bu kaynaklara sahip değildir.
-  
+
   * **Neden Kullanılır?** Bu durum, özellikle kaynak yöneten sınıflarda (örneğin akıllı işaretçiler) "tekil sahiplik" modelini sürdürmek için kritik öneme sahiptir. Kaynakların kopyalanması yerine taşınmasını sağlayarak bellek israfını ve "çift serbest bırakma" (double free) gibi hataları önler.
-  
+
   * **Nasıl Çalışır?** Taşıma yapıcı veya taşıma atama operatörü içinde, kaynaklarını devreden nesnenin (yani `other` parametresinin) iç işaretçileri veya kaynak göstergeleri `nullptr` gibi güvenli ve boş bir duruma getirilir. Bu sayede, orijinal nesne (artık taşınmış durumda olan nesne) kendi yıkıcısı çağrıldığında geçersiz veya serbest bırakılmış kaynakları tekrar serbest bırakmaya çalışmaz.
 
   * **Önemli Özellikleri:**
+
       * **Geçerli Ama Belirsiz (Valid But Unspecified):** C++ standardı, taşınmış bir nesnenin geçerli bir durumda kalacağını garanti eder. Yani onu silebilir veya üzerine yeni bir değer atayabilirsiniz. Ancak, taşındıktan sonraki içeriğinin (örneğin, sayısal değerlerin veya işaretçilerin ne olacağının) garantisi yoktur; genellikle `nullptr` veya "boş" bir duruma ayarlanır.
       * **Güvenli Operasyonlar:** Taşınmış bir nesne üzerinde sadece yıkıcı (`~`), atama operatörleri (`=`) veya ona yeni bir değer/kaynak atayacak operasyonlar (örneğin, `swap` veya yeniden atama) güvenle çağrılabilir.
 
-**⚠️ DİKKAT:**
-Taşınmış duruma geçen bir nesnenin önceki kaynaklarını (örneğin, `data_` işaretçisiyle gösterilen belleği) okumaya çalışmak veya üzerinde önceki içeriğiyle ilgili başka işlemler yapmak **tanımsız davranışa (Undefined Behavior)** yol açabilir. Çünkü nesnenin içeriği artık öngörülemez bir durumdadır. Kendi taşıma yapıcılarınızı yazarken, kaynaklarını devrettiğiniz nesneyi mutlaka geçerli ve güvenli bir "boş" duruma bırakmalısınız (genellikle işaretçileri `nullptr` yapmak gibi).
+**⚠️ DİKKAT:** Taşınmış duruma geçen bir nesnenin önceki kaynaklarını (örneğin, `data_` işaretçisiyle gösterilen belleği) okumaya çalışmak veya üzerinde önceki içeriğiyle ilgili başka işlemler yapmak **tanımsız davranışa (Undefined Behavior)** yol açabilir. Çünkü nesnenin içeriği artık öngörülemez bir durumdadır. Kendi taşıma yapıcılarınızı yazarken, kaynaklarını devrettiğiniz nesneyi mutlaka geçerli ve güvenli bir "boş" duruma bırakmalısınız (genellikle işaretçileri `nullptr` yapmak gibi).
 
 -----
 
-### Conversion Constructor (Dönüşüm Yapıcısı)
+### Conversion Constructors (Dönüşüm Yapıcıları)
 
 C++'da, bir sınıfın nesnesini, farklı bir veri tipinden (örneğin, bir `int` veya `std::string`) otomatik olarak oluşturmaya olanak tanıyan özel yapıcılara **"Dönüşüm Yapıcısı" (Conversion Constructor)** denir. Bu yapıcılar, belirli durumlarda türler arası otomatik dönüşümlere izin verir.
-
------
 
 #### Dönüşüm Yapıcısı Nedir?
 
@@ -390,18 +383,13 @@ int main()
   * **`explicit` Anahtar Kelimesi:** Otomatik dönüşümleri istemediğinizde (`implicit conversion`), dönüşüm yapıcısının önüne `explicit` anahtar kelimesi koyarak bu dönüşümleri engelleyebilirsiniz. Bu durumda sadece doğrudan (`explicit`) oluşturmaya izin verilir.
       * `explicit my_number(int val);` olarak tanımlansaydı, `my_number num2 = 20;` veya `num1.add(5);` satırları derleme hatası verirdi. Yalnızca `my_number num2(20);` veya `num1.add(my_number(5));` gibi açıkça dönüşüm belirtilen kullanımlara izin verilirdi.
 
-**⚠️ DİKKAT:**
-Otomatik dönüşüm yapıcıları bazen beklenmedik veya istenmeyen dönüşümlere yol açarak kodda mantık hatalarına neden olabilir. Bu yüzden, otomatik dönüşümlerin gerçekten faydalı ve güvenli olduğundan emin değilseniz, `explicit` anahtar kelimesini kullanmak iyi bir programlama pratiğidir.
-
------
+**⚠️ DİKKAT:** Otomatik dönüşüm yapıcıları bazen beklenmedik veya istenmeyen dönüşümlere yol açarak kodda mantık hatalarına neden olabilir. Bu yüzden, otomatik dönüşümlerin gerçekten faydalı ve güvenli olduğundan emin değilseniz, `explicit` anahtar kelimesini kullanmak iyi bir programlama pratiğidir.
 
 -----
 
 ### Implicit Conversion Sequences (Örtülü Dönüşüm Sekansları)
 
 C++ derleyicisi, belirli durumlarda bir veri tipini başka bir veri tipine sizin açıkça belirtmenize gerek kalmadan otomatik olarak dönüştürebilir. Bu otomatik dönüşümlere **örtülü dönüşüm (implicit conversion)** denir. Ancak, bu dönüşümler rastgele yapılmaz; belirli kurallara ve sekanslara (sıralamalara) uyarlar.
-
------
 
 #### Temel Kavramlar:
 
@@ -415,10 +403,8 @@ C++ derleyicisi, belirli durumlarda bir veri tipini başka bir veri tipine sizin
 
 2.  **Kullanıcı Tanımlı Dönüşüm (User-Defined Conversion):** Sizin bir sınıf içinde tanımladığınız özel dönüşümlerdir. İki ana yolu vardır:
 
-      * **Dönüşüm Yapıcısı (Conversion Constructor):** Tek bir parametre alan (veya ilk parametresi zorunlu olup kalanları varsayılan değerli olan) bir yapıcıdır. Bu yapıcı, kendi sınıfını başka bir tipten oluşturur. Örnekteki `B(A)` gibi.
-      * **Dönüşüm Operatörü (Conversion Operator):** Bir sınıfın nesnesini başka bir tipe dönüştürmek için kullanılan özel bir üye fonksiyondur (örneğin, `operator int() const;` gibi). (Bu örnekte kullanılmamıştır.)
-
------
+      * **Dönüşüm Yapıcısı (Conversion Constructor):** Tek bir parametre alan (veya ilk parametresi zorunlu olup kalanları varsayılan değerli olan) bir yapıcıdır. Bu yapıcı, kendi sınıfını başka bir tipten oluşturur.
+      * **Dönüşüm Operatörü (Conversion Operator):** Bir sınıfın nesnesini başka bir tipe dönüştürmek için kullanılan özel bir üye fonksiyondur (örneğin, `operator int() const;` gibi).
 
 Derleyicinin **otomatik olarak (örtülü)** yapabileceği dönüşüm sekanslarının en fazla bir kullanıcı tanımlı dönüşüm içerebileceğini ifade eder. Bu, aşağıdaki iki ana yapıya izin verir:
 
@@ -433,8 +419,6 @@ Derleyicinin **otomatik olarak (örtülü)** yapabileceği dönüşüm sekanslar
       * Ardından, bu standart dönüşümün sonucunda oluşan tip, bir kullanıcı tanımlı dönüşüm (örneğin, bir dönüşüm yapıcısı) ile hedef tipe ulaşır.
 
 Bu iki senaryoda da **yalnızca bir adet kullanıcı tanımlı dönüşüme** izin verilir. İki veya daha fazla kullanıcı tanımlı dönüşüm içeren bir zincir, derleyici tarafından otomatik olarak yapılmaz; açıkça belirtilmesi gerekir.
-
------
 
 **Örnek Üzerinden İnceleme:**
 
@@ -469,18 +453,15 @@ Derleyici, bu tek kullanıcı tanımlı dönüşümü içeren zinciri otomatik o
 
 -----
 
-### Explicit Constructor (Açık Yapıcı)
+### Explicit Specifier (Explicit Belirleyicisi)
 
 C++'da bir **dönüşüm yapıcısı** (yani tek parametre alan bir yapıcı), otomatik (örtülü) tür dönüşümlerine izin verir. Ancak bu durum, bazen beklenmedik veya istenmeyen dönüşümlere yol açabilir. İşte bu istenmeyen örtülü dönüşümleri engellemek için **`explicit`** anahtar kelimesi kullanılır. Bir yapıcı `explicit` olarak işaretlendiğinde, yalnızca **açıkça (explicitly)** çağrıldığında kullanılabilir; örtülü dönüşümler için kullanılamaz.
 
------
-
-#### Explicit Constructor Nedir?
+#### `explicit` Nedir?
 
 `explicit` anahtar kelimesi, tek parametre alan bir yapıcıya uygulandığında, o yapıcının **örtülü dönüşümler (implicit conversions)** yapmasını engeller. Bu, derleyicinin belirli bir tipten sınıfın bir nesnesini otomatik olarak oluşturmasına izin vermez; nesneyi oluşturmak için her zaman açık bir çağrı veya açık bir tür dönüşümü (casting) gereklidir.
 
 **Örnek:**
-
 Aşağıdaki `MyItem` sınıfı, `explicit` anahtar kelimesinin bir dönüşüm yapıcısını nasıl etkilediğini gösteriyor:
 
 ```cpp
@@ -576,5 +557,4 @@ int main()
       * Fonksiyon Dönüş Değeri: Bir fonksiyonun `MyItem` döndürmesi beklenirken `int` döndürülmesi.
       * Aynı zamanda, `explicit` anahtar kelimesi sadece tek parametre alan yapıcılar için geçerlidir. Birden fazla parametre alan veya varsayılan yapıcılarda kullanılması anlamsızdır veya hataya yol açabilir.
 
-**⚠️ DİKKAT:**
-`explicit` sadece **örtülü** dönüşümleri engeller, **açık** dönüşümleri (`static_cast<my_item>(30)` veya `my_item(50)` gibi) engellemez. Bu sayede, gerekli durumlarda tipi dönüştürme esnekliği korunur ancak bu dönüşümün her zaman bilinçli bir eylem olduğu vurgulanır.
+**⚠️ DİKKAT:** `explicit` sadece **örtülü** dönüşümleri engeller, **açık** dönüşümleri (`static_cast<my_item>(30)` veya `my_item(50)` gibi) engellemez. Bu sayede, gerekli durumlarda tipi dönüştürme esnekliği korunur ancak bu dönüşümün her zaman bilinçli bir eylem olduğu vurgulanır.

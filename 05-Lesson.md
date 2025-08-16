@@ -1,45 +1,49 @@
-# 5.Ders
+# 5. Ders
 
-## Function Overloading
+## Function Overloading (Fonksiyon Aşırı Yükleme)
 
 Farklı parametrelerle aynı isme sahip fonksiyonlar oluşturmanıza olanak tanır. Bu, fonksiyonlar arasında parametre türü veya sayısı gibi farklar olabilir.
 
-- **Derleme zamanında (compile-time)** çözülür. Yani, hangi fonksiyonun çağrılacağı, programın derleme aşamasında belirlenir.
-- **Fonksiyonların adı aynıdır**, ancak parametre sayısı veya türleri farklıdır.
-- Derleyici, fonksiyonun çağrıldığı yere göre uygun fonksiyonu seçer.
+  * **Derleme zamanında (compile-time)** çözülür. Yani, hangi fonksiyonun çağrılacağı, programın derleme aşamasında belirlenir.
+  * **Fonksiyonların adı aynıdır**, ancak parametre sayısı veya türleri farklıdır.
+  * Derleyici, fonksiyonun çağrıldığı yere göre uygun fonksiyonu seçer.
+
+<!-- end list -->
 
 ```cpp
-void print(int i) 
+void print(int i)
 {
     std::cout << "Integer: " << i << '\n';
 }
 
-void print(double d) 
+void print(double d)
 {
     std::cout << "Double: " << d << '\n';
 }
 
-void print(std::string s) 
+void print(std::string s)
 {
     std::cout << "String: " << s << '\n';
 }
 
-int main() 
+int main()
 {
     print(10);      // Integer: 10
     print(3.14);    // Double: 3.14
-    print("Hello"); // String: Hello  
+    print("Hello"); // String: Hello
 }
 ```
 
-- ```print(int)```, ```print(double)``` ve ```print(string)``` fonksiyonları aynı isme sahip olmasına rağmen, parametre türlerine göre yüklenmiştir.
-- Derleyici, **çağrı sırasında** hangi fonksiyonun çağrılacağını parametre türüne göre **otomatik olarak** belirler.
+  * `print(int)`, `print(double)` ve `print(string)` fonksiyonları aynı isme sahip olmasına rağmen, parametre türlerine göre yüklenmiştir.
+  * Derleyici, **çağrı sırasında** hangi fonksiyonun çağrılacağını parametre türüne göre **otomatik olarak** belirler.
 
-### Function Overloading'in Olup Olmadığına Karar Vermek
+### Deciding on Function Overloading (Fonksiyon Aşırı Yüklemesine Karar Verme)
 
-1) **Fonksiyon isimlerinin aynı olması:** Eğer **birden fazla fonksiyon aynı isimle tanımlanmışsa**, bunlar function overloading olabilir.
+1)  **Fonksiyon isimlerinin aynı olması:** Eğer **birden fazla fonksiyon aynı isimle tanımlanmışsa**, bunlar function overloading olabilir.
 
-2) **Farklı parametre sayısı veya türü:** Fonksiyon aşırı yükleme, genellikle parametre sayısının veya parametre türlerinin farklı olduğu durumlarda görülür. Eğer aynı isimle birden fazla fonksiyon varsa ve her bir fonksiyonun **parametre sayısı** veya **parametre türleri** farklıysa, bu **function overloading** anlamına gelir.
+2)  **Farklı parametre sayısı veya türü:** Fonksiyon aşırı yükleme, genellikle parametre sayısının veya parametre türlerinin farklı olduğu durumlarda görülür. Eğer aynı isimle birden fazla fonksiyon varsa ve her bir fonksiyonun **parametre sayısı** veya **parametre türleri** farklıysa, bu **function overloading** anlamına gelir.
+
+<!-- end list -->
 
 ```cpp
 int add(int a, int b);          // Geçerli bir aşırı yükleme adayı
@@ -47,18 +51,20 @@ int add(double a, double b);    // Parametre türleri farklı, geçerli aşırı
 int add(int a, int b, int c);   // Parametre sayısı farklı, geçerli aşırı yükleme
 ```
 
-3) **Geri dönüş türü(Return type) farklılığı**: Function overloading **geri dönüş türüyle yapılmaz**. Yani, sadece geri dönüş türü farklı olan **fonksiyonlar overloading sayılmaz**. Fonksiyonların **parametre sayısı** ya da **türlerinin farklı** olması gerekir.
+3)  **Geri dönüş türü(Return type) farklılığı**: Function overloading **geri dönüş türüyle yapılmaz**. Yani, sadece geri dönüş türü farklı olan **fonksiyonlar overloading sayılmaz**. Fonksiyonların **parametre sayısı** ya da **türlerinin farklı** olması gerekir.
+
+<!-- end list -->
 
 ```cpp
 int add(int a, int b);       // int türünde dönen bir fonksiyon
 double add(int a, int b);    // int, int parametreleriyle tanımlanmış başka bir fonksiyon, ancak geri dönüş türü farklı. Bu durumda derleyici, hangi 'add(int, int)' fonksiyonunu çağıracağını belirleyemez ve belirsizlik (ambiguity) hatası verir. Bu bir aşırı yükleme değildir.
 ```
 
-### Function Overloading ile Function Redeclaration Farklılıkları Anlama ve Ayırt Etme:
+### Understanding and Distinguishing the Differences Between Function Overloading and Function Redeclaration (Fonksiyon Aşırı Yükleme ve Yeniden Bildirim Arasındaki Farkları Anlama ve Ayırt Etme)
 
-- **Function overloading parametrelerin** farklı olduğu, aynı isimle tanımlanmış birden fazla fonksiyondur.
+  * **Function overloading parametrelerin** farklı olduğu, aynı isimle tanımlanmış birden fazla fonksiyondur.
 
-- **Function redeclaration** aynı isimdeki bir fonksiyonun parametreleriyle birlikte tekrardan bildirilmesidir.
+  * **Function redeclaration** aynı isimdeki bir fonksiyonun parametreleriyle birlikte tekrardan bildirilmesidir.
 
 **NOT-1:** **Fonksiyon Redeclaration (Fonksiyon yeniden bildirimi)**, bir fonksiyonun zaten bildirildiği bir yerin üzerine tekrar aynı fonksiyonun bildirilmesidir. Ancak, bu **aynı fonksiyon değişmeden** tekrarlanır.
 
@@ -76,30 +82,31 @@ int main()
 }
 ```
 
-Burada, ```add``` fonksiyonu ilk önce tanımlanmış, sonra aynı parametrelerle yeniden bildirilmiştir. Bu **function redeclaration** örneğidir.
+Burada, `add` fonksiyonu ilk önce tanımlanmış, sonra aynı parametrelerle yeniden bildirilmiştir. Bu **function redeclaration** örneğidir.
 
-| **Özellik**          | **Function Overloading**                                             | **Function Redeclaration**                                            |
+| **Özellik** | **Function Overloading** | **Function Redeclaration** |
 | -------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| **İsim**             | Aynı fonksiyon ismi kullanılır                                       | Aynı fonksiyon ismi kullanılır                                        |
-| **Parametreler**     | Farklı parametre sayısı veya türleri olmalıdır                       | Aynı parametreler (sayısı ve türleri değişmez)                        |
-| **Dönüş Türü**       | Dönüş türü değişebilir, ancak yalnızca bu ile aşırı yükleme yapılmaz | Aynı dönüş türü olmalıdır (başka bir yerden tekrar bildirilmiştir)    |
-| **Amaç**             | Aynı işlevi farklı parametrelerle yapmak                             | Fonksiyonu başka bir yerde bildirmek ve başlık dosyasına yerleştirmek |
+| **İsim** | Aynı fonksiyon ismi kullanılır                             | Aynı fonksiyon ismi kullanılır                              |
+| **Parametreler** | Farklı parametre sayısı veya türleri olmalıdır             | Aynı parametreler (sayısı ve türleri değişmez)              |
+| **Dönüş Türü** | Dönüş türü değişebilir, ancak yalnızca bu ile aşırı yükleme yapılmaz | Aynı dönüş türü olmalıdır (başka bir yerden tekrar bildirilmiştir)    |
+| **Amaç** | Aynı işlevi farklı parametrelerle yapmak                   | Fonksiyonu başka bir yerde bildirmek ve başlık dosyasına yerleştirmek |
 | **Derleyici Kararı** | **Derleme zamanında** parametre türüne göre uygun fonksiyon seçilir  | **Tekrar tanımlama**, derleyici zaten tanımlı fonksiyonu kabul eder   |
 
-### Function Overloading Çözümleme Süreci:
+### Function Overloading Resolution Process (Fonksiyon Aşırı Yükleme Çözümleme Süreci)
 
 C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip eder:
 
-1) **Parametre Türlerini Karşılaştırma**:
-    
-    - Derleyici, çağrılan fonksiyon ile mevcut aşırı yüklenmiş fonksiyonları karşılaştırır.
-    - Eğer parametre sayısı aynıysa, fonksiyonların parametre türleriyle karşılaştırma yapılır.
+1)  **Parametre Türlerini Karşılaştırma**:
 
-2) **Tam Eşleşme (Exact Match)**:
-    
-    - Derleyici, parametrelerin türlerini tam olarak eşleşecek şekilde arar. En güçlü eşleşme bu türdür. Örneğin, ```int``` türündeki bir parametreye ```int``` türündeki bir argüman verildiğinde, bu tam eşleşme olur.
+      * Derleyici, çağrılan fonksiyon ile mevcut aşırı yüklenmiş fonksiyonları karşılaştırır.
+      * Eğer parametre sayısı aynıysa, fonksiyonların parametre türleriyle karşılaştırma yapılır.
+
+2)  **Tam Eşleşme (Exact Match)**:
+
+      * Derleyici, parametrelerin türlerini tam olarak eşleşecek şekilde arar. En güçlü eşleşme bu türdür. Örneğin, `int` türündeki bir parametreye `int` türündeki bir argüman verildiğinde, bu tam eşleşme olur.
 
     **Örnek:** Fonksiyon aşırı yükleme çözümleme:
+
     ```cpp
     void print(int x) { std::cout << "Integer: " << x << '\n'; }
     void print(double x) { std::cout << "Double: " << x << '\n'; }
@@ -113,9 +120,9 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
     }
     ```
 
-    - Derleyici **tam eşleşme** için aşağıdaki işlemleri yapabilir.
+      * Derleyici **tam eşleşme** için aşağıdaki işlemleri yapabilir.
 
-        1) **L Value to R Value Conversion (L Değeri'nden R Değeri'ne dönüşüm)**
+        1)  **L Value to R Value Conversion (L Değeri'nden R Değeri'ne dönüşüm)**
 
             ```cpp
             void print(int x) { std::cout << "Integer: " << x << '\n'; }
@@ -128,7 +135,7 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
             }
             ```
 
-        2) **```const``` Conversion (```const``` dönüşümü):** ```const``` ile işaretlenmiş bir nesnenin, ```const``` olmayan bir parametre ile eşleşmesini sağlar.
+        2)  **`const` Conversion (`const` dönüşümü):** `const` ile işaretlenmiş bir nesnenin, `const` olmayan bir parametre ile eşleşmesini sağlar.
 
             ```cpp
             void print(const int x) { std::cout << "Const Integer: " << x << '\n'; }
@@ -142,8 +149,8 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
             }
             ```
 
-        3) **Array Decay (Array to Pointer Conversion):** Dizi Çürütme (Diziye Göstergelerle Dönüşüm): Bu işlem **dizi çürütme** olarak adlandırılır, yani dizinin ilk elemanına işaret eden bir pointer'a dönüşüm yapılır.
-        
+        3)  **Array Decay (Array to Pointer Conversion):** Dizi Çürütme (Diziye Göstergelerle Dönüşüm): Bu işlem **dizi çürütme** olarak adlandırılır, yani dizinin ilk elemanına işaret eden bir pointer'a dönüşüm yapılır.
+
             ```cpp
             void print(int* arr) { std::cout << "Array address: " << arr << '\n'; }
 
@@ -154,7 +161,7 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
             }
             ```
 
-        4) **Function to Pointer Conversion (Fonksiyonun Göstergesine Dönüşüm):**
+        4)  **Function to Pointer Conversion (Fonksiyonun Göstergesine Dönüşüm):**
 
             ```cpp
             void print(int x) { std::cout << "Integer: " << x << '\n'; }
@@ -166,16 +173,20 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
             }
             ```
 
-3) **İleri Dönüşüm (Promotion) ve Dönüşüm (Conversion)**:
+3)  **İleri Dönüşüm (Promotion) ve Dönüşüm (Conversion)**:
 
-    - Eğer tam eşleşme yoksa, derleyici **dönüşüm (conversion)** ve **ileri dönüşüm (promotion)** yollarını kullanarak en yakın eşleşmeyi bulmaya çalışır.
-    - Örneğin, ```int``` türündeki bir argüman, ```float``` türündeki bir parametreye dönüştürülebilir.
+      * Eğer tam eşleşme yoksa, derleyici **dönüşüm (conversion)** ve **ileri dönüşüm (promotion)** yollarını kullanarak en yakın eşleşmeyi bulmaya çalışır.
+      * Örneğin, `int` türündeki bir argüman, `float` türündeki bir parametreye dönüştürülebilir.
 
-    1) **İleri dönüşüm(Promotion):** Daha küçük türlerin, daha büyük türlere otomatik olarak dönüştürülmesidir. Veri kaybı olmaz. İleri Dönüşüm (Promotion) Örnekleri:
-        
-        - ```char``` → ```int``` dönüşümü
-        - ```int``` → ```float``` dönüşümü
-        - ```float``` → ```double``` dönüşümü
+    <!-- end list -->
+
+    1)  **İleri dönüşüm(Promotion):** Daha küçük türlerin, daha büyük türlere otomatik olarak dönüştürülmesidir. Veri kaybı olmaz. İleri Dönüşüm (Promotion) Örnekleri:
+
+          * `char` → `int` dönüşümü
+          * `int` → `float` dönüşümü
+          * `float` → `double` dönüşümü
+
+        <!-- end list -->
 
         ```cpp
         void print(double x) { std::cout << "Double: " << x << '\n'; }
@@ -187,11 +198,13 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
         }
         ```
 
-    2) **Dönüşüm (Conversion):** Farklı türler arasındaki uyumu sağlamak için yapılır ve bazen veri kaybına yol açabilir.
-        
-        - ```int``` → ```double```
-        - ```float``` → ```int``` (bu dönüşümda veri kaybı olabilir)
-        - ```char``` → ```int``` (ASCII değerine dönüşüm)
+    2)  **Dönüşüm (Conversion):** Farklı türler arasındaki uyumu sağlamak için yapılır ve bazen veri kaybına yol açabilir.
+
+          * `int` → `double`
+          * `float` → `int` (bu dönüşümda veri kaybı olabilir)
+          * `char` → `int` (ASCII değerine dönüşüm)
+
+        <!-- end list -->
 
         ```cpp
         void print(double x) { std::cout << "Double: " << x << '\n'; }
@@ -203,23 +216,23 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
         }
         ```
 
-    | **Özellik**         | **İleri Dönüşüm (Promotion)**                                   | **Dönüşüm (Conversion)**                              |
+    | **Özellik** | **İleri Dönüşüm (Promotion)** | **Dönüşüm (Conversion)** |
     | ------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
-    | **Amaç**            | Küçük türleri daha büyük türlere dönüştürmek                    | İki tür arasındaki uyumu sağlamak için dönüşüm yapmak |
-    | **Veri Kaybı**      | Veri kaybı olmaz (daha küçük tür, daha büyük türe dönüştürülür) | Veri kaybı olabilir (örneğin `float` → `int`)         |
-    | **Örnek**           | `char` → `int`, `int` → `float`, `float` → `double`             | `int` → `double`, `float` → `int`                     |
-    | **Kullanım Durumu** | Genellikle temel türlerde (char, int, float) olur               | Farklı türler arasında uyum sağlamak için kullanılır  |
-        
+    | **Amaç** | Küçük türleri daha büyük türlere dönüştürmek          | İki tür arasındaki uyumu sağlamak için dönüşüm yapmak |
+    | **Veri Kaybı** | Veri kaybı olmaz (daha küçük tür, daha büyük türe dönüştürülür) | Veri kaybı olabilir (örneğin `float` → `int`) |
+    | **Örnek** | `char` → `int`, `int` → `float`, `float` → `double`   | `int` → `double`, `float` → `int`         |
+    | **Kullanım Durumu** | Genellikle temel türlerde (char, int, float) olur     | Farklı türler arasında uyum sağlamak için kullanılır |
 
-4) **En İyi Uyum (Best Match / Viable Function)**:
-    
-    - Eğer birkaç fonksiyon, parametrelerin türlerine uygun dönüşümle eşleşiyorsa, derleyici **en iyi eşleşmeyi** seçer. Bu, en az dönüşüm yapılması gereken fonksiyon olur.
+4)  **En İyi Uyum (Best Match / Viable Function)**:
 
-5) **Ambiguity (Çakışma)**:
+      * Eğer birkaç fonksiyon, parametrelerin türlerine uygun dönüşümle eşleşiyorsa, derleyici **en iyi eşleşmeyi** seçer. Bu, en az dönüşüm yapılması gereken fonksiyon olur.
 
-    - Eğer derleyici, hangi fonksiyonun çağrılacağı konusunda emin olamazsa, **çakışma** durumu meydana gelir ve derleyici hata verir.
+5)  **Ambiguity (Çakışma)**:
+
+      * Eğer derleyici, hangi fonksiyonun çağrılacağı konusunda emin olamazsa, **çakışma** durumu meydana gelir ve derleyici hata verir.
 
     **Örnek:** Çakışma durumu:
+
     ```cpp
     void print(int x) { std::cout << "Integer: " << x << '\n'; }
     void print(double x) { std::cout << "Double: " << x << '\n'; }
@@ -228,11 +241,16 @@ C++ derleyicisi, fonksiyonun doğru versiyonunu seçerken şu adımları takip e
     {
         print(10);      // Tam eşleşme: print(int)
         print(3.14);    // Tam eşleşme: print(double)
-        print('a');     // Belirsizlik! 'a' bir char literalidir. C++'da 'char', 'int'e ileri dönüşümle (promotion) veya 'double'a dönüşümle (conversion) dönüştürülebilir. Her iki dönüşüm de geçerli olduğu için derleyici hangi fonksiyonu seçeceğine karar veremez ve "ambiguous call to overloaded function" hatası verir.        
+        print('a');     // Belirsizlik! 'a' bir char literalidir. C++'da 'char', 'int'e ileri dönüşümle (promotion) veya 'double'a dönüşümle (conversion) dönüştürülebilir. Her iki dönüşüm de geçerli olduğu için derleyici hangi fonksiyonu seçeceğine karar veremez ve "ambiguous call to overloaded function" hatası verir.
     }
     ```
 
+-----
+
+## Examples (Örnekler)
+
 **Örnek-1:** Mutable ve Immutable için yapılan implamantasyon compile-time'da geçrekleşiyor.
+
 ```cpp
 class my_class {};
 
@@ -250,6 +268,7 @@ int main()
 ```
 
 **Örnek-2:** Varsayılan Argümanlar ve Function Overloading Arasındaki Çakışma
+
 ```cpp
 void func(int, int = 10); // Fonksiyon bildirimi: Bir int ve opsiyonel ikinci bir int alır.
 void func(int);           // Fonksiyon bildirimi: Bir int alır.
@@ -268,6 +287,7 @@ int main()
 ```
 
 **Örnek-3:** Referans Türleri ve Function Overloading Çözünürlüğü
+
 ```cpp
 void func(int& ref)    { std::cout << "L value referans\n"; } // L-value referansı alan fonksiyon (değiştirilebilir)
 void func(int val)     { std::cout << "Call-by-value\n"; }    // Değerle çağırma
@@ -288,7 +308,8 @@ int main()
 }
 ```
 
-**Örnek-4:** Null Pointer Literali (```0```) ve ```nullptr``` ile Aşırı Yükleme
+**Örnek-4:** Null Pointer Literali (`0`) ve `nullptr` ile Aşırı Yükleme
+
 ```cpp
 void func(int *ptr) { std::cout << "func(int *)\n"; }
 void func(int val)  { std::cout << "func(int)\n"; }
@@ -300,7 +321,8 @@ int main()
 }
 ```
 
-**Örnek-5:** Pointer Türleri Arasında ```nullptr``` Belirsizliği
+**Örnek-5:** Pointer Türleri Arasında `nullptr` Belirsizliği
+
 ```cpp
 void func(int *ptr)    { std::cout << "func(int *)\n"; }
 void func(double *ptr) { std::cout << "func(double *)\n"; }
@@ -311,7 +333,8 @@ int main()
 }
 ```
 
-**Örnek-6:** ```std::nullptr_t``` ile Belirsizliğin Giderilmesi
+**Örnek-6:** `std::nullptr_t` ile Belirsizliğin Giderilmesi
+
 ```cpp
 #include <cstddef> // std::nullptr_t için gerekli
 
@@ -326,6 +349,7 @@ int main()
 ```
 
 **Örnek-7:** L-value ve R-value Referansları ile Function Overloading
+
 ```cpp
 void func(int& ref)         { std::cout << "L value referans\n"; }         // Sadece değiştirilebilir (non-const) L-value'lara bağlanır.
 void func(int&& rref)       { std::cout << "R value referans\n"; }         // Sadece R-value'lara bağlanır.
@@ -348,6 +372,7 @@ int main()
 ```
 
 **Örnek-8:** İstisnai Bir Durum - Pointer ve Bool Aşırı Yüklemesi
+
 ```cpp
 void func(bool b)    { std::cout << "bool\n"; }
 void func(void *ptr) { std::cout << "void *\n"; }
@@ -361,9 +386,10 @@ int main()
 }
 ```
 
-**NOT:** ```func(bool)``` ve ```func(void *)``` fonksiyonları **Viable** durumundadır. ```func(&x)``` ile fonkisyon çağırıldığında argümanın türü ```int *``` olur. ```int *``` türünden ```bool``` dönüşümüde vardır, ```void *``` dönüşümüde vardır. Bu şekilde tanımlanmış olan **fonksiyon overload** işlemlerinde ```void *``` türünün ```bool``` türüne üstünlüğü vardır.
+**NOT:** `func(bool)` ve `func(void *)` fonksiyonları **Viable** durumundadır. `func(&x)` ile fonkisyon çağırıldığında argümanın türü `int *` olur. `int *` türünden `bool` dönüşümüde vardır, `void *` dönüşümüde vardır. Bu şekilde tanımlanmış olan **fonksiyon overload** işlemlerinde `void *` türünün `bool` türüne üstünlüğü vardır.
 
 **Örnek-9:** Birden Fazla Argümanlı Aşırı Yükleme Çözünürlüğü
+
 ```cpp
 void func(int a, double b, long c)   { std::cout << "int, double, long\n"; }
 void func(bool a, float b, int c)    { std::cout << "bool, float, int\n"; }
@@ -389,9 +415,10 @@ int main()
 
 **NOT:** En az bir argüman için o parametrede diğerlerine üstünlük kuracak, diğer arümanlarda da daha kötü olmayacak.
 
----
-## Ekstra Bilgi
+-----
 
-1) **Pointer** türünden, ```bool``` türüne örtülü dönüşüm vardır. ```nullptr``` (C++11 ve sonrası) veya ```NULL``` (C-stil) ```false``` olarak kabul edilirken, diğer tüm geçerli işaretçi değerleri ```true``` olarak kabul edilir. Bu, bir pointer'ın geçerli olup olmadığını kontrol etmek için sıklıkla kullanılır.
+## Additional Information (Ek Bilgi)
 
-2) Bir **fonksiyonun imzası (signature)**, o fonksiyonun **ismi** ve **parametre listesinden** (parametrelerin türleri ve sırası) oluşur. Geri dönüş türü ve parametre isimleri fonksiyon imzasının bir parçası değildir ve aşırı yükleme kararını etkilemez.
+1)  **Pointer** türünden, `bool` türüne örtülü dönüşüm vardır. `nullptr` (C++11 ve sonrası) veya `NULL` (C-stil) `false` olarak kabul edilirken, diğer tüm geçerli işaretçi değerleri `true` olarak kabul edilir. Bu, bir pointer'ın geçerli olup olmadığını kontrol etmek için sıklıkla kullanılır.
+
+2)  Bir **fonksiyonun imzası (signature)**, o fonksiyonun **ismi** ve **parametre listesinden** (parametrelerin türleri ve sırası) oluşur. Geri dönüş türü ve parametre isimleri fonksiyon imzasının bir parçası değildir ve aşırı yükleme kararını etkilemez.

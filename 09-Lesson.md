@@ -1,8 +1,8 @@
-# 9. Ders:
+# 9. Ders
 
 ## Class
 
-### Bellek Yönetimi: `new` ve `delete`
+### Memory Management: `new` and `delete` (Bellek Yönetimi: `new` ve `delete`)
 
 C++'ta program çalışırken bellek ayırıp serbest bırakmaya **dinamik bellek yönetimi** deriz. Bunu `new` ve `delete` anahtar kelimeleriyle yaparız.
 
@@ -10,16 +10,16 @@ C++'ta program çalışırken bellek ayırıp serbest bırakmaya **dinamik belle
   * **`delete`:** `new` ile açılan yeri geri verir (belleği serbest bırakır).
   * **Önemli:** `new` ve `delete`'i doğru kullanmak, **bellek sızıntılarını** (kullanılmayan belleğin boşaltılmaması) engeller.
 
-#### Tek Nesne İçin
+#### Single Object (Tek Nesne İçin)
 
 ```cpp
 int* tek_sayi_ptr = new int(42);    // Bir int için yer aç ve 42 ata
 // ... kullan
 delete tek_sayi_ptr;                // Belleği serbest bırak
 tek_sayi_ptr = nullptr;             // Güvenlik için işaretçiyi sıfırla
-```
+````
 
-#### Dizi İçin
+#### Array (Dizi İçin)
 
 ```cpp
 int* sayi_dizisi_ptr = new int[5];  // 5 elemanlı int dizisi oluştur
@@ -28,7 +28,7 @@ delete[] sayi_dizisi_ptr;           // Dizi belleğini serbest bırak (köşeli 
 sayi_dizisi_ptr = nullptr;          // Güvenlik için işaretçiyi sıfırla
 ```
 
-#### Dikkat Edilmesi Gerekenler
+#### Points to Consider (Dikkat Edilmesi Gerekenler)
 
   * `delete` sonrası işaretçiyi hemen `nullptr` yapın. Bu, aynı belleği tekrar silmeyi (çift serbest bırakma) engeller.
   * `delete nullptr;` güvenlidir, hata vermez.
@@ -37,9 +37,9 @@ sayi_dizisi_ptr = nullptr;          // Güvenlik için işaretçiyi sıfırla
 
 -----
 
-### C++'ta Bildirim ve Özel Üye Fonksiyonları
+### Declarations and Special Member Functions in C++ (C++'ta Bildirim ve Özel Üye Fonksiyonları)
 
-#### `not declared` (Bildirilmemiş) Hatası
+#### `not declared` Error (`not declared` Hatası)
 
 Bir değişkeni, fonksiyonu veya başka bir şeyi kullanmaya kalktığınızda derleyici onu tanımıyorsa bu hatayı alırsınız. Temel kural: Bir şeyi kullanmadan önce **tanıtmalısınız**.
 
@@ -60,20 +60,20 @@ int main() {
 
 -----
 
-#### `user declared` (Kullanıcı Tarafından Bildirilmiş) & `user defined` (Kullanıcı Tanımlı)
+#### `user-declared` & `user-defined` (Kullanıcı Tarafından Bildirilmiş & Kullanıcı Tanımlı)
 
 Bu terimler benzerdir:
 
-  * **`user declared`:**  Sizin kodda tanıttığınız yapılar (değişken, fonksiyon, sınıf vb.).
-  * **`user defined`:**  İçeriği yine sizin yazdığınız fonksiyon/sınıflar (özellikle fonksiyon ve sınıfların).
+  * **`user-declared`:** Sizin kodda tanıttığınız yapılar (değişken, fonksiyon, sınıf vb.).
+  * **`user-defined`:** İçeriği yine sizin yazdığınız fonksiyon/sınıflar (özellikle fonksiyon ve sınıfların).
 
-**Özel Durumlar: Kurucular ve Yıkıcılar**
+**Special Cases: Constructors and Destructors (Özel Durumlar: Kurucular ve Yıkıcılar)**
 
 Sınıflar için özel öneme sahip fonksiyonlardır. Nesne oluşturulduğunda veya yok edildiğinde otomatik çalışırlar.
 
-  * **Kullanıcı Tanımlı Kurucu:** Nesnenin başlangıç ayarlarını yapar. Siz yazmazsanız, derleyici otomatik bir tane oluşturur.
+  * **User-Defined Constructor (Kullanıcı Tanımlı Kurucu):** Nesnenin başlangıç ayarlarını yapar. Siz yazmazsanız, derleyici otomatik bir tane oluşturur.
 
-  * **Kullanıcı Tanımlı Yıkıcı:** Nesne silindiğinde (ömrü bittiğinde) kaynakları temizler (örneğin `new` ile ayrılmış belleği `delete` eder). Siz yazmazsanız, derleyici otomatik bir tane oluşturur.
+  * **User-Defined Destructor (Kullanıcı Tanımlı Yıkıcı):** Nesne silindiğinde (ömrü bittiğinde) kaynakları temizler (örneğin `new` ile ayrılmış belleği `delete` eder). Siz yazmazsanız, derleyici otomatik bir tane oluşturur.
 
 <!-- end list -->
 
@@ -112,7 +112,7 @@ int main() {
 
 C++11 ile geldi. Derleyiciye, özel üye fonksiyonlar (kurucular, yıkıcılar, kopyalama/atama operatörleri) için **kendi varsayılan uygulamasını oluşturmasını** açıkça söylemek için kullanılır. Siz özel bir fonksiyon tanımladığınızda derleyici bazen diğer varsayılanları oluşturmayı bırakabilir; `= default` bunu engeller.
 
-  * **Ne Zaman Kullanılır?** Kendi kodunuzu yazmak yerine, derleyicinin sunduğu standart davranışı istediğinizde.
+  * **When to Use? (Ne Zaman Kullanılır?):** Kendi kodunuzu yazmak yerine, derleyicinin sunduğu standart davranışı istediğinizde.
 
 <!-- end list -->
 
@@ -149,7 +149,7 @@ int main() {
 
 C++11 ile geldi. Bir fonksiyonun (özellikle özel üye fonksiyonların) **kullanımını tamamen yasaklar**. Bu fonksiyonu çağırmaya çalışan kod, derleme hatası alır.
 
-  * **Ne Zaman Kullanılır?** Nesnenizin kopyalanmasını veya atanmasını istemediğinizde (örneğin, tekil (Singleton) desenlerde veya kaynak yönetimi yapan sınıflarda).
+  * **When to Use? (Ne Zaman Kullanılır?):** Nesnenizin kopyalanmasını veya atanmasını istemediğinizde (örneğin, tekil (Singleton) desenlerde veya kaynak yönetimi yapan sınıflarda).
 
 <!-- end list -->
 
@@ -210,7 +210,7 @@ Bir sınıf tanımladığınızda, C++ derleyicisi sizin için bazı özel üye 
     }
     ```
 
-  * **`implicitly declared delete` (Dolaylı Silinmiş):** Bazı durumlarda, siz bir özel üye fonksiyonu tanımladığınızda veya sınıfınızda belirli koşullar varsa, derleyici diğer bazı özel üye fonksiyonlarını **otomatik olarak yasaklar (`= delete` gibi)**. Bu, sınıfın mantıksal tutarlılığını korumak içindir.
+  * **`implicitly declared deleted` (Dolaylı Silinmiş):** Bazı durumlarda, siz bir özel üye fonksiyonu tanımladığınızda veya sınıfınızda belirli koşullar varsa, derleyici diğer bazı özel üye fonksiyonlarını **otomatik olarak yasaklar (`= delete` gibi)**. Bu, sınıfın mantıksal tutarlılığını korumak içindir.
 
       * **Örnek:** Eğer sınıfınızda `const` bir veri üyesi varsa, derleyici varsayılan atama operatörünü otomatik olarak yasaklar. Çünkü `const` (sabit) bir üyeye atama yapılamaz.
 
@@ -240,20 +240,20 @@ Bir sınıf tanımladığınızda, C++ derleyicisi sizin için bazı özel üye 
 
 -----
 
-### Özel Üye Fonksiyonları
+### Special Member Functions (Özel Üye Fonksiyonları)
 
 C++’ta derleyici veya geliştirici tarafından sağlanan altı özel üye fonksiyon vardır. Bunlar nesne yaşam döngüsünü ve kaynak yönetimini kontrol eder.
 
 | Fonksiyon            | Söz Dizimi                                 | Ne Zaman Çağrılır?                                       |
 | -------------------- | ------------------------------------------ | -------------------------------------------------------- |
-| **Constructor**      | `class_name(args);`                        | Nesne yaratılırken                                       |
-| **Destructor**       | `~class_name();`                           | Nesne ömrü bittiğinde                                    |
+| **Constructor** | `class_name(args);`                        | Nesne yaratılırken                                       |
+| **Destructor** | `~class_name();`                           | Nesne ömrü bittiğinde                                    |
 | **Copy Constructor** | `class_name(const class_name& other);`     | Başlatma, değer geçişi, döndürülen nesne                 |
-| **Copy Assignment**  | `class_name& operator=(other);`            | Var olan iki nesne arasında atama                        |
+| **Copy Assignment** | `class_name& operator=(other);`            | Var olan iki nesne arasında atama                        |
 | **Move Constructor** | `class_name(class_name&& other) noexcept;` | Geçici nesne oluşturulurken, `std::move` kullanıldığında |
-| **Move Assignment**  | `class_name& operator=(other&&) noexcept;` | Var olan nesneye geçici nesne atandığında                |
+| **Move Assignment** | `class_name& operator=(other&&) noexcept;` | Var olan nesneye geçici nesne atandığında                |
 
-#### Constructor
+#### Constructor (Kurucu)
 
 ```cpp
 class student 
@@ -274,7 +274,7 @@ class student
 };
 ```
 
-#### Destructor
+#### Destructor (Yıkıcı)
 
 ```cpp
 class buffer_class 
@@ -293,6 +293,7 @@ class buffer_class
         }
 };
 ```
+
 #### Copy Constructor (Kopyalama Kurucusu)
 
 Bir sınıfın **aynı türden başka bir nesnesini parametre olarak alan** bir kurucu fonksiyondur.
@@ -352,9 +353,11 @@ Destructor called here, this : 0x7ffc126b8a76
 */
 ```
 
-##### Copy Constructor'ın çağırıldığı durumlar
+##### Situations Where Copy Constructor is Called (Kopyalama Kurucusunun Çağrıldığı Durumlar)
 
-- **Nesne Başlangıç Değeriyle Oluşturulduğunda:** Bir nesne, başka bir mevcut nesne kullanılarak ilk değer ataması ile oluşturulduğunda.
+  - **When an Object is Initialized with a Value (Nesne Başlangıç Değeriyle Oluşturulduğunda):** Bir nesne, başka bir mevcut nesne kullanılarak ilk değer ataması ile oluşturulduğunda.
+
+<!-- end list -->
 
 ```cpp
 MyClass obj_1;
@@ -362,7 +365,9 @@ MyClass obj_2 = obj_1; // Kopyalama Constructor'ı çağrılır.
 MyClass obj_3(obj_1);  // Kopyalama Constructor'ı çağrılır.
 ```
 
-- **Fonksiyona Nesne Değer Olarak Geçirildiğinde (Pass by Value):** Bir fonksiyona nesne, referans yerine değer olarak geçirildiğinde.
+  - **When an Object is Passed to a Function by Value (Fonksiyona Nesne Değer Olarak Geçirildiğinde):** Bir fonksiyona nesne, referans yerine değer olarak geçirildiğinde.
+
+<!-- end list -->
 
 ```cpp
 void process_object(MyClass passed_object) {
@@ -373,7 +378,9 @@ MyClass original_object;
 process_object(original_object);
 ```
 
-- **Fonksiyondan Nesne Değer Olarak Döndürüldüğünde (Return by Value):** Bir fonksiyon, yerel bir nesneyi değer olarak döndürdüğünde (modern C++ derleyicilerinde RVO/NRVO optimizasyonları ile bu durum bazen atlanabilir, ancak kavramsal olarak kopyalama burada gerçekleşir).
+  - **When an Object is Returned from a Function by Value (Fonksiyondan Nesne Değer Olarak Döndürüldüğünde):** Bir fonksiyon, yerel bir nesneyi değer olarak döndürdüğünde (modern C++ derleyicilerinde RVO/NRVO optimizasyonları ile bu durum bazen atlanabilir, ancak kavramsal olarak kopyalama burada gerçekleşir).
+
+<!-- end list -->
 
 ```cpp
 MyClass create_object() {
@@ -406,15 +413,17 @@ int main()
 }
 ```
 
-**NOT:** Derleyicinin örtülü olarak (implicity) bildirdiği, ve tanımladığı herhangi bir **special member function** şu özelliklere sahiptir; sınıfın non-static, inline, public member functionlarıdır!
+**NOT:** Derleyicinin örtülü olarak (implicity) bildirdiği, ve tanımladığı herhangi bir **special member function** şu özelliklere sahiptir; sınıfın non-static, inline, public member functionlarıdır\!
 
 -----
 
-## Değer Tipi(Value Type)
+## Value Type (Değer Tipi)
 
 Bir değer tipi, veriyi doğrudan içeren bir değişkendir. Kopyalandığında veya atandığında, verinin kendisi kopyalanır. Orijinal ve kopya bağımsızdır; birindeki değişiklik diğerini etkilemez.
 
-- **Örnek:** ```int```, ```double```, basit ```struct```'lar.
+  - **Örnek:** `int`, `double`, basit `struct`'lar.
+
+<!-- end list -->
 
 ```cpp
 int a = 10;
@@ -424,11 +433,13 @@ b = 20;    // 'b' değişir, 'a' (10) aynı kalır.
 
 -----
 
-## Değer Semantiği (Value Semantics)
+## Value Semantics (Değer Semantiği)
 
-Bir sınıfın veya türün, tıpkı değer tipleri gibi davranacak şekilde tasarlanmasıdır. Yani, bir nesne kopyalandığında veya atandığında, tüm kaynakları (bellek, dosyalar vb.) dahil tam ve bağımsız bir kopyası oluşturulur. Özellikle dinamik bellek kullanan sınıflar için bu, derin kopyalama (deep copy) yapılmasını gerektirir
+Bir sınıfın veya türün, tıpkı değer tipleri gibi davranacak şekilde tasarlanmasıdır. Yani, bir nesne kopyalandığında veya atandığında, tüm kaynakları (bellek, dosyalar vb.) dahil tam ve bağımsız bir kopyası oluşturulur. Özellikle dinamik bellek kullanan sınıflar için bu, derin kopyalama (deep copy) yapılmasını gerektirir.
 
-- **Gereklilik:** Kopyalama kurucusu, atama operatörü ve yıkıcının (destructor) doğru implementasyonu
+  - **Gereklilik:** Kopyalama kurucusu, atama operatörü ve yıkıcının (destructor) doğru implementasyonu.
+
+<!-- end list -->
 
 ```cpp
 class MyString {
@@ -450,9 +461,9 @@ public:
 
 -----
 
-## Özel Kelimeler
+## Special Keywords (Özel Anahtar Kelimeler)
 
-### **Invariant (Sınıf İnvariantı)**
+### Invariant (Sınıf Sabiti/Değişmezlik Kuralı)
 
 **İnvariant**, bir sınıfın içindeki verilerin her zaman uyması gereken bir **kuraldır**. Nesne oluşturulduğunda ve kullanıldığında bu kural asla bozulmamalıdır. Sınıfın tüm metotları bu kuralı korumalıdır.
 
@@ -512,7 +523,7 @@ int main()
 
 -----
 
-### **Aggregate (Agrega)**
+### Aggregate (Agrega)
 
 **Agrega**, C++'ta çok basit, sadece veri tutan bir sınıf veya yapıdır. Karmaşık kurucusu, özel/korumalı üyesi, sanal fonksiyonu veya temel sınıfı olmaz. Üyelerini `{}` (küme parantezleri) ile sırayla kolayca başlatabilirsiniz.
 
@@ -546,14 +557,16 @@ int main()
 
 -----
 
-## **Rule of Zero:** “özel üye fonksiyonları yazma” felsefesidir. 
+### Rule of Zero (`Rule of Zero` Kuralı)
 
-Eğer sınıfınız **ham kaynak (ham işaretçi, dosya tanıtıcısı vb.) yönetmiyorsa**, **destructor, copy/move constructor ve assignment operator yazmayın**, derleyicinin oluşturmasına izin verin.
+“özel üye fonksiyonları yazma” felsefesidir. Eğer sınıfınız **ham kaynak (ham işaretçi, dosya tanıtıcısı vb.) yönetmiyorsa**, **destructor, copy/move constructor ve assignment operator yazmayın**, derleyicinin oluşturmasına izin verin.
 
 -----
 
-## Mülakat Sorusu:
+### Interview Question (Mülakat Sorusu)
 
-* **Soru:** Hangi durumda derleyici bir sınıfın "special member function"unu default eder ve nasıl default eder?
+  * **Soru:** Hangi durumda derleyici bir sınıfın "special member function"unu default eder ve nasıl default eder?
 
-* **Cevap:** Eğer kullanıcı tarafından özel olarak tanımlanmadıysa, derleyici otomatik olarak (dolaylı şekilde) varsayılan constructor, copy constructor, copy assignment operator, destructor ve move fonksiyonlarını default olarak sağlar. Eğer sınıfta özel bir üye fonksiyon tanımlanırsa, ilgili default fonksiyonlar otomatik olarak oluşturulmayabilir. İstenirse ```= default``` ile açıkça default edilmesi sağlanır.
+  * **Cevap:** Eğer kullanıcı tarafından özel olarak tanımlanmadıysa, derleyici otomatik olarak (dolaylı şekilde) varsayılan constructor, copy constructor, copy assignment operator, destructor ve move fonksiyonlarını default olarak sağlar. Eğer sınıfta özel bir üye fonksiyon tanımlanırsa, ilgili default fonksiyonlar otomatik olarak oluşturulmayabilir. İstenirse `= default` ile açıkça default edilmesi sağlanır.
+
+<!-- end list -->

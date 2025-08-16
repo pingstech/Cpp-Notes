@@ -1,14 +1,15 @@
-# 6.Ders
+## 6. Ders
 
-## Class
+### Classes
 
 Bir tür veri yapısıdır ve iki ana bileşenden oluşur:
-- **Veri üyeleri (data members)**: Bir sınıfın içindeki değişkenlerdir.
-- **Fonksiyon üyeleri (member functions)**: Bu değişkenler üzerinde işlem yapan fonksiyonlardır.
 
-### Class Definition
+  - **Veri üyeleri (data members)**: Bir sınıfın içindeki değişkenlerdir.
+  - **Fonksiyon üyeleri (member functions)**: Bu değişkenler üzerinde işlem yapan fonksiyonlardır.
 
-Bir sınıf, ```class``` anahtar kelimesi ile tanımlanır.
+#### Class Definition
+
+Bir sınıf, `class` anahtar kelimesi ile tanımlanır.
 
 ```cpp
 class my_class
@@ -28,22 +29,28 @@ class my_class
 
 **Bir sınıf aşağıdaki özelliklere sahiptir:**
 
-1) **Veri Üyeleri (Data Members)**:
-    - Bir sınıf, değişkenlerin bulunduğu bir yapı olabilir. Bu değişkenler veri üyeleri olarak bilinir.
-    - Veri üyeleri private (özel) veya public (genel) olabilir.
+1)  **Veri Üyeleri (Data Members)**:
 
-2) **Fonksiyon Üyeleri (Member Functions)**:
-    - Sınıf içindeki fonksiyonlar, sınıfın veri üyeleri üzerinde işlem yapmak için kullanılır.
-    - Bu fonksiyonlar da ```private``` veya ```public``` olabilir.
+      - Bir sınıf, değişkenlerin bulunduğu bir yapı olabilir. Bu değişkenler veri üyeleri olarak bilinir.
+      - Veri üyeleri private (özel) veya public (genel) olabilir.
 
-3) **Nesne (Object)**:
-    - Sınıf, bir şablon sağlar; ancak bir sınıfın **nesneleri**, sınıfın örnekleridir.
-    - **Nesneler**, sınıfın veri ve fonksiyon üyelerini kullanabilir.
+2)  **Fonksiyon Üyeleri (Member Functions)**:
 
-4) **Access Control (Erişim Kontrolü)**:
-    - ```public```: Sınıf dışından erişilebilir.
-    - ```private```: Yalnızca sınıf içinden erişilebilir.
-    - ```protected```: Bu erişim düzeyi, türetilmiş sınıfların erişmesine izin verir.
+      - Sınıf içindeki fonksiyonlar, sınıfın veri üyeleri üzerinde işlem yapmak için kullanılır.
+      - Bu fonksiyonlar da `private` veya `public` olabilir.
+
+3)  **Nesne (Object)**:
+
+      - Sınıf, bir şablon sağlar; ancak bir sınıfın **nesneleri**, sınıfın örnekleridir.
+      - **Nesneler**, sınıfın veri ve fonksiyon üyelerini kullanabilir.
+
+4)  **Access Control (Erişim Kontrolü)**:
+
+      - `public`: Sınıf dışından erişilebilir.
+      - `private`: Yalnızca sınıf içinden erişilebilir.
+      - `protected`: Bu erişim düzeyi, türetilmiş sınıfların erişmesine izin verir.
+
+<!-- end list -->
 
 ```cpp
 struct data_t 
@@ -88,12 +95,12 @@ int main()
 }
 ```
 
-### Access Control(Erişim Kontrolü)
+### Access Specifiers
 
-1) #### **```public``` (Genel):**
+1)  #### `public` Access Specifier (Genel Erişim Belirleyicisi):
 
-    - ```public``` üyeler sınıf dışından erişilebilir.
-    - Bu üyeler, sınıf dışındaki herhangi bir fonksiyon veya nesne tarafından kullanılabilir.
+      - `public` üyeler sınıf dışından erişilebilir.
+      - Bu üyeler, sınıf dışındaki herhangi bir fonksiyon veya nesne tarafından kullanılabilir.
 
     **Örnek:**
 
@@ -121,15 +128,14 @@ int main()
         std::cout << "X değeri: " << obj.getX() << '\n';  // public fonksiyon kullanımı
     }
     ```
-    - Burada, ```x``` ```public``` olarak tanımlandığı için ```main``` fonksiyonunda dışarıdan erişilebilir.
-    - ```setX``` ve ```getX``` fonksiyonları da ```public``` olduğu için dışarıdan çağrılabilir.
 
-    ---
+      - Burada, `x` `public` olarak tanımlandığı için `main` fonksiyonunda dışarıdan erişilebilir.
+      - `setX` ve `getX` fonksiyonları da `public` olduğu için dışarıdan çağrılabilir.
 
-2) #### **```private``` (Özel):**
+2)  #### `private` Access Specifier (Özel Erişim Belirleyicisi):
 
-    - ```private``` üyeler sadece sınıfın içinde bulunan fonksiyonlar tarafından erişilebilir.
-    - ```private``` veriler, sınıf dışından erişilemez ve yalnızca sınıf içindeki fonksiyonlarla işlenebilir.
+      - `private` üyeler sadece sınıfın içinde bulunan fonksiyonlar tarafından erişilebilir.
+      - `private` veriler, sınıf dışından erişilemez ve yalnızca sınıf içindeki fonksiyonlarla işlenebilir.
 
     **Örnek:**
 
@@ -159,14 +165,16 @@ int main()
         std::cout << "X değeri: " << obj.getX() << '\n';  // private veri üyesine erişim, public fonksiyon ile yapılır
     }
     ```
-    - ```x``` değişkeni ```private``` olarak tanımlanmıştır, bu nedenle ```main``` fonksiyonunda doğrudan erişilemez.
 
-    - Ancak ```setX``` ve ```getX``` gibi ```public``` fonksiyonlar kullanılarak erişim sağlanabilir.
+      - `x` değişkeni `private` olarak tanımlanmıştır, bu nedenle `main` fonksiyonunda doğrudan erişilemez.
 
-    ---
+      - Ancak `setX` ve `getX` gibi `public` fonksiyonlar kullanılarak erişim sağlanabilir.
 
-3) #### **```protected``` (Korunmuş):**
-    - ```protected``` üyeler, sınıf dışından erişilemez, ancak bu üyeler türeyen sınıflar tarafından erişilebilir. Bu, kalıtım (inheritance) ile türetilen sınıflara erişim izni verir.
+3)  #### `protected` Access Specifier (Korunmuş Erişim Belirleyicisi):
+
+      - `protected` üyeler, sınıf dışından erişilemez, ancak bu üyeler türeyen sınıflar tarafından erişilebilir. Bu, kalıtım (inheritance) ile türetilen sınıflara erişim izni verir.
+
+    <!-- end list -->
 
     ```cpp
     #include <iostream>
@@ -205,19 +213,18 @@ int main()
         obj.display();  // Derived sınıfının fonksiyonu ile protected üyeye erişim
     }
     ```
-    - Burada, ```x``` ```protected``` olarak tanımlandığı için ```Base``` sınıfının dışında doğrudan erişilemez, ancak ```Derived``` sınıfından erişilebilir.
 
-    - ```setX``` fonksiyonu ```Base``` sınıfından çağrılabilir, bu da ```protected``` veriye dolaylı erişim sağlar.
+      - Burada, `x` `protected` olarak tanımlandığı için `Base` sınıfının dışında doğrudan erişilemez, ancak `Derived` sınıfından erişilebilir.
 
-    ---
+      - `setX` fonksiyonu `Base` sınıfından çağrılabilir, bu da `protected` veriye dolaylı erişim sağlar.
 
-| **Erişim Belirleyicisi** | **Erişim Durumu**                                     |
+| **Erişim Belirleyicisi** | **Erişim Durumu** |
 | ------------------------ | ----------------------------------------------------- |
-| **`public`**             | Sınıf içinden ve dışından erişilebilir.               |
-| **`private`**            | Yalnızca sınıf içinden erişilebilir.                  |
-| **`protected`**          | Sınıf içinden ve türetilmiş sınıflardan erişilebilir. |
+| **`public`** | Sınıf içinden ve dışından erişilebilir.               |
+| **`private`** | Yalnızca sınıf içinden erişilebilir.                  |
+| **`protected`** | Sınıf içinden ve türetilmiş sınıflardan erişilebilir. |
 
-### Member Function
+### Member Functions
 
 Bir sınıfın içine dahil edilmiş fonksiyonlardır ve bu fonksiyonlar sınıfın nesneleri üzerinde işlem yapar.
 
@@ -233,7 +240,7 @@ class _my_class()
 inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığımız için "inline" kullanmak zorundayız.
 ```
 
-1) **Temel Bildirim ve Tanım:**
+1)  **Temel Bildirim ve Tanım:**
 
     ```cpp
     class Araba 
@@ -258,9 +265,8 @@ inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığım�
         hiz += artis; // Üye değişkene doğrudan erişim
     }
     ```
-    ---
 
-2) **Erişim Kuralları(```public``` vs ```private```):**  
+2)  **Access Rules (`public` vs `private`):**
 
     Üye fonksiyonların dışarıdan çağrılabilmesi için public olmalıdır.
 
@@ -275,11 +281,10 @@ inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığım�
         // Üye değişkenlere sadece sınıfın KENDİ fonksiyonları erişebilir.
     }
     ```
-    ---
 
-3) **```const``` Üye Fonksiyonlar:**
+3)  **`const` Member Functions:**
 
-    Nesnenin durumunu değiştirmeyen fonksiyonlar ```const``` ile işaretlenir.
+    Nesnenin durumunu değiştirmeyen fonksiyonlar `const` ile işaretlenir.
 
     ```cpp
     class Araba 
@@ -302,9 +307,8 @@ inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığım�
         sabitAraba.mevcutHiz(); // Geçerli (const fonksiyon)
     }
     ```
-    ---
 
-4) **```static``` Üye Fonksiyonlar:**
+4)  **`static` Member Functions:**
 
     Nesneye değil, sınıfa ait fonksiyonlar. İçeride this yoktur.
 
@@ -332,12 +336,13 @@ inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığım�
         std::cout << Araba::toplamArabaSayisi(); // Çıktı: 2
     }
     ```
-    ---
 
-5) **Tanım Yerleri: Inline vs Dışarıda**
+5)  **Definition Locations: Inline vs Outside:**
 
-    - **Inline**: Sınıf içinde tanım → Derleyici optimizasyonu.
-    - **Dışarıda**: Büyük fonksiyonlar için → ```SınıfAdı::fonksiyon``` syntax'ı zorunlu.
+      - **Inline**: Sınıf içinde tanım → Derleyici optimizasyonu.
+      - **Dışarıda**: Büyük fonksiyonlar için → `SınıfAdı::fonksiyon` syntax'ı zorunlu.
+
+    <!-- end list -->
 
     ```cpp
     class Araba 
@@ -351,22 +356,22 @@ inline void _my_class::func() // Sınıfın dışında tanımlama yapmadığım�
         std::cout << "Beep!";
     }
     ```
----
 
 **Özet Tablo: Kritik Kurallar**
-| Özellik             | Syntax Kuralı                         | Sık Hata                     |
-|---------------------|---------------------------------------|------------------------------|
-| **Sınıf Dışı Tanım**| `void Sınıf::fonksiyon() { ... }`     | `Sınıf::` unutma → Tanımsızlık hatası! |
-| **`const` Fonksiyon**| `int get() const { ... }`            | `const` nesneler için zorunlu |
-| **`static` Fonksiyon**| `static void foo();` → `this` yok!  | Static üye değişken gerektirir |
-| **Erişim**          | `private` fonksiyon → Sadece sınıf içi | Dışarıdan çağırma hatası    |
+| Özellik | Syntax Kuralı | Sık Hata |
+|---|---|---|
+| **Sınıf Dışı Tanım**| `void Sınıf::fonksiyon() { ... }` | `Sınıf::` unutma → Tanımsızlık hatası\! |
+| **`const` Fonksiyon**| `int get() const { ... }` | `const` nesneler için zorunlu |
+| **`static` Fonksiyon**| `static void foo();` → `this` yok\! | Static üye değişken gerektirir |
+| **Erişim** | `private` fonksiyon → Sadece sınıf içi | Dışarıdan çağırma hatası |
 
-> ✅ **En İyi Uygulama:**  
-> - Nesne durumu değişmiyorsa **`const`** ekle.  
-> - Sınıf geneli işlemler için **`static`** kullan.  
-> - Büyük fonksiyonları **sınıf dışında tanımla** (kod okunabilirliği).
+> ✅ **En İyi Uygulama:**
+>
+>   - Nesne durumu değişmiyorsa **`const`** ekle.
+>   - Sınıf geneli işlemler için **`static`** kullan.
+>   - Büyük fonksiyonları **sınıf dışında tanımla** (kod okunabilirliği).
 
-#### Member Function ile Function Overloading:**
+#### Member Function Overloading:
 
 ```cpp
 class Calculator 
@@ -401,8 +406,7 @@ int main()
 }
 ```
 
-**NOT-1:** **Member functions(üye fonksiyonlar)** bulundukları scope içerisinde **redeclaration(yeniden tanımlama) yapılamazlar!** **Syntax hatasına** yol açar.
-
+**NOT-1:** **Member functions(üye fonksiyonlar)** bulundukları scope içerisinde **redeclaration(yeniden tanımlama) yapılamazlar\!** **Syntax hatasına** yol açar.
 
 ```cpp
 class my_class
@@ -434,15 +438,15 @@ int main()
 }
 ```
 
----
+-----
 
-### C++'da İsim Arama(Name Lookup) Mantığı
+### Name Lookup
 
-1) #### Kapsam(Scope):
+1)  #### Scope
 
     İsim aramanın en temel prensibi kapsamdır (scope). Bir ismin tanımlı olduğu bölgeye "kapsam" denir. C++'da çeşitli kapsam türleri bulunur:
 
-    - **Yerel Kapsam (Local Scope)**: Bir fonksiyon veya kod bloğu (```{}```) içinde tanımlanan isimler sadece o blok içinde görünürdür.
+      - **Local Scope**: Bir fonksiyon veya kod bloğu (`{}`) içinde tanımlanan isimler sadece o blok içinde görünürdür.
 
         ```cpp
         void myFunction() 
@@ -452,7 +456,7 @@ int main()
         } // 'x' burada kapsam dışına çıkar
         ```
 
-    - **Sınıf Kapsamı (Class Scope)**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
+      - **Class Scope**: Bir sınıfın içinde tanımlanan üyeler (veri üyeleri, üye fonksiyonlar, iç içe sınıflar) sadece o sınıfın üyeleri veya o sınıfın nesneleri aracılığıyla erişilebilir.
 
         ```cpp
         class MyClass 
@@ -466,7 +470,7 @@ int main()
         };
         ```
 
-    - **Namespace Kapsamı (Namespace Scope)**: Bir namespace içinde tanımlanan isimler sadece o ```namespace``` içinde veya ```using``` bildirimi ile erişilebilir.
+      - **Namespace Scope**: Bir namespace içinde tanımlanan isimler sadece o `namespace` içinde veya `using` bildirimi ile erişilebilir.
 
         ```cpp
         namespace MyNamespace 
@@ -475,7 +479,7 @@ int main()
         }
         ```
 
-    - **Global Kapsam (Global Scope)**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
+      - **Global Scope**: Herhangi bir fonksiyon, sınıf veya namespace dışında tanımlanan isimler programın her yerinden erişilebilir.
 
         ```cpp
         int programId; // 'programId' global kapsamda
@@ -483,13 +487,13 @@ int main()
 
         Derleyici, bir ismi ararken öncelikle o ismin kullanıldığı mevcut **iç kapsamlardan dış kapsamlara doğru** arama yapar.
 
-2) #### Bağımlı Olmayan İsim Arama (Unqualified Name Lookup):
+2)  #### Unqualified Name Lookup:
 
-    Bir ismin önüne ```::``` (kapsam çözümleme operatörü) veya bir sınıf/namespace adı gibi bir niteleyici koymadan arandığı durumdur. Derleyici, bu durumda şu sırayı takip eder:
+    Bir ismin önüne `::` (kapsam çözümleme operatörü) veya bir sınıf/namespace adı gibi bir niteleyici koymadan arandığı durumdur. Derleyici, bu durumda şu sırayı takip eder:
 
-    - İsmin kullanıldığı **mevcut kapsam** (fonksiyon bloğu, sınıf üye fonksiyonu vb.).
-    - Mevcut kapsamı çevreleyen **dış kapsamlar** (iç içe fonksiyon blokları, ana fonksiyon, sınıfın kendisi).
-    - Dosya kapsamı (global veya namespace).
+      - İsmin kullanıldığı **mevcut kapsam** (fonksiyon bloğu, sınıf üye fonksiyonu vb.).
+      - Mevcut kapsamı çevreleyen **dış kapsamlar** (iç içe fonksiyon blokları, ana fonksiyon, sınıfın kendisi).
+      - Dosya kapsamı (global veya namespace).
 
     İlk bulduğu geçerli tanımı kullanır. Eğer aynı isim birden fazla kapsamda tanımlıysa, **en içteki kapsamdaki tanım öncelik alır**.
 
@@ -516,9 +520,9 @@ int main()
     }
     ```
 
-3) #### Bağımlı İsim Arama (Qualified Name Lookup)
+3)  #### Qualified Name Lookup
 
-    Bir ismin önüne ```::``` operatörü ile bir sınıf veya namespace adı (```NamespaceAdi::isim``` veya ```SinifAdi::isim```) gibi bir **niteleyici (qualifier)** koyularak arandığı durumdur. Bu durumda derleyici, aramayı sadece belirtilen sınıfın veya namespace'in içinde yapar.
+    Bir ismin önüne `::` operatörü ile bir sınıf veya namespace adı (`NamespaceAdi::isim` veya `SinifAdi::isim`) gibi bir **niteleyici (qualifier)** koyularak arandığı durumdur. Bu durumda derleyici, aramayı sadece belirtilen sınıfın veya namespace'in içinde yapar.
 
     ```cpp
     namespace MyLibrary { int value = 100; }
@@ -541,9 +545,9 @@ int main()
     }
     ```
 
-4) #### Bağımlı Argüman Arama (Argument-Dependent Lookup - ADL / Koenig Lookup)
+4)  #### Argument-Dependent Lookup (ADL)
 
-    Bu özel bir isim arama türüdür ve özellikle operatör aşırı yüklemeleri ve fonksiyon şablonları için önemlidir. Bir fonksiyon çağrıldığında, eğer fonksiyon ismi niteleyici olmadan kullanılırsa (```func(arg)```), derleyici sadece mevcut kapsamda arama yapmakla kalmaz, aynı zamanda fonksiyonun argümanlarının tiplerinin tanımlandığı namespace'leri de arar.
+    Bu özel bir isim arama türüdür ve özellikle operatör aşırı yüklemeleri ve fonksiyon şablonları için önemlidir. Bir fonksiyon çağrıldığında, eğer fonksiyon ismi niteleyici olmadan kullanılırsa (`func(arg)`), derleyici sadece mevcut kapsamda arama yapmakla kalmaz, aynı zamanda fonksiyonun argümanlarının tiplerinin tanımlandığı namespace'leri de arar.
 
     ```cpp
     namespace N 
@@ -562,42 +566,43 @@ int main()
     }
     ```
 
-    Burada ```f(s_obj)``` çağrısında, ```f``` fonksiyonu ```N::f``` olarak doğrudan nitelenmediği halde, argüman olan ```s_obj```'nin tipi ```N::S``` olduğu için derleyici ```N``` namespace'ini de arar ve ```N::f(S)```'i bulur.
+    Burada `f(s_obj)` çağrısında, `f` fonksiyonu `N::f` olarak doğrudan nitelenmediği halde, argüman olan `s_obj`'nin tipi `N::S` olduğu için derleyici `N` namespace'ini de arar ve `N::f(S)`'i bulur.
 
+#### Detailed Example:
 
-#### Detaylı Örnek:
+````
+```cpp
+class my_class
+{
+    private:
+        int x;              // Sınıfın private veri üyesi 'x'
+    public:
+        void foo();         // my_class'ın üye fonksiyonu
+};
 
-    ```cpp
-    class my_class
-    {
-        private:
-            int x;              // Sınıfın private veri üyesi 'x'
-        public:
-            void foo();         // my_class'ın üye fonksiyonu
-    };
+int x = 45;                 // Global kapsamdaki 'x' değişkeni
 
-    int x = 45;                 // Global kapsamdaki 'x' değişkeni
+void my_class::foo()        // my_class'ın foo() fonksiyonunun tanımı
+{
+    int x = 67;             // foo() fonksiyonunun yerel kapsamındaki 'x' değişkeni
+    
+    my_class::x = x + ::x;  // İşlemin yapıldığı kritik satır
+}
+```
+````
 
-    void my_class::foo()        // my_class'ın foo() fonksiyonunun tanımı
-    {
-        int x = 67;             // foo() fonksiyonunun yerel kapsamındaki 'x' değişkeni
-        
-        my_class::x = x + ::x;  // İşlemin yapıldığı kritik satır
-    }
-    ```
+**`my_class::x = x + ::x;` ifadesi bu durumda şu anlama gelir:**
 
-**```my_class::x = x + ::x;``` ifadesi bu durumda şu anlama gelir:**
+`my_class` sınıfının üyesi olan `x` = (`foo()` fonksiyonunun yerel `x`'i) + (`global x`'i) şeklinde nitelendirilir. Şimdi buradaki değerleriyerine koyarsak
 
-```my_class``` sınıfının üyesi olan ```x``` = (```foo()``` fonksiyonunun yerel ```x```'i) + (```global x```'i) şeklinde nitelendirilir. Şimdi buradaki değerleriyerine koyarsak
+  - `my_class::x` = `67` + `45`
+  - `my_class::x` = `112`
 
-- ```my_class::x``` = ```67``` + ```45```
-- ```my_class::x``` = ```112```
+-----
 
----
+### Extra Notes on Class Usage:
 
-### Class Kullanımına Ait Ekstra Notlar:
-
-1) **Erişim belirleyici kullanmadan sınıf tanımlama:**
+1)  **Defining a Class Without an Access Specifier**
 
     ```cpp
     class _my_class
@@ -611,14 +616,14 @@ int main()
     }
     ```
 
-2) **Mülakat sorusu-1:** 
+2)  **Interview Question-1:**
 
-    C++' bir sınıfın **```public``` interface**'i: sadece sınıfın **```public``` bölümü değil**, sınıfın **```public``` bölümündeki öğeler + başlık dosyasındaki(headre file) ```global``` bildirimlerdir**.
+    C++' bir sınıfın **`public` interface**'i: sadece sınıfın **`public` bölümü değil**, sınıfın **`public` bölümündeki öğeler + başlık dosyasındaki(headre file) `global` bildirimlerdir**.
 
-3) **Sınıf scope içinde aynı isimli değişken tanımlama:**
-    Bir **syntax hatasıdır**. Bir sınıfın scope'u içerisinde **aynı isimli** bir **değişken** tanımlanamaz. 
-    
-    Sınıfın ```public```, ```private``` ve ```protected``` bölümleri yani erişim ayrıcalıklı kod alanları **bir scope değildir**.
+3)  **Defining a Variable with the Same Name within Class Scope**
+    Bir **syntax hatasıdır**. Bir sınıfın scope'u içerisinde **aynı isimli** bir **değişken** tanımlanamaz.
+
+    Sınıfın `public`, `private` ve `protected` bölümleri yani erişim ayrıcalıklı kod alanları **bir scope değildir**.
 
     ```cpp
     class _my_class

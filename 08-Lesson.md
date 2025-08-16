@@ -1,18 +1,18 @@
-# 8.Ders
+# 8. Ders
 
 ## Class
 
-### Constructor Functions(Yapıcı Fonkisyonlar)
+### Constructor Functions (Yapıcı Fonksiyonlar)
 
 Bir sınıfın nesnesi oluşturulduğunda **otomatik olarak** çağrılan özel bir üye fonksiyondur. (**ctor** olarak kısaltması yapılabilir.)
 
-#### Constructor Function(Yapıcı Fonkisyon) Nasıl Tanımlanır?
+#### How to Define a Constructor Function (Yapıcı Fonksiyon Nasıl Tanımlanır?)
 
-1) **Sınıf Adıyla Aynı İsim:** Yapıcı fonksiyonun adı, ait olduğu sınıfın adıyla tamamen aynı olmalıdır.
+1.  **Sınıf Adıyla Aynı İsim:** Yapıcı fonksiyonun adı, ait olduğu sınıfın adıyla tamamen aynı olmalıdır.
+2.  **Geri Dönüş Tipi Yok:** Yapıcı fonksiyonların açıkça belirtilmiş bir **geri dönüş tipi yoktur\!** (`void` bile yazılmaz).
+3.  **Erişim Belirleyici:** Genellikle `public` erişim belirleyicisi altında tanımlanırlar, böylece sınıfın dışından nesneler oluşturulabilir.
 
-2) **Geri Dönüş Tipi Yok:** Yapıcı fonksiyonların açıkça belirtilmiş bir <u>**geri dönüş tipi yoktur!**</u> ( ```void``` bile yazılmaz).
-
-3) **Erişim Belirleyici:** Genellikle ```public``` erişim belirleyicisi altında tanımlanırlar, böylece sınıfın dışından nesneler oluşturulabilir.
+<!-- end list -->
 
 ```cpp
 class ogrenci
@@ -49,19 +49,18 @@ public:
         std::cout << "Ad: " << ad << ", Yaş: " << yas << ", Ortalama: " << not_ortalamasi << std::endl;
     }
 };
-````
+```
 
-#### Constructor Function(Yapıcı Fonkisyon) Türleri
+#### Types of Constructor Functions (Yapıcı Fonksiyon Türleri)
 
-1)  **Parametreli Yapıcı (Parameterized Constructor)**
-
+1.  **Parameterized Constructor (Parametreli Yapıcı)**
     Yukarıdaki `ogrenci(const std::string& ogrenci_adi, int ogrenci_yasi, double ortalama)` gibi, parametreler alarak nesneye ilk değerleri atayan yapıcılardır. Nesne oluşturulurken parantez içinde bu parametreler verilir:
 
     ```cpp
     ogrenci ali("Ali Can", 18, 3.5); // Parametreli yapıcı çağrılır
     ```
 
-2)  **Varsayılan Yapıcı (Default Constructor)**
+2.  **Default Constructor (Varsayılan Yapıcı)**
 
       - Hiç parametre almayan yapıcı fonksiyondur.
       - Eğer bir sınıf için hiçbir yapıcı tanımlamazsanız, C++ derleyicisi otomatik olarak bir varsayılan yapıcı oluşturur (eğer başka bir yapıcı tanımlanmamışsa).
@@ -73,19 +72,17 @@ public:
     Ogrenci yeniOgrenci; // Varsayılan yapıcı çağrılır
     ```
 
-    **NOT:** Yapıcı fonksiyonlar, bir nesnenin oluşturulma anını yönettikleri için `const` üye fonksiyon olamazlar.
+**NOT:** Yapıcı fonksiyonlar, bir nesnenin oluşturulma anını yönettikleri için `const` üye fonksiyon olamazlar.
 
 -----
 
-#### Başlatıcı Listesi (Initializer List)
+### Initializer List (Başlatıcı Listesi)
 
-Başlatıcı listesi, yapıcı fonksiyonun gövdesinden önce (`:` ile başlayarak) \<u\>veri üyelerini doğrudan başlatan (direct initialization) bir yöntemdir\</u\>. Bu, özellikle aşağıdaki durumlar için hem daha verimli hem de zorunludur:
+Başlatıcı listesi, yapıcı fonksiyonun gövdesinden önce (`:` ile başlayarak) veri üyelerini doğrudan başlatan (direct initialization) bir yöntemdir. Bu, aşağıdaki durumlar için hem daha verimli hem de zorunludur:
 
-  - **`const` Veri Üyeleri:** `const` olarak tanımlanmış üyeler sadece bir kez, oluşturulma anında başlatılabilir. Onlara daha sonra değer atanamaz. Bu yüzden `const` üyeler yapıcı fonksiyonun gövdesinde değil, yalnızca başlatıcı listesinde başlatılabilir.
-
+  - **`const` Veri Üyeleri:** `const` olarak tanımlanmış üyeler sadece bir kez, oluşturulma anında başlatılabilir. Bu yüzden `const` üyeler yapıcı fonksiyonun gövdesinde değil, yalnızca başlatıcı listesinde başlatılabilir.
   - **Referans Veri Üyeleri:** Referanslar da `const` üyeler gibi tanımlandıkları anda bir nesneye veya değişkene bağlanmalıdır. Bu nedenle yalnızca başlatıcı listesinde başlatılabilirler.
-
-  - **Verimlilik:** Temel tipler ve sınıf nesneleri için başlatıcı listesi kullanmak, atama (assignment) yerine doğrudan başlatma (initialization) yaptığı için daha verimlidir. Atama işleminde önce nesne varsayılan yapıcı ile oluşturulur, sonra atama operatörü ile yeni değer verilir. Başlatıcı listesi ise nesneyi doğrudan istenen değerle oluşturur.
+  - **Verimlilik:** Temel tipler ve sınıf nesneleri için başlatıcı listesi kullanmak, atama (assignment) yerine doğrudan başlatma (initialization) yaptığı için daha verimlidir.
 
 <!-- end list -->
 
@@ -114,31 +111,25 @@ public:
 };
 ```
 
-**NOT:** Contructor member functionlar kesinlikle **`const`**\<u\> member function olamaz\!\*\*\</u\>
+**NOT:** Constructor üye fonksiyonları kesinlikle **`const`** üye fonksiyon olamaz\!
 
 -----
 
-### Destructors Functions (Yıkıcı Fonksiyonlar)
+### Destructor Functions (Yıkıcı Fonksiyonlar)
 
-Bir sınıfın nesnesi **bellekten silinirken veya kapsam dışına çıkarken** (ömrü sona erdiğinde) otomatik olarak çağrılan özel bir üye fonksiyondur. Yapıcı fonksiyonların (constructors) tam tersi bir görevi vardır: nesnenin yaşam döngüsünün sonunu yönetmek. (**dtor** olarak kısaltması yapılabilir.)
+Bir sınıfın nesnesi **bellekten silinirken veya kapsam dışına çıkarken** (ömrü sona erdiğinde) otomatik olarak çağrılan özel bir üye fonksiyondur. Yapıcı fonksiyonların tam tersi bir görevi vardır: nesnenin yaşam döngüsünün sonunu yönetmek. (**dtor** olarak kısaltması yapılabilir.)
 
-  - Kullanım amacı şunlardır.
+  - Kullanım amacı şunlardır:
+    1.  **Kaynakları Serbest Bırakma:** Nesnenin `new` ile ayırdığı dinamik belleği iade etmek, açtığı dosyaları kapatmak gibi işlemleri gerçekleştirir. Bu, bellek sızıntılarını (memory leaks) ve kaynak israfını önler.
+    2.  **Temizlik İşlemleri:** Nesneye ait son temizlik işlemlerini yapar.
+    3.  **Tutarlı Durumun Sona Ermesi:** Nesne bellekten kaldırılmadan önce gerekli son durum ayarlamalarını yapar.
 
-    1)  **Kaynakları Serbest Bırakma:** Nesnenin `new` ile ayırdığı dinamik belleği iade etmek, açtığı dosyaları kapatmak, ağ bağlantılarını sonlandırmak gibi işlemleri gerçekleştirir. Bu, bellek sızıntılarını (memory leaks) ve kaynak israfını önler.
+#### How to Define a Destructor Function (Yıkıcı Fonksiyon Nasıl Tanımlanır?)
 
-    2)  **Temizlik İşlemleri:** Nesneye ait son temizlik işlemlerini (örneğin, bir veritabanı bağlantısını kapatma, bir log dosyasını sonlandırma) yapar
-
-    3)  **Tutarlı Durumun Sona Ermesi:** Nesne bellekten kaldırılmadan önce gerekli son durum ayarlamalarını yapar.
-
-#### Destructors Function(Yıkıcı Fonkisyon) Nasıl Tanımlanır?
-
-1)  **Tilde (`~`) İşareti ve Sınıf Adı:** Yıkıcı fonksiyonun adı, sınıf adının önüne bir tilde (`~`) işareti konularak oluşturulur. Örneğin, `MyClass` sınıfının yıkıcısı `~MyClass` olacaktır.
-
-2)  **Geri Dönüş Tipi Yok:** Yapıcı fonksiyonlar gibi, yıkıcı fonksiyonların da açıkça belirtilmiş bir geri dönüş tipi yoktur ( `void` bile yazılmaz).
-
-3)  **Parametre Almaz:** Yıkıcı fonksiyonlar hiçbir parametre almaz. Bu yüzden, bir sınıfın sadece bir tane yıkıcısı olabilir.
-
-4)  **Erişim Belirleyici:** Genellikle `public` erişim belirleyicisi altında tanımlanırlar.
+1.  **Tilde (`~`) İşareti ve Sınıf Adı:** Yıkıcı fonksiyonun adı, sınıf adının önüne bir tilde (`~`) işareti konularak oluşturulur.
+2.  **Geri Dönüş Tipi Yok:** Yapıcı fonksiyonlar gibi, yıkıcı fonksiyonların da açıkça belirtilmiş bir geri dönüş tipi yoktur.
+3.  **Parametre Almaz:** Yıkıcı fonksiyonlar hiçbir parametre almaz. Bu yüzden, bir sınıfın sadece bir tane yıkıcısı olabilir.
+4.  **Erişim Belirleyici:** Genellikle `public` erişim belirleyicisi altında tanımlanırlar.
 
 <!-- end list -->
 
@@ -209,32 +200,28 @@ int main()
 }
 ```
 
-**ÖNEMLİ NOT:** Eğer bir sınıf için özel bir yıkıcı tanımlamazsanız, C++ derleyicisi sizin için otomatik olarak bir yıkıcı oluşturur. Bu varsayılan yıkıcı, sınıfınız dinamik bellek veya harici kaynaklar (dosya, soket vb.) yönetmiyorsa yeterlidir. Ancak, yapıcı fonksiyonda `new` ile bellek ayırdıysanız veya bir kaynağı manuel olarak edindiyseniz, **kaynak sızıntısını önlemek için bu kaynakları serbest bırakan bir yıkıcı yazmanız zorunludur.**
+**ÖNEMLİ NOT:** Eğer bir sınıf için özel bir yıkıcı tanımlamazsanız, C++ derleyicisi sizin için otomatik olarak bir yıkıcı oluşturur. Ancak, yapıcı fonksiyonda `new` ile bellek ayırdıysanız veya bir kaynağı manuel olarak edindiyseniz, **kaynak sızıntısını önlemek için bu kaynakları serbest bırakan bir yıkıcı yazmanız zorunludur**.
 
 **Special Member Functions:** Bir sınıfın varsayılan yapıcısı ve yıkıcısı, aynı zamanda o sınıfın "özel üye fonksiyonları" (special member functions) kategorisine girer.
 
 -----
 
-**NOT:** Sınıfın **defalt ctor** ve **destructor** fonksiyonları aynı zamanda sınıfın **"special member function"** kategorisindedir.
-
------
-
-### C++'de Storage Duration (Depolama Süresi)
+### Storage Duration in C++ (C++'da Depolama Süresi)
 
 Değişkenin ne kadar süreyle bellekte var olacağını ve yaşam döngüsünü (ne zaman oluşturulup ne zaman yok edileceğini) belirleyen önemli bir özelliktir.
 
-1)  **Otomatik Depolama Süresi (Automatic Storage Duration)**
+1.  **Automatic Storage Duration (Otomatik Depolama Süresi)**
 
-      * **Tanım:** Bir kod bloğuna (fonksiyon gövdesi, `if` bloğu, döngü bloğu vb.) girildiğinde oluşturulan ve o bloktan çıkıldığında otomatik olarak yok edilen değişkenlerdir. Bunlar genellikle **yığın (stack)** üzerinde depolanır.
+      - **Tanım:** Bir kod bloğuna (fonksiyon gövdesi, `if` bloğu, döngü bloğu vb.) girildiğinde oluşturulan ve o bloktan çıkıldığında otomatik olarak yok edilen değişkenlerdir. Bunlar genellikle **yığın (stack)** üzerinde depolanır.
 
-      * **Anahtar Kelime:** Genellikle açıkça belirtilmez; varsayılan depolama süresidir. İsteğe bağlı olarak `auto` anahtar kelimesiyle belirtilebilir, ancak C++11'den itibaren `auto`'nun farklı bir anlamı (tip çıkarımı) olduğundan bu kullanım artık yaygın değildir.
+      - **Anahtar Kelime:** Genellikle açıkça belirtilmez; varsayılan depolama süresidir.
 
-      * **Yaşam Döngüsü:**
+      - **Yaşam Döngüsü:**
 
           - **Oluşum:** Blok başladığında.
           - **Yok Oluş:** Blok sona erdiğinde.
 
-      * **Örnek:**
+      - **Örnek:**
 
         ```cpp
         void func()
@@ -249,21 +236,14 @@ Değişkenin ne kadar süreyle bellekte var olacağını ve yaşam döngüsünü
         } // 'x' burada yok edilir
         ```
 
-    -----
+2.  **Static Storage Duration (Statik Depolama Süresi)**
 
-2)  **Statik Depolama Süresi (Static Storage Duration)**
-
-      * **Tanım:** Programın yaşam süresi boyunca var olan değişkenlerdir. Yalnızca bir kez başlatılırlar ve program sonlandığında yok edilirler. Bunlar genellikle programın **veri bölümünde** (data segment) depolanır.
-
-      * **Anahtar Kelime:** `static` veya global değişkenler için hiç anahtar kelime kullanılmaz.
-
-      * **Yaşam Döngüsü:**
-
+      - **Tanım:** Programın yaşam süresi boyunca var olan değişkenlerdir. Yalnızca bir kez başlatılırlar ve program sonlandığında yok edilirler. Bunlar genellikle programın **veri bölümünde** (data segment) depolanır.
+      - **Anahtar Kelime:** `static` veya global değişkenler için hiç anahtar kelime kullanılmaz.
+      - **Yaşam Döngüsü:**
           - **Oluşum:** Program başlamadan önce (veya ilk kullanıldıklarında, C++11 sonrası yerel statik değişkenler için).
           - **Yok Oluş:** Program sonlandığında.
-
-      * **Alt Kategoriler:**
-
+      - **Alt Kategoriler:**
           - **Global Değişkenler:** Herhangi bir fonksiyonun veya sınıfın dışında tanımlanan değişkenler. Varsayılan olarak statik depolama süresine sahiptir.
 
             ```cpp
@@ -295,34 +275,24 @@ Değişkenin ne kadar süreyle bellekte var olacağını ve yaşam döngüsünü
             int my_class::instance_count = 0; // Sınıf dışında başlatılmalı
             ```
 
-    -----
+3.  **Dynamic Storage Duration (Dinamik Depolama Süresi)**
 
-3)  **Dinamik Depolama Süresi (Dynamic Storage Duration)**
-
-      * **Tanım:** Programcı tarafından açıkça tahsis edilen ve serbest bırakılan bellek bloklarıdır. Bunlar genellikle **free store** veya **yığın(heap)** üzerinde depolanır.
-
-      * **Anahtar Kelime:** Belleği tahsis etmek için `new` ve serbest bırakmak için `delete` operatörleri kullanılır.
-
-      * **Yaşam Döngüsü:**
-
+      - **Tanım:** Programcı tarafından açıkça tahsis edilen ve serbest bırakılan bellek bloklarıdır. Bunlar genellikle **free store** veya **yığın(heap)** üzerinde depolanır.
+      - **Anahtar Kelime:** Belleği tahsis etmek için `new` ve serbest bırakmak için `delete` operatörleri kullanılır.
+      - **Yaşam Döngüsü:**
           - **Oluşum:** `new` operatörü çağrıldığında.
           - **Yok Oluş:** `delete` operatörü çağrıldığında. Eğer `delete` çağrılmazsa, bellek sızıntısı (memory leak) meydana gelir.
 
-    -----
+4.  **Thread Storage Duration (İş Parçacığı Depolama Süresi)**
 
-4)  **İş Parçacığı Depolama Süresi (Thread Storage Duration)**
-
-      * **Tanım:** `thread_local` anahtar kelimesiyle tanımlanır. Her bir iş parçacığı (thread) için bu değişkenden ayrı bir kopya oluşturulur.
-
-      * **Yaşam Döngüsü:**
-
-          - **Oluşum:** İlgili iş parçacığı başladığında veya değişkenin ilk kullanıldığı anda (ilk kullanım temelli başlatma için).
+      - **Tanım:** `thread_local` anahtar kelimesiyle tanımlanır. Her bir iş parçacığı (thread) için bu değişkenden ayrı bir kopya oluşturulur.
+      - **Yaşam Döngüsü:**
+          - **Oluşum:** İlgili iş parçacığı başladığında veya değişkenin ilk kullanıldığı anda.
           - **Yok Oluş:** İlgili iş parçacığı sonlandığında.
 
-#### Global Nesnelerin Başlatılma Sırası
+#### Initialization Order of Global Objects (Global Nesnelerin Başlatılma Sırası)
 
-  - **Aynı Dosya İçinde:** Tek bir kaynak dosyası içindeki global **nesnelerin yapıcıları (constructor fonksiyonları)**, bildirim sıralarına göre çağrılır. **Yıkıcıları (deconstruct fonkisyonları)** ise bu sıranın tam tersi yönde çağrılır.
-
+  - **Aynı Dosya İçinde:** Tek bir kaynak dosyası içindeki global **nesnelerin yapıcıları (constructor fonksiyonları)**, bildirim sıralarına göre çağrılır. **Yıkıcıları (destructor fonksiyonları)** ise bu sıranın tam tersi yönde çağrılır.
   - **Farklı Dosyalarda:** Farklı kaynak dosyalarında (`.cpp`) tanımlanan **global nesnelerin yapıcılarının hangi sırayla çağrılacağı C++ standardı tarafından belirlenmemiştir\!** Bu durum, bir global nesnenin yapıcısının, henüz oluşturulmamış başka bir global nesneye bağımlı olması halinde "**Static Initialization Order Fiasco**" olarak bilinen ve tanıması zor bir hataya yol açabilir.
 
 **Örnek:**
@@ -440,11 +410,11 @@ int main()
 }
 ```
 
-  * **Açıklama:** Yukarıdaki örnek **otomatik ömürlü nesnelerin** ömrünün gösterimine örnektir.
+  - **Açıklama:** Yukarıdaki örnek **otomatik ömürlü nesnelerin** ömrünün gösterimine örnektir.
 
 -----
 
-  * **Örnek:** Aşağıda örnek ile herhangi bir döngü ve el ile yazmadan 1'den 100'e kadar nasıl yazdırılabileceği gösterilmiştir. Bu gösterimin amacı "ctor" un çalıştırıldığına dair örnek vermektir.
+  - **Örnek:** Aşağıda örnek ile herhangi bir döngü ve el ile yazmadan 1'den 100'e kadar nasıl yazdırılabileceği gösterilmiştir. Bu gösterimin amacı "ctor" un çalıştırıldığına dair örnek vermektir.
 
 <!-- end list -->
 
@@ -467,41 +437,34 @@ int main()
 
 -----
 
-## RAII(Resource Acquisition Is Initialization)
+## RAII (Resource Acquisition Is Initialization) (Kaynak Edinimi Başlatmadır)
 
 RAII, modern C++'ın temelini oluşturan ve **kaynak yönetimini** güvenli ve otomatik hale getiren güçlü bir programlama paradigmasıdır. RAII, programınızın bellek sızıntıları, dosya kapatma unutkanlıkları, kilitlenmeyen mutex'ler gibi yaygın kaynak yönetimi hatalarını önlemesine yardımcı olur.
 
-#### Temel Prensip
+#### Core Principle (Temel Prensip)
 
-  - **Kaynakların Edinimi (Acquisition):** Bir kaynağı (bellek, dosya tanıtıcısı, ağ bağlantısı, kilit vb.) edindiğiniz an, bu edinimi bir **nesnenin ömrüne bağlarsınız**. Bu genellikle nesnenin **yapıcı (constructor)** fonksiyonunda gerçekleşir. Yapıcı, kaynağı başarıyla edinmekten sorumludur.
-
+  - **Kaynakların Edinimi (Acquisition):** Bir kaynağı (bellek, dosya tanıtıcısı, ağ bağlantısı, kilit vb.) edindiğiniz an, bu edinimi bir **nesnenin ömrüne bağlarsınız**. Bu genellikle nesnenin **yapıcı (constructor)** fonksiyonunda gerçekleşir.
   - **Kaynakların Serbest Bırakılması (Release):** Nesne, ömrünün sonuna geldiğinde (kapsam dışına çıktığında, `delete` ile silindiğinde vb.), otomatik olarak **yıkıcı (destructor)** fonksiyonu çağrılır. Yıkıcı, edinilen kaynağı güvenli ve temiz bir şekilde serbest bırakmaktan sorumludur.
 
 Böylece, kaynağın edinimi "başlatma" (constructor) ile, kaynağın serbest bırakılması ise "yıkım" (destructor) ile eşleştirilir.
 
-#### RAII'nin Faydaları:
+#### Benefits of RAII (RAII'nin Faydaları)
 
-1)  **Otomatik Kaynak Yönetimi:** Manuel olarak kaynakları serbest bırakmayı unutma riskini ortadan kaldırır. Fonksiyonlardan normal çıkış yapıldığında, istisna fırlatıldığında veya erken dönüş yapıldığında bile kaynaklar otomatik olarak temizlenir.
+1.  **Otomatik Kaynak Yönetimi:** Manuel olarak kaynakları serbest bırakmayı unutma riskini ortadan kaldırır. Fonksiyonlardan normal çıkış yapıldığında, istisna fırlatıldığında veya erken dönüş yapıldığında bile kaynaklar otomatik olarak temizlenir.
+2.  **Bellek Sızıntılarını Önleme:** Dinamik olarak ayrılmış belleğin `delete` ile serbest bırakılmamasından kaynaklanan yaygın hataları önler.
+3.  **Hata Yönetimini Basitleştirme:** İstisnalar (exceptions) fırlatıldığında bile kaynakların temizlenmesini garanti eder.
+4.  **Güvenlik:** Kilitler gibi senkronizasyon mekanizmalarının her zaman doğru bir şekilde açılıp kapanmasını sağlar, böylece **dead-lock** (kilitlenme) gibi sorunların önüne geçer.
+5.  **Kod Okunabilirliği ve Bakım Kolaylığı:** Kaynak yönetimi mantığı tek bir yerde (sınıfın yapıcı ve yıkıcısında) kapsüllendiği için kod daha temiz ve anlaşılır olur.
 
-2)  **Bellek Sızıntılarını Önleme:** Dinamik olarak ayrılmış belleğin `delete` ile serbest bırakılmamasından kaynaklanan yaygın hataları önler.
-
-3)  **Hata Yönetimini Basitleştirme:** İstisnalar (exceptions) fırlatıldığında bile kaynakların temizlenmesini garanti eder. ` try-catch  ` bloklarında karmaşık `finally` benzeri temizlik kodlarına ihtiyaç duyulmaz.
-
-4)  **Güvenlik:** Kilitler gibi senkronizasyon mekanizmalarının her zaman doğru bir şekilde açılıp kapanmasını sağlar, böylece **dead-lock** (kilitlenme) gibi sorunların önüne geçer.
-
-5)  **Kod Okunabilirliği ve Bakım Kolaylığı:** Kaynak yönetimi mantığı tek bir yerde (sınıfın yapıcı ve yıkıcısında) kapsüllendiği için kod daha temiz ve anlaşılır olur.
-
-#### RAII'nin Temel Örnekleri:
+#### Basic Examples of RAII (RAII'nin Temel Örnekleri)
 
 C++ Standart Kütüphanesi (STL), RAII prensibinin birçok mükemmel uygulamasını içerir:
 
-1)  **Akıllı İşaretçiler (Smart Pointers):**
+1.  **Akıllı İşaretçiler (Smart Pointers):**
 
       - **`std::unique_ptr`:** Yalnızca bir sahibin olabileceği dinamik bellek alanlarını yönetir. İşaretçinin ömrü sona erdiğinde bellek otomatik olarak serbest bırakılır.
-
       - **`std::shared_ptr`:** Belleği birden fazla sahibin paylaşmasına izin verir. Tüm shared\_ptr kopyaları kapsam dışına çıktığında veya sıfırlandığında bellek serbest bırakılır.
-
-      - **`std::weak_ptr`:** shared\_ptr döngüsel referanslarını kırmak için kullanılır, kaynağa sahiplik sağlamaz.
+      - **`std::weak_ptr`:** `shared_ptr` döngüsel referanslarını kırmak için kullanılır, kaynağa sahiplik sağlamaz.
 
     <!-- end list -->
 
@@ -537,9 +500,7 @@ C++ Standart Kütüphanesi (STL), RAII prensibinin birçok mükemmel uygulaması
     */
     ```
 
-    -----
-
-2)  **`std::fstream` (Dosya Akışları):** Dosya nesneleri (input/output streams) oluşturulduğunda dosyayı açar ve nesne yok edildiğinde dosyayı otomatik olarak kapatır.
+2.  **`std::fstream` (Dosya Akışları):** Dosya nesneleri (input/output streams) oluşturulduğunda dosyayı açar ve nesne yok edildiğinde dosyayı otomatik olarak kapatır.
 
     ```cpp
     #include <fstream> // Dosya işlemleri için
@@ -555,9 +516,7 @@ C++ Standart Kütüphanesi (STL), RAII prensibinin birçok mükemmel uygulaması
     } // 'dosya' nesnesi burada kapsam dışına çıkar ve destructor dosyayı otomatik kapatır.
     ```
 
-    -----
-
-3)  **`std::lock_guard` ve `std::unique_lock` (Mutex Kilitleri):** Çoklu iş parçacığı programlamasında mutex'leri güvenli bir şekilde kilitlemek ve kilidi açmak için kullanılır. Nesne oluşturulduğunda mutex'i kilitler ve kapsam dışına çıktığında kilidi otomatik olarak serbest bırakır.
+3.  **`std::lock_guard` ve `std::unique_lock` (Mutex Kilitleri):** Çoklu iş parçacığı programlamasında mutex'leri güvenli bir şekilde kilitlemek ve kilidi açmak için kullanılır. Nesne oluşturulduğunda mutex'i kilitler ve kapsam dışına çıktığında kilidi otomatik olarak serbest bırakır.
 
     ```cpp
     #include <mutex> // Mutex işlemleri için
@@ -575,9 +534,7 @@ C++ Standart Kütüphanesi (STL), RAII prensibinin birçok mükemmel uygulaması
     } // 'kilit' burada kapsam dışına çıkar ve destructor mutex'i açar.
     ```
 
-    -----
-
-#### Kendi RAII Sınıfınızı Oluşturmak:
+#### Creating Your Own RAII Class (Kendi RAII Sınıfınızı Oluşturmak)
 
 Kendi özel kaynaklarınız (örneğin, C API'lerinden elde edilen tanıtıcılar) için de RAII sınıfları yazabilirsiniz. Anahtar, yapıcıda kaynağı edinmek ve yıkıcıda onu serbest bırakmaktır.
 
@@ -648,7 +605,7 @@ void myCustomResourceExample() {
 
 -----
 
-  * **Örnek:**
+  - **Örnek:**
 
 <!-- end list -->
 
@@ -679,7 +636,7 @@ Yukarıdaki örnek ile default ve value init gösterilmiştir.
 
 -----
 
-  * **Örnek: Initialization Türleri**
+  - **Örnek: Initialization Türleri**
 
 <!-- end list -->
 
@@ -709,7 +666,7 @@ Yukarıdaki örnek ile direct, copy ve direct list init gösterilmiştir.
 
 -----
 
-  * **Örnek: Yapıcı Fonksiyonun Aşırı Yüklenmesi (Overloading)**
+  - **Örnek: Yapıcı Fonksiyonun Aşırı Yüklenmesi (Overloading)**
 
 <!-- end list -->
 
@@ -736,7 +693,7 @@ int main()
 
 -----
 
-  * **Örnek: Erişim Belirleyici Hatası ve Overload Resolution**
+  - **Örnek: Erişim Belirleyici Hatası ve Overload Resolution**
 
 <!-- end list -->
 
@@ -768,13 +725,12 @@ Main.cpp:6:5: note: declared private here
 
 **Açıklama:** Bu kod derlenmez ve bir erişim hatası verir. Sebebi şudur:
 
-1)  **Aday Belirleme (Overload Resolution):** Derleyici, `m(12)` çağrısı için en uygun fonksiyonu arar. `12` bir `int` olduğu için en iyi eşleşme `my_class(int x)` yapıcısıdır.
-
-2)  **Erişim Kontrolü:** Derleyici en iyi eşleşmeyi bulduktan sonra bu fonksiyona erişim hakkı olup olmadığını kontrol eder. `my_class(int x)` `private` olduğu için `main` fonksiyonundan erişilemez ve derleyici hata verir. Derleyici, "en iyi eşleşme `private` olduğu için bir sonraki en iyi eşleşmeyi (örn: `double`'a çevirip `public` olanı) deneyeyim" demez. Süreç, en iyi eşleşmeyi bul ve sonra erişimi kontrol et şeklindedir.
+1.  **Aday Belirleme (Overload Resolution):** Derleyici, `m(12)` çağrısı için en uygun fonksiyonu arar. `12` bir `int` olduğu için en iyi eşleşme `my_class(int x)` yapıcısıdır.
+2.  **Erişim Kontrolü:** Derleyici en iyi eşleşmeyi bulduktan sonra bu fonksiyona erişim hakkı olup olmadığını kontrol eder. `my_class(int x)` `private` olduğu için `main` fonksiyonundan erişilemez ve derleyici hata verir.
 
 -----
 
-  * **Örnek:**
+  - **Örnek:**
 
 <!-- end list -->
 
@@ -794,11 +750,11 @@ class my_class
 };
 ```
 
-**Açıklama:** yukarıdaki gibi ctor içerisinde yapılan işlem **Zero-init olmaz** bu işlem bir **atama işlemidir**.
+**Açıklama:** Yukarıdaki gibi ctor içerisinde yapılan işlem **Zero-init olmaz**, bu işlem bir **atama işlemidir**.
 
 -----
 
-  * **Başlatıcı Liste (Initializer List) Alternatif Örnekleri**
+  - **Alternative Initializer List Examples (Başlatıcı Liste Alternatif Örnekleri)**
 
       - **Örnek:**
 
@@ -852,7 +808,4 @@ class my_class
         **Açıklama:** Sınıf üyeleri, başlatıcı listesinde hangi sırada yazıldıklarına göre değil, sınıf tanımı içinde hangi sırada bildirildiklerine göre başlatılırlar.
 
           - Sınıf nesnesini elemanlarının hayata gelme sırası ctor fonksiyonundan bağımsızdır. Bildirimdeki sıralamaya göre hayata gelecekleri için önce `mx` sonra `my` değeri oluşturulacaktır.
-
-          - Yukarda yapılmış olan `my_class() : my(10), mx(my/3) {}` tanımlaması bir **undefined behavior** oluşmasına yol açar\! `mx` değeri intialize edilirken `my` değerinin çöp değeri(garbage value) ile intialize edilmeye çalışılmaktadır.
-
-<!-- end list -->
+          - Yukarıda yapılmış olan `my_class() : my(10), mx(my/3) {}` tanımlaması bir **undefined behavior** oluşmasına yol açar\! `mx` değeri intialize edilirken `my` değerinin çöp değeri(garbage value) ile intialize edilmeye çalışılmaktadır.

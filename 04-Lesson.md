@@ -1,16 +1,16 @@
-# 4.Ders
+# 4. Ders
 
-## Scope Enum
+## Scoped Enumerations (Kapsamlı Numaralandırmalar)
 
-Enum türlerini **daha güvenli ve anlaşılır** hale getirmek için C++11 ile eklenmiş bir özelliktir. **```enum class```**, enum türlerinin **global alanda birbirine çakışmasını engeller** ve güçlü tür denetimi sağlar. Bu, büyük projelerde kodun okunabilirliğini artırır ve hata olasılıklarını azaltır.
+`enum class`, enum türlerini **daha güvenli ve anlaşılır** hale getirmek için C++11 ile eklenmiş bir özelliktir. Kapsamlı numaralandırmalar, global alanda enum türlerinin birbirine çakışmasını engeller ve güçlü tür denetimi sağlar. Bu, büyük projelerde kodun okunabilirliğini artırır ve hata olasılıklarını azaltır.
 
 ```cpp
 enum class traffic_light {Red, Yellow, Green};
 ```
 
-### Scope Enum ve Tür Belirtme:
+## Scoped Enumerations and Underlying Type Specification (Kapsamlı Numaralandırmalar ve Temel Tür Belirtme)
 
-**```enum```** elemanlarının türünü de belirleyebilmemizi sağlar.
+Scoped enumerations, elemanlarının temel türünü belirlememizi sağlar.
 
 ```cpp
 // "column(:) token"ının sağına yazdığımız tür o enum'ın "underlying type"ı olur.
@@ -21,38 +21,39 @@ enum l_Pos : long {On, Off, Hold, Standby}; // "underlying type"ı long'tur.
 enum uc_Pos : unsigned char {On, Off, Hold, Standby}; // "underlying type"ı unsigned char'dır.
 ```
 
-**NOT-1:** **```i_Pos```** olarak tanımlanan scoped enum örnek aldığımızda, burada:
-- ```i_Pos```, scoped enum türünün adıdır.
-- ```: int``` kısmı, enum'un temel türünün ```int``` olduğunu belirtir. Yani, enum'un her elemanı aslında bir ```int``` türünde saklanacaktır.
-- ```On, Off, Hold, Standby``` ise enum elemanlarıdır.
+**NOT-1:** `i_Pos` olarak tanımlanan scoped enum örneğinde:
+
+  - `i_Pos`, kapsamlı enum türünün adıdır.
+  - `: int` kısmı, enum'un temel türünün `int` olduğunu belirtir. Yani, enum'un her elemanı aslında bir `int` türünde saklanacaktır.
+  - `On, Off, Hold, Standby` ise enum elemanlarıdır.
 
 ⚠️**NOT-2:**
-1) Eğer tür belirtmezseniz, enum elemanlarının **varsayılan türü ```int```** olur.
 
-2) Ancak, tür belirtmek, enum'un değerlerinin türünü daha kontrol edilebilir ve uygun hale getirebilir, örneğin:
+1)  Eğer tür belirtmezseniz, enum elemanlarının **varsayılan türü `int`** olur.
+2)  Ancak, tür belirtmek, enum'un değerlerinin türünü daha kontrol edilebilir ve uygun hale getirebilir. Bu, özellikle sınırlı bellek alanında çalışırken hafıza yönetimi açısından faydalı olabilir.
 
-    - ```int```, ```char```, ```unsigned int```, ```short``` gibi farklı veri türlerini belirleyebilirsiniz.
-    - Bu, hafıza yönetimi açısından faydalı olabilir, özellikle sınırlı bellek alanında çalışırken.
+-----
 
----
+## The Connection Between Name Lookup, Context Control, and Access Control (İsim Arama, Bağlam Kontrolü ve Erişim Kontrolü Arasındaki Bağlantı)
 
-## Name Lookup, Context Control ve Access Control'ün birbirleri arasındaki bağlantı:
+1)  **Name Lookup (İsim Arama)**, bir ismin hangi öğeye (değişken, fonksiyon, sınıf vb.) karşılık geldiğini bulma işlemidir.
+2)  **Context Control (Bağlam Kontrolü)**, bir ismin hangi kapsamda geçerli olduğunu belirler.
+3)  **Access Control (Erişim Kontrolü)**, bir isme erişimin mümkün olup olmadığını (`private`, `public`, `protected` gibi kurallara göre) kontrol eder.
 
-1) **Name Lookup**, bir ismin hangi öğeye (değişken, fonksiyon, sınıf vb.) karşılık geldiğini bulma işlemidir.
-2) **Context Control**, bir ismin hangi kapsamda geçerli olduğunu belirler.
-3) **Access Control**, bir isme erişimin mümkün olup olmadığını (örneğin, ```private```, ```public```, ```protected``` gibi kurallara göre) kontrol eder.
+Bu üç kavram, birbirini tamamlar. **Context control** hangi ismin hangi kapsamda bulunduğunu belirler, **name lookup** doğru öğeyi bulur ve **access control** ise bu öğeye erişimin olup olmadığını denetler. Bu bağlantı, C++ dilinin kapsam yönetimi, isim çakışmalarının önlenmesi ve güvenli erişim için kritik öneme sahiptir.
 
-    Bu üç kavram, birbirini tamamlar. **Context control** hangi ismin hangi kapsamda bulunduğunu belirler, **name lookup** doğru öğeyi bulur, ve **access control** ise bu öğeye erişimin olup olmadığını denetler. Bu bağlantı, C++ dilinin kapsam yönetimi, isim çakışmalarının önlenmesi ve güvenli erişim için kritik öneme sahiptir.
+-----
 
----
+## `::` - Scope Resolution Operator (Kapsam Çözünürlük Operatörü)
 
-## ```::``` - Scope Resolution Operator(Çözünürlük Operatörü)
-
-Bir isim alanı, sınıf, fonksiyon veya değişken gibi öğelere erişimi sağlayan bir operatördür. Bu operatör, bir öğenin **hangi kapsamda** (scope) tanımlandığını belirtmek için kullanılır. Yani, programda aynı isme sahip farklı öğeler olduğunda, hangi öğeye erişileceğini belirtmek için kullanılır.
+Kapsam çözünürlük operatörü, bir isim alanı, sınıf, fonksiyon veya değişken gibi öğelere erişimi sağlayan bir operatördür. Bu operatör, bir öğenin **hangi kapsamda** (scope) tanımlandığını belirtmek için kullanılır. Yani, programda aynı isme sahip farklı öğeler olduğunda, hangi öğeye erişileceğini belirtmek için kullanılır.
 
 Temel anlamda:
-- **Global scope**'ta tanımlanan bir öğeye erişim sağlar.
-- **Sınıf üyeleri** ve **global değişkenler** arasındaki çakışmalarda kullanılır.
+
+  - **Global scope**'ta tanımlanan bir öğeye erişim sağlar.
+  - **Sınıf üyeleri** ve **global değişkenler** arasındaki çakışmalarda kullanılır.
+
+<!-- end list -->
 
 ```cpp
 int val = 56;
@@ -66,9 +67,12 @@ int main()
 }
 ```
 
-**NOT-1:** 
-- ```val``` değişkeni **yerel alanda** tanımlandığında, yerel ```val``` kullanılır.
-- ```::val``` ise **global** ```val```'i ifade eder.
+**NOT-1:**
+
+  - `val` değişkeni **yerel alanda** tanımlandığında, yerel `val` kullanılır.
+  - `::val` ise **global** `val`'i ifade eder.
+
+<!-- end list -->
 
 ```cpp
 void func(int x)    // Fonksiyon ismi olan "func" global namespace içerisindedir.
@@ -76,20 +80,18 @@ void func(int x)    // Fonksiyon ismi olan "func" global namespace içerisindedi
     int func = 40;  // Block içindeki "func" ise block scope içerisinde.
 
     //...
-    ::func(func)    // Recursive bir çağrı olur(syntax gösterilmesi için anlatılmıştır.)
+    ::func(func)    // Recursive bir çağrı olur (syntax gösterilmesi için anlatılmıştır.)
     //...
 }
 ```
 
----
+-----
 
-## Qualified ve Unqualified Name
+## Qualified and Unqualified Names (Nitelikli ve Niteliksiz İsimler)
 
-### Qualified Name:
+### Qualified Name (Nitelikli İsim)
 
-Bir ismin hangi kapsama ait olduğunu belirtmek için **namespace adı**, **sınıf adı** veya başka nitelikler kullanır.
-
-```::``` (scope resolution operator) kullanılarak, belirli bir kapsamdan isim alınır.
+Bir ismin hangi kapsama ait olduğunu belirtmek için **namespace adı**, **sınıf adı** veya başka nitelikler kullanır. `::` (scope resolution operator) kullanılarak, belirli bir kapsamdan isim alınır.
 
 ```cpp
 int x = 5;  // Global scope
@@ -112,13 +114,11 @@ int main()
 }
 ```
 
-**NOT-1:** Burada, ```my_name_space::x``` **qualified name** kullanılarak, belirli bir namespace'deki ```x```'e erişilmiştir.
+**NOT-1:** Burada, `my_name_space::x` **qualified name** kullanılarak, belirli bir namespace'deki `x`'e erişilmiştir.
 
-### Unqualified Name:
+### Unqualified Name (Niteliksiz İsim)
 
-Bir isim alanı (namespace), sınıf veya başka bir kapsam belirlemeden kullanılan **basit isimlerdir**. Yalnızca o isim **o kapsam içinde** geçerli olduğu sürece kullanılabilir.
-
-Eğer bir isim **global kapsamda** veya **yerel kapsamda** tanımlanmışsa, o ismi kullanmak için ek bir nitelik (namespace veya sınıf adı) eklemeye gerek yoktur.
+Bir isim alanı (namespace), sınıf veya başka bir kapsam belirlemeden kullanılan **basit isimlerdir**. Yalnızca o isim **o kapsam içinde** geçerli olduğu sürece kullanılabilir. Eğer bir isim **global kapsamda** veya **yerel kapsamda** tanımlanmışsa, o ismi kullanmak için ek bir nitelik (namespace veya sınıf adı) eklemeye gerek yoktur.
 
 ```cpp
 int x = 5;  // Global scope
@@ -137,9 +137,9 @@ int main()
 }
 ```
 
-**NOT-2:** Burada, x'in **niteliksiz ismi** kullanılmıştır çünkü hiçbir sınıf veya namespace adı belirtilmeden doğrudan erişilmiştir.
+**NOT-2:** Burada, `x`'in **niteliksiz ismi** kullanılmıştır çünkü hiçbir sınıf veya namespace adı belirtilmeden doğrudan erişilmiştir.
 
-### Qualified ve Unqualified Name Örnek
+### Qualified and Unqualified Name Example (Nitelikli ve Niteliksiz İsim Örneği)
 
 ```cpp
 enum class color {Blue, Red, Purple, White, Black};
@@ -151,7 +151,7 @@ int main()
 }
 ```
 
-**NOT-3:** Eğer geçmişten gelen kod(Legacy kod) söz konusu değilse, artık **unscope enum** yerine **scope enum** kullanılmalıdır!
+**NOT-3:** Eğer eski (legacy) kod söz konusu değilse, artık **unscoped enum** yerine **scoped enum** kullanılmalıdır.
 
 ```cpp
 enum class color {Blue, Red, Purple, White, Black};
@@ -161,7 +161,7 @@ void func()
     color c1{ color::Blue };
     c1 = color::White;
 
-    // C++20'den önce bir araç olmadığı için yukarıdaki gibi tanım yapılması gerekilirdi.
+    // C++20'den önce bir araç olmadığı için yukarıdaki gibi tanım yapılması gerekirdi.
 
     // ----------------------------------------
     
@@ -194,13 +194,13 @@ void func()
 }
 ```
 
----
+-----
 
-## If with initialization
+## `if` with Initialization (`if` Başlatmalı Yapısı)
 
-C++11 ile tanıtılan bir özelliktir ve if koşulu içinde **değişken başlatma** yapmayı mümkün kılar. Bu özellik, kodunuzu daha temiz ve okunabilir hale getirebilir, çünkü if bloğu içine bir değişkenin hem **başlatılmasını** hem de **koşulun kontrol edilmesini** aynı anda yapabilirsiniz.
+C++11 ile tanıtılan bir özelliktir ve `if` koşulu içinde **değişken başlatma** yapmayı mümkün kılar. Bu özellik, kodunuzu daha temiz ve okunabilir hale getirebilir, çünkü `if` bloğu içinde bir değişkenin hem **başlatılmasını** hem de **koşulun kontrol edilmesini** aynı anda yapabilirsiniz.
 
-C++'da, bir ```if``` koşulunun içine **değişken başlatma** eklemek için aşağıdaki kod snippetleri gibi kullanılır:
+C++'da, bir `if` koşulunun içine **değişken başlatma** eklemek için aşağıdaki kod snippetleri gibi kullanılır:
 
 ```cpp
 int foo();
@@ -209,7 +209,7 @@ int main()
 {
     int x = foo();
 
-    if(x ! = -1)
+    if(x != -1)
     {
         // "x" kullanılabilir
     }
@@ -225,7 +225,7 @@ int main()
     {
         int y = foo();
 
-        if(y ! = -1)
+        if(y != -1)
         {
             // "y" kullanılabilir
         }
@@ -275,8 +275,7 @@ int main()
  }
 ```
 
-Ancak, **if with initialization** ile daha da esnek hale gelir:
-
+Ancak, `if` with initialization ile daha da esnek hale gelir:
 
 ```cpp
 int foo();
@@ -305,28 +304,27 @@ int main()
         // p kullanılabilir.
     }
 
-    if(int x = foo(), y = bar; x + y > 10)  // "x+y" işleminin sonucu, 10'dan büyükse döngü çalışır.
+    if(int x = foo(), y = bar(); x + y > 10)  // "x+y" işleminin sonucu, 10'dan büyükse döngü çalışır.
     {
         // x ve y kullanılabilir.
     }
 }
 ```
 
----
+-----
 
-## Type-Cast Operators(Tür Değişim Operatörleri)
+## Type-Cast Operators (Tür Dönüşüm Operatörleri)
 
-Bir türden başka bir türe dönüştürme işlemini yapabilmek için kullanılan özel operatörlerdir. C++'ta tür dönüşümleri, verilerin bir türünden başka bir türe dönüştürülmesini sağlar. Bu, özellikle farklı türlerdeki verileri birbirine uyumlu hale getirmek için önemlidir.
+Bir türden başka bir türe dönüştürme işlemini yapabilmek için kullanılan özel operatörlerdir. C++'ta tür dönüşümleri, verilerin bir türünden başka bir türe dönüştürülmesini sağlar.
 
-| **Operatör**       | **Kullanım Alanı**                             | **Güvenlik**                                    | **Çalışma Zamanı Kontrolü** |
+| **Operatör** | **Kullanım Alanı** | **Güvenlik** | **Çalışma Zamanı Kontrolü** |
 | ------------------ | ---------------------------------------------- | ----------------------------------------------- | --------------------------- |
 | `static_cast`      | Uyumlu türler arasında dönüşüm                 | Güvenli                                         | Derleme Zamanı              |
 | `dynamic_cast`     | Polimorfik sınıflar arasında dönüşüm           | Güvenli, çalışma zamanı hatalarını kontrol eder | Çalışma Zamanı              |
 | `const_cast`       | `const` veya `volatile` nitelikleri değiştirme | Dikkatli kullanılmalı                           | Derleme Zamanı              |
 | `reinterpret_cast` | Düşük seviyeli tür dönüşümleri (işaretçi, vb.) | Güvensiz, dikkatli kullanılmalı                 | Derleme Zamanı              |
 
-
-### C-Style Cast(C Tarzı Cast)
+### C-Style Cast (C Tarzı Dönüşüm)
 
 C++ dilinde, tür değiştirme işlemi **C tarzı** cast ile yapılabilir. Ancak, bu yöntem güvenli değildir ve dönüşüm sırasında hata yapma olasılığını artırabilir.
 
@@ -335,13 +333,13 @@ int x = 10;
 double y = (double)x;  // C tarzı cast
 ```
 
-Burada, int türündeki x değişkeni double türüne dönüştürülmüştür.
+Burada, `int` türündeki `x` değişkeni `double` türüne dönüştürülmüştür.
 
-### ```static_cast``` (Statik Cast)
+### `static_cast` (Statik Dönüşüm)
 
-C++'ta, ```static_cast``` daha güvenli bir tür dönüşümünü sağlar. Bu operatör, birbirine uyumlu türler arasında dönüşüm yapmak için kullanılır. ```static_cast```, **derleme zamanı** dönüşümü sağlar ve genellikle matematiksel ve mantıksal tür dönüşümleri için uygundur.
+C++'ta, `static_cast` daha güvenli bir tür dönüşümünü sağlar. Bu operatör, birbirine uyumlu türler arasında dönüşüm yapmak için kullanılır. `static_cast`, **derleme zamanı** dönüşümü sağlar ve genellikle matematiksel ve mantıksal tür dönüşümleri için uygundur.
 
-**Tam sayı** türleri ile **gerçek sayı** türleri arasında yapılacaksa kesinlikle **```static_cast```** kullanılır!
+**Tam sayı** türleri ile **gerçek sayı** türleri arasında yapılacaksa kesinlikle **`static_cast`** kullanılır.
 
 ```cpp
     int x = 10;
@@ -350,9 +348,9 @@ C++'ta, ```static_cast``` daha güvenli bir tür dönüşümünü sağlar. Bu op
     double d_val = static_cast<double>(x) / y;  // static_cast kullanımı
 ```
 
-```static_cast``` ile, ```x``` değişkeni güvenli bir şekilde ```double``` türüne dönüştürülür
+`static_cast` ile, `x` değişkeni güvenli bir şekilde `double` türüne dönüştürülür.
 
-**NOT-1:** ```static_cast```, **yalnızca uyumlu türler arasında dönüşüm yapılmasına izin verir. Örneğin, türetilmiş sınıf nesneleri ile temel sınıf nesneleri arasında geçiş yapılabilir.**
+**NOT-1:** `static_cast`, **yalnızca uyumlu türler arasında dönüşüm yapılmasına izin verir.** Örneğin, türetilmiş sınıf nesneleri ile temel sınıf nesneleri arasında geçiş yapılabilir.
 
 ```cpp
 enum color {blue, black, green};
@@ -372,7 +370,7 @@ int main()
 }
 ```
 
-Yukarıdaki örnekte, ```int``` türünden ```enum``` türüne doğrudan atama yapılamayacağını ve bu nedenle ```static_cast``` kullanmanın neden gerekli olduğunu vurguluyoruz.
+Yukarıdaki örnekte, `int` türünden `enum` türüne doğrudan atama yapılamayacağı ve bu nedenle `static_cast` kullanmanın neden gerekli olduğu vurgulanmaktadır.
 
 ```cpp
 #include <iostream>
@@ -408,13 +406,11 @@ int main()
 }
 ```
 
-Yukarıdaki örnek, C-tarzı ```enum``` ile modern ```enum class``` arasındaki en temel farklardan birini gösterir: **tamsayıya örtülü (implicit)** dönüşüm.
+Yukarıdaki örnek, C-tarzı `enum` ile modern `enum class` arasındaki en temel farklardan birini gösterir: **tamsayıya örtülü (implicit)** dönüşüm.
 
-### ```const_cast ``` (Const  Cast)
+### `const_cast` (Const Dönüşümü)
 
-```const_cast```, bir nesnenin const özelliğini değiştirmek için kullanılır. Yani, bir **const** nesneyi **değiştirilebilir** hale getirebiliriz. Ancak, const bir nesne üzerinde değişiklik yapmak hatalı olabilir ve undefined behavior (tanımlanmamış davranış) ile sonuçlanabilir.
-
-
+`const_cast`, bir nesnenin `const` özelliğini değiştirmek için kullanılır. Yani, bir `const` nesneyi değiştirilebilir hale getirebiliriz. Ancak, `const` bir nesne üzerinde değişiklik yapmak hatalı olabilir ve undefined behavior (tanımlanmamış davranış) ile sonuçlanabilir.
 
 ```cpp
 void modify(const int& x) 
@@ -430,9 +426,11 @@ int main()
     std::cout << "Değiştirilen değer: " << a << std::endl;  // Bu, undefined behavior olabilir
     return 0;
 }
-
 ```
-- Pointer türüne ```const_cast``` uygulamak:
+
+  - Pointer türüne `const_cast` uygulamak:
+
+<!-- end list -->
 
 ```cpp
 #include <iostream>
@@ -469,9 +467,11 @@ int main()
 }
 ```
 
-⚠️⚠️⚠️**NOT-2**: Kendisi ```const``` olan bir nesnenin adresini kesinlikle **operatör vasıtası ile dönüşüm yapılmaz!** **Syntax** olarak problemli olmasada **Undefined behavior**'dır.
+⚠️⚠️⚠️**NOT-2**: Kendisi `const` olan bir nesnenin adresini kesinlikle operatör vasıtası ile dönüşüm yapılmaz. **Syntax** olarak problemli olmasa da **Undefined behavior**'dır.
 
-- Referans türüne ```const_cast``` uygulamak:
+  - Referans türüne `const_cast` uygulamak:
+
+<!-- end list -->
 
 ```cpp
 int main()
@@ -484,7 +484,6 @@ int main()
     const int& ref_to_non_const = y;
 
     // Güvenli: Orijinal veri 'const' olmadığı için 'const_cast' kullanılabilir.
-    // DİKKAT: Kodunuzdaki 'const_char' yazımı 'const_cast' olarak düzeltildi.
     int& non_const_ref = const_cast<int&>(ref_to_non_const);
 
     non_const_ref = 300; // Tamamen geçerli bir işlem. y'nin değeri 300 olur.
@@ -507,12 +506,14 @@ int main()
 }
 ```
 
-### ```reinterpret_cast``` (Yorumlama Castı)
+### `reinterpret_cast` (Yeniden Yorumlama Dönüşümü)
 
-```reinterpret_cast```, iki tür arasında **bit düzeyinde** dönüşüm yapar. Bu, en düşük seviyeli tür dönüşümünü sağlar ve genellikle işaretçi veya referansların dönüştürülmesinde kullanılır.
+`reinterpret_cast`, iki tür arasında **bit düzeyinde** dönüşüm yapar. Bu, en düşük seviyeli tür dönüşümünü sağlar ve genellikle işaretçi veya referansların dönüştürülmesinde kullanılır.
 
-- ```reinterpret_cast```, türler arasında güvenli olmayan, düşük seviyeli dönüşümlere izin verir.
-- Bu tür dönüşümler genellikle **platform bağımlıdır** ve dikkatlice kullanılmalıdır.
+  - `reinterpret_cast`, türler arasında güvenli olmayan, düşük seviyeli dönüşümlere izin verir.
+  - Bu tür dönüşümler genellikle **platform bağımlıdır** ve dikkatlice kullanılmalıdır.
+
+<!-- end list -->
 
 ```cpp
 using namespace std;
@@ -526,28 +527,22 @@ int main() {
 }
 ```
 
-```reinterpret_cast``` ile ```int``` türündeki işaretçi, ```char*``` türüne dönüştürülür. Bu işlem, bellek üzerinde ```a``` değişkeninin bit düzeyindeki temsilini değiştirmez, ancak türler arasında **uyumsuz bir dönüşüm** yapar.
+`reinterpret_cast` ile `int` türündeki işaretçi, `char*` türüne dönüştürülür. Bu işlem, bellek üzerinde `a` değişkeninin bit düzeyindeki temsilini değiştirmez, ancak türler arasında **uyumsuz bir dönüşüm** yapar.
 
-**NOT-3:** ```reinterpret_cast``` oldukça güçlüdür ancak güvenli olmayan dönüşümlere yol açabilir. Çok *dikkatli kullanılmalıdır**.
+**NOT-3:** `reinterpret_cast` oldukça güçlüdür ancak güvenli olmayan dönüşümlere yol açabilir. Çok **dikkatli kullanılmalıdır**.
 
-### Type-Cast Operators ÖZET:
+### Type-Cast Operators Summary (Tür Dönüşüm Operatörleri Özeti)
 
-C++'ta Tür Değişim Operatörleri (Type-Cast Operators) dört ana türde gelir: ```static_cast```, ```dynamic_cast```, ```const_cast```, ve ```reinterpret_cast```. Her biri farklı amaçlar için kullanılır:
+C++'ta Tür Dönüşüm Operatörleri dört ana türde gelir: `static_cast`, `dynamic_cast`, `const_cast`, ve `reinterpret_cast`. Her biri farklı amaçlar için kullanılır:
 
-- ```static_cast``` uyumlu türler arasında güvenli dönüşüm sağlar.
+  - `static_cast` uyumlu türler arasında güvenli dönüşüm sağlar.
+  - `dynamic_cast` sınıf hiyerarşileri içinde güvenli dönüşüm yapar.
+  - `const_cast`, `const` veya `volatile` niteliklerini değiştirir.
+  - `reinterpret_cast`, bit düzeyinde tür dönüşümleri yapar ve dikkatle kullanılmalıdır.
 
-- ```dynamic_cast``` sınıf hiyerarşileri içinde güvenli dönüşüm yapar.
+## `[[nodiscard]]` Attribute (`[[nodiscard]]` Özniteliği)
 
-- ```const_cast```, ```const``` veya ```volatile``` niteliklerini değiştirir.
-
--  ```reinterpret_cast```, bit düzeyinde tür dönüşümleri yapar ve dikkatle kullanılmalıdır.
-
-
-## ```[[nodiscard]]``` Attribute
-
-C++17'de tanıtılan ```[[nodiscard]]``` özniteliği, bir fonksiyonun geri dönüş değerinin **göz ardı edilmemesini** sağlamak için kullanılır. 
-
-- ```[[nodiscard]]```, dönüş değeri önemli olan fonksiyonların çağrıldığında bu değerin göz ardı edilmesini önlemek için kullanılır.
+C++17'de tanıtılan `[[nodiscard]]` özniteliği, bir fonksiyonun geri dönüş değerinin **göz ardı edilmemesini** sağlamak için kullanılır. Bu öznitelik, dönüş değeri önemli olan fonksiyonların çağrıldığında bu değerin göz ardı edilmesini önler.
 
 ```cpp
 [[nodiscard]] int foo() 
@@ -562,4 +557,4 @@ int main()
 }
 ```
 
-**NOT-1:** ```[[nodiscard]]``` eklenen fonksiyonlar, dönüş değeri kullanılmazsa derleyici tarafından uyarılır. Bu, genellikle **hata kodları** veya **önemli geri dönüş değerleri** içeren fonksiyonlar için kullanılır.
+**NOT-1:** `[[nodiscard]]` eklenen fonksiyonlar, dönüş değeri kullanılmazsa derleyici tarafından uyarılır. Bu, genellikle **hata kodları** veya **önemli geri dönüş değerleri** içeren fonksiyonlar için kullanılır.

@@ -1,11 +1,12 @@
-# 2.Ders
+# Ders 2
 
-## Decltype
+## The `decltype` Specifier (decltype Belirleyici)
 
-"```decltype```" operatörü, operandının türünü almak için kullanılır. Bu, bir isim veya bir ifade üzerinden tür çıkarımı yapılmasına olanak sağlar. İki farklı kural seti vardır:
+`decltype` operatörü, operandının türünü almak için kullanılır. Bu, bir isim veya bir ifade üzerinden tür çıkarımı yapılmasına olanak sağlar. İki farklı kural seti bulunmaktadır.
 
-### 1. Kural Seti:
-Eğer ```decltype```'ın operandı bir **isim** ise, bu kural seti geçerlidir.
+### Rule Set 1 (Kural Seti 1)
+
+Eğer `decltype`'ın operandı bir **isim** ise, bu kural seti geçerlidir.
 
 ```cpp
 decltype(c)
@@ -22,20 +23,20 @@ int main()
 
     int z = 5;
     int& z_r{ z };
-    decltype(z_r) z_d = z; // 'z_r' bir l-value referansıdır, bu yüzden 'z_d' de int& türünde bir referans olur. 
+    decltype(z_r) z_d = z; // 'z_r' bir l-value referansıdır, bu yüzden 'z_d' de int& türünde bir referans olur.
                              // 'decltype(z_r) z_d = z;' -> int& z_d = z;
-                             // Referanslar default olarak initialize edilmediği için 'z_d' doğru bir şekilde 
+                             // Referanslar default olarak initialize edilmediği için 'z_d' doğru bir şekilde
                              // bir değerle başlatılmalıdır.
 
     int&& v = 10;
-    decltype(v) v_d = 56; // 'v' bir r-value referansı olduğu için 'v_d' da int&& türünde bir değişken olur. 
+    decltype(v) v_d = 56; // 'v' bir r-value referansı olduğu için 'v_d' da int&& türünde bir değişken olur.
                            // 'decltype(v) v_d = 56;' -> int&& v_d = 56;
 
     int&& w = 10;
     decltype(w)& w_d = 56;  // Burada 'w_d' 'decltype(w)' ile int&& türünde tanımlanmışken,
                             // '&' ile sağdaki r-value'yu bir l-value referansına çeviririz.
                             // Ancak, **reference collapsing** nedeniyle bu ifade hata verir: L-value referansları
-                            // r-value referanslarıyla birleştirildiğinde bir tür uyuşmazlığı oluşur. 
+                            // r-value referanslarıyla birleştirildiğinde bir tür uyuşmazlığı oluşur.
 
     decltype(w)&& w_d_d = 56;  // Bu ifade legal olacaktır çünkü 'decltype(w)' r-value referansı döndürür ve
                                 // '&&' ile yine bir r-value referansı elde edilir, böylece 'w_d_d' doğru bir şekilde
@@ -43,7 +44,7 @@ int main()
 
     int a[5]{};
     decltype(a) a_d = a;  // Burada 'a' bir dizi olduğundan 'decltype(a)' türü 'int[5]' olur.
-                           // Fakat dizilere bir diziyi atamak mümkün değildir (syntax hatası verir). 
+                           // Fakat dizilere bir diziyi atamak mümkün değildir (syntax hatası verir).
 
     decltype(a) a_d_t = {1, 2, 3, 4, 5}; // Ancak diziyi doğrudan bir başlangıç listesiyle başlatmak mümkündür.
 
@@ -57,16 +58,15 @@ int main()
 }
 ```
 
-
-### 2. Kural Seti:
+### Rule Set 2 (Kural Seti 2)
 
 Eğer **decltype** operandı bir **ifade** ise, bu kural geçerlidir. Operandın türü, ifade türünün **değer kategorisine** (value category) bağlıdır. Değer kategorisi, **prvalue**, **lvalue** ve **xvalue**'lardan birini ifade eder.
 
-**PRvalue** (Pure rvalue, saf sağ değer) ise elde edilen tür ```T``` olur.
+  * **PRvalue** (Pure rvalue, saf sağ değer) ise elde edilen tür `T` olur.
+  * **Lvalue** (sol değer) ise elde edilen tür `T&` olur.
+  * **Xvalue** (expiring value, tükenmiş değer) ise elde edilen tür `T&&` olur.
 
-**Lvalue** (sol değer) ise elde edilen tür ```T&``` olur.
-
-**Xvalue** (expiring value, tükenmiş değer) ise elde edilen tür ```T&&``` olur.
+<!-- end list -->
 
 ```cpp
 decltype(10)        // int  türü elde edilir
@@ -77,26 +77,25 @@ int foo();
 int& bar();
 int&& baz();
 
-int main() 
+int main()
 {
     int x = 10;
     decltype(x + 5) x_result; // 'x + 5' bir PRvalue ifadesidir, dolayısıyla 'int' türü elde edilir.
 
     int y[5]{};
-    decltype(a[2]) x; // 'a[2]' bir l-value referansıdır, dolayısıyla 'int& x' türü elde edilir.
-                       // Ayrıca, 'decltype(a[2]) x;' yazıldığında 'int& x' olarak anlaşılır ve 'x' başlatılmadan önce
+    decltype(y[2]) x; // 'y[2]' bir l-value'dur, dolayısıyla 'int& x' türü elde edilir.
+                       // Ayrıca, 'decltype(y[2]) x;' yazıldığında 'int& x' olarak anlaşılır ve 'x' başlatılmadan önce
                        // bir değer verilmelidir.
 
     int ival{};
-    decltype(a[2]) x_2 = ival; // Burada bir syntax hatası oluşmaz, çünkü 'ival' bir l-value'dur.
+    decltype(y[2]) x_2 = ival; // Burada bir syntax hatası oluşmaz, çünkü 'ival' bir l-value'dur.
 
     int z{435};
     int *z_p{ &z };
-    decltype(*z_p) z_d;  // 'decltype(*z_p)' ifadesi 'int&' türünü döndürür, bu nedenle 'z_d' 'int&' türünde olur.
-    decltype(z++) z_d2 = 10; // 'decltype(z++)' ifadesi 'int' türünde bir değer döndürecektir çünkü postfix increment
+    decltype(*z_p) z_d = z;  // 'decltype(*z_p)' ifadesi 'int&' türünü döndürür, bu nedenle 'z_d' 'int&' türünde olur.
+    decltype(z++) z_d2; // 'decltype(z++)' ifadesi 'int' türünde bir değer döndürecektir çünkü postfix increment
                               // bir r-value oluşturur.
-    decltype(++z) z_d3 = 10; // 'decltype(++z)' ifadesi 'int&' türünü döndürür. Ancak burada bir syntax hatası oluşur
-                              // çünkü pre-increment ile oluşturulan bir referans türü, doğru şekilde başlatılamaz.
+    decltype(++z) z_d3 = z; // 'decltype(++z)' ifadesi 'int&' türünü döndürür.
 
     foo(); // PRvalue
     bar(); // Lvalue döndüren bir fonksiyon
@@ -112,9 +111,10 @@ int main()
 }
 ```
 
-### Karışık örnek:
+### Karışık Örnek
+
 ```cpp
-int main() 
+int main()
 {
     int x = 10;
     int y = 20;
@@ -122,13 +122,13 @@ int main()
     decltype(x) a = y;       // 'a' 'int' türünde olur, çünkü x bir int'tir.
     decltype((x)) b = y;     // 'b' bir l-value referansıdır, bu nedenle 'int& b = y' anlamına gelir.
 }
-
 ```
 
----
+-----
 
-## Unevaluated context(İşlem Kodu Üretilmemiş Bağlam)
-Derleyici tarafından değerlendirilmeden önce analiz edilmesi gerektiği durumları belirtir. **decltype operandı** buna büyük bir örnektir.
+## Unevaluated Context (İşlem Kodu Üretilmemiş Bağlam)
+
+Derleyici tarafından değerlendirilmeden önce analiz edilmesi gerektiği durumları belirtir. `decltype` operandı buna büyük bir örnektir.
 
 ```cpp
 int main()
@@ -142,12 +142,11 @@ int main()
 
     ++x_d;                      // Burada x'in değeri artar, çünkü x_d bir l-value referansı
 
-    std::cout << "x = " << x << '\n';    
+    std::cout << "x = " << x << '\n';
 }
 ```
 
-**NOT-1:** 
-```decltype(++x)``` burada bir **unevaluated context**'te çalışır. **Yan etkiler (yani, ++x)** göz ardı edilir ve yalnızca tür çıkarımı yapılır.
+**NOT-1:** `decltype(++x)` burada bir **unevaluated context**'te çalışır. **Yan etkiler (yani, ++x)** göz ardı edilir ve yalnızca tür çıkarımı yapılır.
 
 ```cpp
 int foo()
@@ -160,32 +159,34 @@ int main()
 {
     int x = 10;
 
-    decltype(foo()) y = x;  // "foo()" fonksiyonu "decltype" operandı olarak kullanıldığı için                    fonksiyonun içindeki yan etkiler çalışmaz.
-                            // Yani, "foo()" fonksiyonu çağrılsa da, içindeki kod derleme zamanında etkili olmaz. 
+    decltype(foo()) y = x;  // "foo()" fonksiyonu "decltype" operandı olarak kullanıldığı için
+                            // fonksiyonun içindeki yan etkiler çalışmaz.
+                            // Yani, "foo()" fonksiyonu çağrılsa da, içindeki kod derleme zamanında etkili olmaz.
 }
 ```
 
-**NOT-2:**  ```decltype(foo())``` ile ```foo()``` fonksiyonunun **derleme zamanında** yan etkilerinin uygulanmadığını görürüz.
+**NOT-2:** `decltype(foo())` ile `foo()` fonksiyonunun **derleme zamanında** yan etkilerinin uygulanmadığını görürüz.
 
----
+-----
 
-## Default Argument (Varsayılan Argüman)
+## Default Arguments (Varsayılan Argümanlar)
+
 Bir fonksiyonun parametrelerine **varsayılan değerler** atayarak, fonksiyon çağrıldığında bu parametrelerin belirtilmediği durumlarda otomatik olarak bu değerlerin kullanılmasını sağlar.
 
 ```cpp
-void foo(int, ...)      // Variyadik bir fonksiyondur ("..." elipsis token )
+void foo(int, ...)      // Variyadik bir fonksiyondur ("..." elipsis token)
 
 int main()
 {
-    foo();                  // Bu şekilde çağırılması geçersizdir çünkü "elipsis    token"dan önce bir int parametresi beklenir.
+    foo();                  // Bu şekilde çağırılması geçersizdir çünkü "elipsis token"dan önce bir int parametresi beklenir.
     foo(10);                // Tanımlıdır.
     foo(10, 11, 12, 13);    // Tanımlıdır.
 }
 ```
 
-**NOT-1:** **Elipsis token (```...```), variadic** fonksiyonlarda kullanılır ve belirli bir türdeki parametrelerin sayısının önceden bilinmediği durumlarda kullanılır.
+**NOT-1:** **Elipsis token (`...`), variadic** fonksiyonlarda kullanılır ve belirli bir türdeki parametrelerin sayısının önceden bilinmediği durumlarda kullanılır.
 
-### Default Argument bildirimi:
+### Declaring Default Arguments (Varsayılan Argüman Bildirimi)
 
 ```cpp
 void t_func(int, int, int, int = 0);    // Fonksiyonun 4. argümanı "default argument" bildirimiyle tanımlanmıştır.
@@ -203,7 +204,6 @@ void x_func(int x, int y, int z)    // Fonksiyon bildirimi genellikle ".h" dosya
 {
     std::cout << "x = " << x << "| y = " << y << "| z = " << z << '\n';
 }
-
 ```
 
 **NOT-1:** **Varsayılan değerlerin** sağdan sola doğru verilmesi gerektiğini unutmayın.
@@ -213,7 +213,7 @@ void x_func(int x, int y, int z)    // Fonksiyon bildirimi genellikle ".h" dosya
 ```cpp
 int y = 10;
 
-void func(int = ++y)  // Varsayılan argüman ++y ile sağlanır
+void func(int = ++y);  // Varsayılan argüman ++y ile sağlanır
 
 int p_func()
 {
@@ -221,10 +221,7 @@ int p_func()
     return 1;
 }
 
-void s_func(int = p_func())  // p_func() fonksiyonu çağrılacak.
-{
-
-}
+void s_func(int = p_func());  // p_func() fonksiyonu çağrılacak.
 
 int main()
 {
@@ -240,25 +237,25 @@ int main()
 }
 ```
 
-**NOT-2:** **Varsayılan argümanlar**, fonksiyon çağrıldığında her defasında **yeniden hesaplanır** (örneğin ```++y```).
+**NOT-2:** **Varsayılan argümanlar**, fonksiyon çağrıldığında her defasında **yeniden hesaplanır** (örneğin `++y`).
 
 #### Kullanım örneği-2:
 
 ```cpp
 int g = 10;
 
-void a_func(int *p = &g);   // Pointer parametreler varsayılan argüman alabilir. 
+void a_func(int *p = &g);   // Pointer parametreler varsayılan argüman alabilir.
 
 void b_func(int &p = g);    // Referans parametreler varsayılan argüman alabilir. "void b_func(int & = g);" şeklinde de yazılabilir.
 
-void c_func(const char * p = "Furkan"); // Syntax hatası yoktur. 
+void c_func(const char *p = "Furkan"); // Syntax hatası yoktur.
 void c_func(const char *= "Furkan");    // Syntax hatası vardır, Bu şekilde bir tanımlama legal değildir. "Maximal munch" kuralından dolayı bu şekilde bir tanımlama yapılamaz!
 void c_func(const char * = "Furkan");   // Syntax hatası yoktur. '*' tokenı boşluk ile ayrılarak "Maximal munch" kuralına uyulmuştur.
 
 void d_func(int x, int y = x);          // "Illegal Code" hatası alınır. Bir parametre kendinden önceki bir parametreyi "Varsayılan argüman" olarak kullanamaz.
 
-int foo(int x = 5)
-int bar(int x = foo())
+int foo(int x = 5);
+int bar(int x = foo());
 
 int main()
 {
@@ -266,7 +263,7 @@ int main()
 }
 ```
 
-**NOT-2:** Bir fonksiyon bildiriminde "**function redeclaration**" yapılarak birden fazla "**default argument**" bildirimi yapılabilir.
+**NOT-2:** Bir fonksiyon bildiriminde **"function redeclaration"** yapılarak birden fazla **"default argument"** bildirimi yapılabilir.
 
 ```cpp
 /* api.h dosyası*/
@@ -280,9 +277,9 @@ void foo(int, int, int = 10); // Daha önceden aynı şekilde bir "redeclaration
 #include "api.h"
 
 //Not: Bu işlem sürekli sabit bir parametre girilmesi gerekiyorsa yapılabilir.
-void foo(int, int, int = 10);   // "Function redeclaration" kullanılarak "Varsayılan argüman" özelliği kullanılabilir. 
+void foo(int, int, int = 10);   // "Function redeclaration" kullanılarak "Varsayılan argüman" özelliği kullanılabilir.
 
-void foo(int, int = 8, int);    // Bir "Syntax hatası" oluşmaz, fakat "foo(int, int = 8, int = 10)" yapılsaydı "Syntax hatası" oluşurdu. Varsayılan argüman ikinci kez deklere edilemez!
+void foo(int, int = 8, int);    // Bir "Syntax hatası" oluşmaz, fakat "foo(int, int = 8, int = 10)" yapılsaydı "Syntax hatası" oluşurdu. Varsayılan argüman ikinci kez deklare edilemez!
 
 //Not-2: Fonksiyonlar kümülatif olarak çağırıldığı için "foo()" fonksiyonunu tekrardan tanımlamamız bir hataya sebep olmaz.
 
@@ -293,12 +290,14 @@ int main()
 }
 ```
 
-### "constexpr" Anahtar Sözcüğü
+### The `constexpr` Keyword (constexpr Anahtar Sözcüğü)
 
-```constexpr``` belirli değişkenlerin veya fonksiyonların derleme zamanında hesaplanabilmesini sağlayan bir anahtar kelimedir.
+`constexpr` belirli değişkenlerin veya fonksiyonların derleme zamanında hesaplanabilmesini sağlayan bir anahtar kelimedir.
 
-- Bu tür değişkenler veya fonksiyonlar, **derleyici tarafından** hesaplanır ve bu hesaplama sırasında **herhangi bir runtime (çalışma zamanı) işlemine** ihtiyaç duyulmaz.
-- ```constexpr``` değişkenlerin veya fonksiyonların değeri **derleme zamanında sabit** olduğu için, bu değer programın **çalışma zamanı** sırasında kullanılabilir ve optimize edilebilir.
+  * Bu tür değişkenler veya fonksiyonlar, **derleyici tarafından** hesaplanır ve bu hesaplama sırasında **herhangi bir runtime (çalışma zamanı) işlemine** ihtiyaç duyulmaz.
+  * `constexpr` değişkenlerin veya fonksiyonların değeri **derleme zamanında sabit** olduğu için, bu değer programın **çalışma zamanı** sırasında kullanılabilir ve optimize edilebilir.
+
+<!-- end list -->
 
 ```cpp
 int main()
@@ -308,7 +307,7 @@ int main()
     constexpr int y = 20; // "constexpr" anahtar kelimesi ile tanımlandığında, o değişkenin değeri derleme zamanında sabit olur.
 
     int r = 222;
-    constexpr int z = r; // Bu ifade hatalıdır çünkü 'z'ye verilen ilk değer sabit bir ifade değildir! 
+    constexpr int z = r; // Bu ifade hatalıdır çünkü 'z'ye verilen ilk değer sabit bir ifade değildir!
                           // "const int r = 222;" olarak tanımlansaydı, syntax hatası olmazdı.
 }
 ```

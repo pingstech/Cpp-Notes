@@ -1,23 +1,25 @@
 # 10. Ders
 
-## Class
+## Class (Sınıf)
 
-### Özel Üye Fonksiyonları(Special Member Function)
+### Special Member Functions (Özel Üye Fonksiyonları)
 
-#### Kopyalama Atama (`Copy Assignment`)
+#### Copy Assignment (Kopyalama Ataması)
 
-Zaten var olan bir nesnenin değerini, yine zaten var olan başka bir nesneye atamak için kullanılır. `operator=` şeklinde tanımlanır ve sol operandı (`this`) temsil eden bir referans döndürür. **Copy Assignment bir constructor değildir!**
+Zaten var olan bir nesnenin değerini, yine zaten var olan başka bir nesneye atamak için kullanılır. `operator=` şeklinde tanımlanır ve sol operandı (`this`) temsil eden bir referans döndürür. Copy Assignment bir `constructor` değildir.
 
 ```cpp
 sinif_adi& operator=(const sinif_adi& diger_nesne);
 ```
 
-- **`sinif_adi&`:** Atama sonrası sol operandın referansını döndürür. Bu, zincirleme atamalara (`a = b = c;`) olanak tanır.
-- **`const sinif_adi& diger_nesne`:** Kopyalanacak nesnenin sabit (const) bir referansı. Bu, kopyalama sırasında kaynak nesnenin değişmemesini ve gereksiz kopyalamayı engeller.
+  * `sinif_adi&`: Atama sonrası sol operandın referansını döndürür. Bu, zincirleme atamalara (`a = b = c;`) olanak tanır.
+  * `const sinif_adi& diger_nesne`: Kopyalanacak nesnenin sabit (`const`) bir referansı. Bu, kopyalama sırasında kaynak nesnenin değişmemesini ve gereksiz kopyalamayı engeller.
 
-##### Copy Assignment'ın çağırıldığı durumlar:
+##### Copy Assignment'ın Çağrıldığı Durumlar:
 
-- **Mevcut Nesneler Arasında Atama Yapıldığında:** En temel kullanım durumudur. Bir nesne, `=` operatörü kullanılarak başka bir nesnenin değerlerini alır.
+  * **Mevcut Nesneler Arasında Atama Yapıldığında:** En temel kullanım durumudur. Bir nesne, `=` operatörü kullanılarak başka bir nesnenin değerlerini alır.
+
+<!-- end list -->
 
 ```cpp
 my_class nesne_bir;    // Varsayılan kurucu çağrılır
@@ -27,7 +29,9 @@ nesne_iki = nesne_bir; // <<< Burada Kopyalama Atama Operatörü çağrılır.
                        // nesne_iki'nin içeriği, nesne_bir'in içeriğiyle güncellenir.
 ```
 
-- **Zincirleme Atamalar Yapıldığında:** `=` operatörü kendi referansını döndürdüğü için zincirleme atamalar mümkündür ve her adımda kopyalama ataması çağrılır.
+  * **Zincirleme Atamalar Yapıldığında:** `=` operatörü kendi referansını döndürdüğü için zincirleme atamalar mümkündür ve her adımda kopyalama ataması çağrılır.
+
+<!-- end list -->
 
 ```cpp
 my_class x, y, z;
@@ -36,9 +40,11 @@ x = y = z; // Önce y = z (Kopyalama Ataması), sonra x = (y'nin yeni hali) (Kop
 
 ##### Temel Görevi:
 
-- Kaynak nesnedeki veriyi, hedef nesneye kopyalamaktır.
-- Dinamik bellek veya diğer kaynaklar kullanılıyorsa, **derin kopya (deep copy)** yapılmalıdır. Bu, sallanan göstergeler veya çift serbest bırakma gibi sorunları önler.
-- "Kendine atama" (self-assignment) durumunu (`a = a;` gibi) güvenli bir şekilde ele almalıdır.
+  * Kaynak nesnedeki veriyi, hedef nesneye kopyalamaktır.
+  * Dinamik bellek veya diğer kaynaklar kullanılıyorsa, **derin kopya (deep copy)** yapılmalıdır. Bu, sallanan göstergeler veya çift serbest bırakma gibi sorunları önler.
+  * "Kendine atama" (self-assignment) durumunu (`a = a;` gibi) güvenli bir şekilde ele almalıdır.
+
+<!-- end list -->
 
 ```cpp
 #include <iostream> // Çıkış için
@@ -117,59 +123,67 @@ int main()
 }
 ```
 
----
+-----
 
-#### Taşıma Kurucusu (`Move Constructor`)
+#### Move Constructor (Taşıma Kurucusu)
 
-Bir sınıfın **aynı türden, geçici (`rvalue`) bir nesnesinin kaynaklarını "çalarak" (taşınarak) yeni bir nesne oluşturan** özel bir kurucu fonksiyondur. Kopyalama yapmak yerine kaynak sahipliğini aktarır, bu da gereksiz veri kopyalamayı ve performans kaybını önler. **Taşıma kurucusu bir `constructor`'dır!**
+Bir sınıfın **aynı türden, geçici (`rvalue`) bir nesnesinin kaynaklarını "çalarak" (taşınarak) yeni bir nesne oluşturan** özel bir kurucu fonksiyondur. Kopyalama yapmak yerine kaynak sahipliğini aktarır, bu da gereksiz veri kopyalamayı ve performans kaybını önler. Taşıma kurucusu bir `constructor`'dır.
 
 ```cpp
 sinif_adi(sinif_adi&& diger_nesne) noexcept;
 ```
 
-- **`sinif_adi&&`:** Taşınacak geçici nesnenin `rvalue` referansıdır. Bu, sadece geçici nesnelerden (veya `std::move` ile açıkça taşınan nesnelerden) çağrılmasını sağlar.
-- **`noexcept`:** Bu kurucunun istisna atmayacağını belirtir. Taşıma kurucusunun `noexcept` olması, STL konteynerleri gibi yapıların taşıma optimizasyonlarını güvenle kullanabilmesi için önemlidir.
+  * `sinif_adi&&`: Taşınacak geçici nesnenin `rvalue` referansıdır. Bu, sadece geçici nesnelerden (veya `std::move` ile açıkça taşınan nesnelerden) çağrılmasını sağlar.
+  * `noexcept`: Bu kurucunun istisna atmayacağını belirtir. Taşıma kurucusunun `noexcept` olması, STL konteynerleri gibi yapıların taşıma optimizasyonlarını güvenle kullanabilmesi için önemlidir.
 
----
+-----
 
 ##### Taşıma Kurucusunun Çağrıldığı Durumlar:
 
-- **Geçici Nesnelerden Başlatma:** Bir nesne, geçici bir değer (bir `rvalue`) kullanılarak ilk değer ataması ile oluşturulduğunda.
+  * **Geçici Nesnelerden Başlatma:** Bir nesne, geçici bir değer (bir `rvalue`) kullanılarak ilk değer ataması ile oluşturulduğunda.
 
-  ```cpp
-  my_class gecici_uret(); // Geçici bir my_class nesnesi döndüren fonksiyon
-  my_class yeni_nesne = gecici_uret(); // <<< Burada Taşıma Kurucusu çağrılabilir.
-                                       // (RVO/NRVO optimizasyonu yoksa)
-                                       // gecici_uret'ten dönen geçici nesnenin kaynakları yeni_nesne'ye taşınır.
-  ```
+<!-- end list -->
 
-- **`std::move` ile Açık Taşıma:** `std::move` fonksiyonu, bir `lvalue` (normal değişken) ifadeyi bir `rvalue`'ye dönüştürerek taşıma semantiğini açıkça tetikler.
+```cpp
+my_class gecici_uret(); // Geçici bir my_class nesnesi döndüren fonksiyon
+my_class yeni_nesne = gecici_uret(); // <<< Burada Taşıma Kurucusu çağrılabilir.
+                                   // (RVO/NRVO optimizasyonu yoksa)
+                                   // gecici_uret'ten dönen geçici nesnenin kaynakları yeni_nesne'ye taşınır.
+```
 
-  ```cpp
-  my_class kaynak_ornek(123); // Normal bir nesne
-  my_class hedef_ornek = std::move(kaynak_ornek); // <<< Burada Taşıma Kurucusu çağrılır.
-                                                 // kaynak_ornek'in kaynakları hedef_ornek'e taşınır.
-                                                 // kaynak_ornek artık "boş" bir durumdadır ve kullanılmamalıdır.
-  ```
+  * **`std::move` ile Açık Taşıma:** `std::move` fonksiyonu, bir `lvalue` (normal değişken) ifadeyi bir `rvalue`'ye dönüştürerek taşıma semantiğini açıkça tetikler.
 
-- **Fonksiyondan Değer Olarak Döndürüldüğünde (RVO/NRVO Yoksa):** Bir fonksiyon, yerel bir nesneyi değer olarak döndürdüğünde (modern derleyicilerdeki RVO/NRVO optimizasyonları bu çağrıyı çoğu zaman atlar).
+<!-- end list -->
 
-  ```cpp
-  my_class olustur_nesne() {
-      my_class temp(5); // Geçici nesne
-      return temp; // <<< RVO/NRVO yoksa Taşıma Kurucusu çağrılabilir.
+```cpp
+my_class kaynak_ornek(123); // Normal bir nesne
+my_class hedef_ornek = std::move(kaynak_ornek); // <<< Burada Taşıma Kurucusu çağrılır.
+                                             // kaynak_ornek'in kaynakları hedef_ornek'e taşınır.
+                                             // kaynak_ornek artık "boş" bir durumdadır ve kullanılmamalıdır.
+```
+
+  * **Fonksiyondan Değer Olarak Döndürüldüğünde (RVO/NRVO Yoksa):** Bir fonksiyon, yerel bir nesneyi değer olarak döndürdüğünde (modern derleyicilerdeki RVO/NRVO optimizasyonları bu çağrıyı çoğu zaman atlar).
+
+<!-- end list -->
+
+```cpp
+my_class olustur_nesne() {
+    my_class temp(5); // Geçici nesne
+    return temp; // <<< RVO/NRVO yoksa Taşıma Kurucusu çağrılabilir.
                    // temp'in kaynakları döndürülen değere taşınır.
-  }
-  my_class ana_nesne = olustur_nesne();
-  ```
+}
+my_class ana_nesne = olustur_nesne();
+```
 
----
+-----
 
 ##### Temel Görevi:
 
-- Kaynak nesnenin sahip olduğu dinamik bellek veya diğer kaynakların **sahipliğini yeni nesneye aktarmaktır**.
-- Kopyalama yapmaz, bu yüzden **çok daha hızlıdır** ve gereksiz bellek tahsisinden kaçınır.
-- Taşınan (kaynak) nesnenin işaretçilerini `nullptr` veya benzeri bir "boş" duruma getirerek, kendi yıkıcısının yanlışlıkla aynı belleği serbest bırakmasını engeller.
+  * Kaynak nesnenin sahip olduğu dinamik bellek veya diğer kaynakların **sahipliğini yeni nesneye aktarmaktır**.
+  * Kopyalama yapmaz, bu yüzden **çok daha hızlıdır** ve gereksiz bellek tahsisinden kaçınır.
+  * Taşınan (kaynak) nesnenin işaretçilerini `nullptr` veya benzeri bir "boş" duruma getirerek, kendi yıkıcısının yanlışlıkla aynı belleği serbest bırakmasını engeller.
+
+<!-- end list -->
 
 ```cpp
 #include <iostream> // Çıkış için
@@ -247,57 +261,63 @@ int main()
 }
 ```
 
----
+-----
 
-#### Taşıma Ataması (`Move Assignment`)
+#### Move Assignment (Taşıma Ataması)
 
-Zaten var olan bir nesnenin değerini, **geçici (`rvalue`) bir nesneden** kaynakları "çalarak" güncelleyen bir atama operatörüdür. `operator=` şeklinde tanımlanır, ancak `rvalue` referansı (`&&`) alır. **Taşıma Ataması bir `constructor` değildir!**
+Zaten var olan bir nesnenin değerini, **geçici (`rvalue`) bir nesneden** kaynakları "çalarak" güncelleyen bir atama operatörüdür. `operator=` şeklinde tanımlanır, ancak `rvalue` referansı (`&&`) alır. Taşıma Ataması bir `constructor` değildir.
 
 ```cpp
 sinif_adi& operator=(sinif_adi&& diger_nesne) noexcept;
 ```
 
-- **`sinif_adi&`:** Atama sonrası sol operandın referansını döndürür. Zincirleme atamalara olanak tanır.
-- **`sinif_adi&& diger_nesne`:** Taşınacak geçici (veya `std::move` ile dönüştürülmüş) nesnenin `rvalue` referansı. `const` değildir çünkü kaynakları taşımak için değiştirilecektir.
-- **`noexcept`:** Bu operatörün istisna atmayacağını belirtir. Güvenli taşıma için kritik öneme sahiptir.
+  * `sinif_adi&`: Atama sonrası sol operandın referansını döndürür. Zincirleme atamalara olanak tanır.
+  * `sinif_adi&& diger_nesne`: Taşınacak geçici (veya `std::move` ile dönüştürülmüş) nesnenin `rvalue` referansı. `const` değildir çünkü kaynakları taşımak için değiştirilecektir.
+  * `noexcept`: Bu operatörün istisna atmayacağını belirtir. Güvenli taşıma için kritik öneme sahiptir.
 
----
+-----
 
 ##### Taşıma Atamasının Çağrıldığı Durumlar:
 
-- **`std::move` ile Mevcut Nesneler Arasında Atama:** Bir nesneye, `std::move` ile bir `rvalue`'ye dönüştürülmüş başka bir mevcut nesne atandığında.
+  * **`std::move` ile Mevcut Nesneler Arasında Atama:** Bir nesneye, `std::move` ile bir `rvalue`'ye dönüştürülmüş başka bir mevcut nesne atandığında.
 
-  ```cpp
-  my_class kaynak_nesne(10); // Mevcut bir nesne
-  my_class hedef_nesne(20);  // Mevcut başka bir nesne
+<!-- end list -->
 
-  hedef_nesne = std::move(kaynak_nesne); // <<< Burada Taşıma Ataması Operatörü çağrılır.
-                                        // kaynak_nesne'nin kaynakları hedef_nesne'ye taşınır.
-                                        // kaynak_nesne artık "boş" durumdadır ve kullanılmamalıdır.
-  ```
+```cpp
+my_class kaynak_nesne(10); // Mevcut bir nesne
+my_class hedef_nesne(20);  // Mevcut başka bir nesne
 
-- **Geçici Nesnelerden Atama:** Bir ifadenin sonucu olan geçici bir nesne, mevcut bir nesneye atandığında.
+hedef_nesne = std::move(kaynak_nesne); // <<< Burada Taşıma Ataması Operatörü çağrılır.
+                                    // kaynak_nesne'nin kaynakları hedef_nesne'ye taşınır.
+                                    // kaynak_nesne artık "boş" durumdadır ve kullanılmamalıdır.
+```
 
-  ```cpp
-  my_class bir_fonksiyon_uret(int deger) {
-      return my_class(deger); // Geçici nesne döner
-  }
+  * **Geçici Nesnelerden Atama:** Bir ifadenin sonucu olan geçici bir nesne, mevcut bir nesneye atandığında.
 
-  my_class mevcut_nesne;
-  mevcut_nesne = bir_fonksiyon_uret(50); // <<< Burada Taşıma Ataması çağrılabilir.
-                                       // bir_fonksiyon_uret'ten dönen geçici nesne,
-                                       // mevcut_nesne'ye atanırken kaynakları taşınır.
-  ```
+<!-- end list -->
 
----
+```cpp
+my_class bir_fonksiyon_uret(int deger) {
+    return my_class(deger); // Geçici nesne döner
+}
+
+my_class mevcut_nesne;
+mevcut_nesne = bir_fonksiyon_uret(50); // <<< Burada Taşıma Ataması çağrılabilir.
+                                   // bir_fonksiyon_uret'ten dönen geçici nesne,
+                                   // mevcut_nesne'ye atanırken kaynakları taşınır.
+```
+
+-----
 
 ##### Temel Görevi:
 
-- Hedef nesnenin sahip olduğu mevcut kaynakları (belleği) serbest bırakmak.
-- Taşınacak kaynak nesnedeki dinamik bellek veya diğer kaynakların **sahipliğini hedef nesneye devretmektir**.
-- Taşınan (kaynak) nesnenin işaretçilerini `nullptr` veya benzeri bir "boş" duruma getirerek, kendi yıkıcısının yanlışlıkla aynı belleği serbest bırakmasını engellemektir.
-- Kopyalama yapmadığı için **çok daha hızlıdır** ve bellek tahsis/serbest bırakma maliyetlerini azaltır.
-- "Kendine atama" (self-assignment) durumunu (`a = std::move(a);` gibi) güvenli bir şekilde ele almalıdır.
+  * Hedef nesnenin sahip olduğu mevcut kaynakları (belleği) serbest bırakmak.
+  * Taşınacak kaynak nesnedeki dinamik bellek veya diğer kaynakların **sahipliğini hedef nesneye devretmektir**.
+  * Taşınan (kaynak) nesnenin işaretçilerini `nullptr` veya benzeri bir "boş" duruma getirerek, kendi yıkıcısının yanlışlıkla aynı belleği serbest bırakmasını engellemektir.
+  * Kopyalama yapmadığı için **çok daha hızlıdır** ve bellek tahsis/serbest bırakma maliyetlerini azaltır.
+  * "Kendine atama" (self-assignment) durumunu (`a = std::move(a);` gibi) güvenli bir şekilde ele almalıdır.
+
+<!-- end list -->
 
 ```cpp
 #include <iostream> // Çıkış için
@@ -405,7 +425,7 @@ int main()
 
 -----
 
-### Derleyici Hangi Durumlarda Sınıfın Special Member Function'ları Yazar?
+### When Does the Compiler Write Special Member Functions? (Derleyici Hangi Durumlarda Özel Üye Fonksiyonları Yazar?)
 
 Derleyicinin otomatik olarak yazabileceği özel üye fonksiyonları şunlardır:
 
@@ -416,9 +436,7 @@ Derleyicinin otomatik olarak yazabileceği özel üye fonksiyonları şunlardır
   * **Taşıma Kurucusu (`Move Constructor`)**: Bir nesnenin, geçici bir nesnenin kaynakları "çalınarak" oluşturulması (C++11 ve sonrası).
   * **Taşıma Atama Operatörü (`Move Assignment Operator`)**: Mevcut bir nesneye, geçici bir nesnenin kaynaklarının atanması (C++11 ve sonrası).
 
-### Derleyicinin Özel Üye Fonksiyonlarını Otomatik Yazma Kuralları
-
------
+### Automatic Generation Rules for Special Member Functions (Özel Üye Fonksiyonlarının Otomatik Oluşturulma Kuralları)
 
 | Özel Üye Fonksiyonu       | Derleyici Ne Zaman Otomatik Yazar?                                                                                              | Derleyici Ne Zaman **YAZMAZ**? (veya `delete` olarak işaretler)                                                                                                                                                                                                                                                |
 | :------------------------ | :------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -426,10 +444,8 @@ Derleyicinin otomatik olarak yazabileceği özel üye fonksiyonları şunlardır
 | **Yıkıcı** | - Siz tanımlamazsanız.                                                                                                         | - Siz tanımlarsanız.                                                                                                                                                                                                                                                                                         |
 | **Kopyalama Kurucusu** | - Siz tanımlamazsanız.  - **Taşıma kurucusu veya taşıma atama operatörü tanımlamazsanız.** | - Siz tanımlarsanız.  - **Taşıma kurucusu VEYA taşıma atama operatörü tanımlarsanız.** (C++11 sonrası) - Sınıfın `const` veya referans türünde üyeleri varsa.                                                                                                                                         |
 | **Kopyalama Atama Op.** | - Siz tanımlamazsanız.  - **Taşıma kurucusu veya taşıma atama operatörü tanımlamazsanız.** | - Siz tanımlarsanız.  - **Taşıma kurucusu VEYA taşıma atama operatörü tanımlarsanız.** (C++11 sonrası) - Sınıfın `const` veya referans türünde üyeleri varsa.                                                                                                                                         |
-| **Taşıma Kurucusu** | - Siz tanımlamazsanız.  - **Hiçbir Kopyalama Kurucusu, Kopyalama Atama Operatörü veya Yıkıcı tanımlamazsanız.** | - Siz tanımlarsanız.  - **Kopyalama kurucusu, Kopyalama atama operatörü VEYA Yıkıcı tanımlarsanız.**  - Sınıfın yıkıcısı `noexcept` değilse (potansiyel olarak `deleted` olur).                                                                                                                           |
-| **Taşıma Atama Op.** | - Siz tanımlamazsanız.  - **Hiçbir Kopyalama Kurucusu, Kopyalama Atama Operatörü veya Yıkıcı tanımlamazsanız.** | - Siz tanımlarsanız.  - **Kopyalama kurucusu, Kopyalama atama operatörü VEYA Yıkıcı tanımlarsanız.**  - (Ek kısıtlamalar da olabilir, örn: `const` üyeler genellikle taşıma atamayı engeller.)                                                                                                          |
-
------
+| **Taşıma Kurucusu** | - Siz tanımlamazsanız.  - **Hiçbir Kopyalama Kurucusu, Kopyalama Atama Operatörü veya Yıkıcı tanımlamazsanız.** | - Siz tanımlarsanız.  - **Kopyalama kurucusu, Kopyalama atama operatörü VEYA Yıkıcı tanımlarsanız.** - Sınıfın yıkıcısı `noexcept` değilse (potansiyel olarak `deleted` olur).                                                                                                                           |
+| **Taşıma Atama Op.** | - Siz tanımlamazsanız.  - **Hiçbir Kopyalama Kurucusu, Kopyalama Atama Operatörü veya Yıkıcı tanımlamazsanız.** | - Siz tanımlarsanız.  - **Kopyalama kurucusu, Kopyalama atama operatörü VEYA Yıkıcı tanımlarsanız.** - (Ek kısıtlamalar da olabilir, örn: `const` üyeler genellikle taşıma atamayı engeller.)                                                                                                          |
 
 ```cpp
 // my_class: Rule of Zero örneği
@@ -557,7 +573,11 @@ class my_class_8
 };
 ```
 
-### C++ Özel Üye Fonksiyonları: Derleyicinin Otomatik Yazma Davranışı
+-----
+
+### Additional Information (Ek Bilgiler)
+
+#### C++ Özel Üye Fonksiyonları: Derleyicinin Otomatik Yazma Davranışı
 
 Aşağıdaki tablo, bir sınıfın hangi özel üye fonksiyonlarını (ilk sütun) sizin tarafınızdan tanımlamanız durumunda (veya hiç tanımlamadığınızda), derleyicinin diğer özel üye fonksiyonlarını (üst satır) otomatik olarak nasıl ele alacağını gösterir.
 
@@ -578,11 +598,8 @@ Aşağıdaki tablo, bir sınıfın hangi özel üye fonksiyonlarını (ilk sütu
 | **`move constructor`** | 🟣 `not declared`     | 🟢 `defaulted` | 🔴 `deleted`       | 🔴 `deleted`       | 🔵 `user declared` | 🟣 `not declared`  |
 | **`move assignment`** | 🟢 `defaulted`        | 🟢 `defaulted` | 🔴 `deleted`       | 🔴 `deleted`       | 🟣 `not declared`  | 🔵 `user declared` |
 
------
 
-## Ekstra Bilgiler:
-
-### Özel Üye Fonksiyonlar
+#### Special Member Functions (Özel Üye Fonksiyonları)
 
 ```cpp
 class my_class
@@ -599,7 +616,7 @@ class my_class
 }
 ```
 
-### `std::move` Alternatif Gösterimi
+#### Alternative Representation of `std::move` (std::move Alternatif Gösterimi)
 
 Adına rağmen, `std::move` **hiçbir şeyi hareket ettirmez veya taşımaz** (yani bellek üzerinde bir işlem yapmaz). Asıl görevi, **kendisine verilen bir ifadeyi (genellikle bir `lvalue`), `rvalue` reference'a (`&&`) dönüştürmektir**.
 
@@ -625,29 +642,30 @@ int main()
 }
 ```
 
----
+-----
 
-### Derleyici Ne Zaman Move Constructor (Taşıma Kurucusu) veya Ne Zaman Copy Constructor'ı (Kopyalama Kurucusunu) Seçer?
+#### When Does the Compiler Choose the Move Constructor or Copy Constructor? (Derleyici Ne Zaman Taşıma Kurucusunu veya Kopyalama Kurucusunu Seçer?)
 
-Derleyici, bir nesnenin ilk değer atamasıyla oluşturulduğu durumlarda (initialization), hangi kurucuyu (Taşıma veya Kopyalama) çağıracağına, **kaynak ifadenin türüne** bakarak karar verir:
+Derleyici, bir nesnenin ilk değer atamasıyla oluşturulduğu durumlarda (`initialization`), hangi kurucuyu (Taşıma veya Kopyalama) çağıracağına, **kaynak ifadenin türüne** bakarak karar verir.
 
-- Kaynak İfade Bir `R-value` İse → Taşıma Kurucusu (`Move Constructor`) Çağrılır.
-  - `R-value`'ler genellikle geçici nesnelerdir (fonksiyon dönüş değerleri gibi) veya `std::move` ile açıkça taşınabilir hale getirilmiş ifadelerdir. Bu durumda, derleyici kaynakların kopyalanması yerine taşınmasını tercih ederek performansı optimize eder.
+  * Kaynak İfade Bir `R-value` İse → Taşıma Kurucusu (`Move Constructor`) Çağrılır.
+      * `R-value`'ler genellikle geçici nesnelerdir (fonksiyon dönüş değerleri gibi) veya `std::move` ile açıkça taşınabilir hale getirilmiş ifadelerdir. Bu durumda, derleyici kaynakların kopyalanması yerine taşınmasını tercih ederek performansı optimize eder.
+  * Kaynak İfade Bir `L-value` İse → Kopyalama Kurucusu (`Copy Constructor`) Çağrılır.
+      * `L-value`'ler, bellekte belirli bir konumu olan ve genellikle ismi olan kalıcı nesnelerdir (değişkenler gibi). Bu durumda, orijinal nesnenin bozulmadan kalması gerektiği için derleyici **kopyalama** işlemini tercih eder.
 
-- Kaynak İfade Bir `L-value` İse → Kopyalama Kurucusu (`Copy Constructor`) Çağrılır.
-  - `L-value`'ler, bellekte belirli bir konumu olan ve genellikle ismi olan kalıcı nesnelerdir (değişkenler gibi). Bu durumda, orijinal nesnenin bozulmadan kalması gerektiği için derleyici **kopyalama** işlemini tercih eder.
+-----
 
----
+#### Dangling Pointer (Sallanan Gösterge)
 
-### Dangling Pointer
+Artık geçerli veya ayrılmış bir bellek konumunu işaret etmeyen, ancak yine de o belleğin adresini tutan bir işaretçidir.
 
-Artık geçerli veya ayrılmış bir bellek konumunu işaret etmeyen, ancak yine de o belleğin adresini tutan bir işaretçidir. 
-
-#### Dangling Pointer Gerçekleşme Durumları:
+##### Dangling Pointer Gerçekleşme Durumları:
 
 Sallanan göstergeler genellikle üç ana senaryoda ortaya çıkar:
 
-1) **Bellek Serbest Bırakma (Deallocation of Memory):** Bir işaretçinin gösterdiği dinamik olarak ayrılmış bellek (new veya malloc ile), delete veya free() kullanılarak serbest bırakıldığında, ancak işaretçi nullptr olarak ayarlanmadığında oluşur. İşaretçi hala serbest bırakılmış belleğin adresini tutar.
+1)  **Bellek Serbest Bırakma (Deallocation of Memory):** Bir işaretçinin gösterdiği dinamik olarak ayrılmış bellek (`new` veya `malloc` ile), `delete` veya `free()` kullanılarak serbest bırakıldığında, ancak işaretçi `nullptr` olarak ayarlanmadığında oluşur. İşaretçi hala serbest bırakılmış belleğin adresini tutar.
+
+<!-- end list -->
 
 ```cpp
 int* sayi_ptr = new int(10);
@@ -656,7 +674,9 @@ delete sayi_ptr; // Bellek serbest bırakıldı
 // sayi_ptr = nullptr; // Sallanan gösterge olmasını engellemek için bu satır eklenmeli
 ```
 
-2) **Yerel Değişken Adresi Döndürme:** Bir fonksiyonun yerel bir değişkeninin adresi döndürüldüğünde meydana gelir. Fonksiyonun yürütülmesi bittiğinde, yerel değişken yığın bellekten silinir ve döndürülen işaretçi artık geçerli olmayan bir bellek konumunu gösterir.
+2)  **Yerel Değişken Adresi Döndürme:** Bir fonksiyonun yerel bir değişkeninin adresi döndürüldüğünde meydana gelir. Fonksiyonun yürütülmesi bittiğinde, yerel değişken yığın bellekten silinir ve döndürülen işaretçi artık geçerli olmayan bir bellek konumunu gösterir.
+
+<!-- end list -->
 
 ```cpp
 int* yerel_adres_dondur() 
@@ -668,7 +688,9 @@ int* yerel_adres_dondur()
 // int* sarkan_ptr = yerel_adres_dondur(); // sarkan_ptr bir sallanan göstergedir
 ```
 
-3) **Kapsam Dışına Çıkma (Going Out of Scope):** Bir işaretçi, kendisinden daha dar bir kapsamda tanımlanmış bir değişkene işaret ettiğinde ve bu değişken kapsam dışına çıktığında oluşur.
+3)  **Kapsam Dışına Çıkma (Going Out of Scope):** Bir işaretçi, kendisinden daha dar bir kapsamda tanımlanmış bir değişkene işaret ettiğinde ve bu değişken kapsam dışına çıktığında oluşur.
+
+<!-- end list -->
 
 ```cpp
 int* dis_kapsam_ptr;
@@ -681,9 +703,11 @@ int* dis_kapsam_ptr;
 
 -----
 
-#### Engelleme Yöntemleri:
+##### Engelleme Yöntemleri:
 
-- **Bellek Serbest Bırakıldıktan Sonra İşaretçiyi ```nullptr``` Yapın:** Dinamik belleği ```delete``` ile serbest bıraktıktan hemen sonra, ilgili işaretçiyi ```nullptr``` olarak atamak en temel ve etkili yöntemdir. ```nullptr```'a atama, işaretçinin artık geçerli bir adresi göstermediğini açıkça belirtir ve ```nullptr```'ı referans almak derleme/çalışma zamanı hatası verir, böylece potansiyel hataları erken yakalamanıza yardımcı olur.
+  * **Bellek Serbest Bırakıldıktan Sonra İşaretçiyi `nullptr` Yapın:** Dinamik belleği `delete` ile serbest bıraktıktan hemen sonra, ilgili işaretçiyi `nullptr` olarak atamak en temel ve etkili yöntemdir. `nullptr`'a atama, işaretçinin artık geçerli bir adresi göstermediğini açıkça belirtir ve `nullptr`'ı referans almak derleme/çalışma zamanı hatası verir, böylece potansiyel hataları erken yakalamanıza yardımcı olur.
+
+<!-- end list -->
 
 ```cpp
 int* veri = new int(5);
@@ -692,18 +716,17 @@ delete veri;
 veri = nullptr; // ÖNEMLİ: Sallanan göstergeyi engelle
 ```
 
-- **Yerel Değişkenlerin Adreslerini Döndürmeyin:** Fonksiyonlardan yerel değişkenlerin adreslerini döndürmekten kaçının. Eğer dinamik belleğe ihtiyacınız varsa, bunu fonksiyon içinde new ile ayırın ve döndürün (tercihen akıllı işaretçi ile).
-
-- **Kapsam Yönetimine Dikkat Edin:** Değişkenlerin ömrünü ve kapsamını iyi anlayın. Bir işaretçiyi, referans aldığı değişken kapsam dışına çıktıktan sonra kullanmaktan kaçının.
-
-- **Referansları Kullanın:** Mümkün olduğunda, sadece bir değeri okumanız veya değiştirmeniz gerekiyorsa işaretçiler yerine referansları kullanın. Referanslar asla "dangling" olamaz (null olamazlar ve her zaman geçerli bir nesneye bağlı olmalıdırlar).
-
+  * **Yerel Değişkenlerin Adreslerini Döndürmeyin:** Fonksiyonlardan yerel değişkenlerin adreslerini döndürmekten kaçının. Eğer dinamik belleğe ihtiyacınız varsa, bunu fonksiyon içinde `new` ile ayırın ve döndürün (tercihen akıllı işaretçi ile).
+  * **Kapsam Yönetimine Dikkat Edin:** Değişkenlerin ömrünü ve kapsamını iyi anlayın. Bir işaretçiyi, referans aldığı değişken kapsam dışına çıktıktan sonra kullanmaktan kaçının.
+  * **Referansları Kullanın:** Mümkün olduğunda, sadece bir değeri okumanız veya değiştirmeniz gerekiyorsa işaretçiler yerine referansları kullanın. Referanslar asla "dangling" olamaz (null olamazlar ve her zaman geçerli bir nesneye bağlı olmalıdırlar).
 
 -----
 
-## Mülakat Soruları ve Cevapları: Kopya ve Taşıma Semantiği
+### Interview Questions and Answers: Copy and Move Semantics (Mülakat Soruları ve Cevapları: Kopya ve Taşıma Semantiği)
 
-1) **Soru:** Aşağıdaki `func(std::move(_my_class));` satırı çalıştırıldığında Move'mu yoksa Copy Constructor mı çağırılır?
+1)  **Soru:** Aşağıdaki `func(std::move(_my_class));` satırı çalıştırıldığında Move'mu yoksa Copy Constructor mı çağırılır?
+
+<!-- end list -->
 
 ```cpp
 class my_class
@@ -728,15 +751,15 @@ int main()
 }
 ```
 
-  - **Cevap:** **Her ikisi de çağrılmaz\!**
+  * **Cevap:** **Her ikisi de çağrılmaz\!**
 
-    **Açıklama:** `func`'ın her iki aşırı yüklemesi de parametreyi `const` olarak almaktadır (`const my_class&` ve `const my_class&&`). `std::move(_my_class)` ifadesi bir `my_class&&` (rvalue referansı) üretir. Ancak, bu `rvalue` referansı `const` olduğu için (fonksiyon imzası `const my_class&&`), içindeki kaynakların taşınmasına (değiştirilmesine) izin verilmez. Taşıma kurucusu ise parametresini `const` almadığı (`my_class&&`) için eşleşmez.
+    **Açıklama:** `func`'ın her iki aşırı yüklemesi de parametreyi `const` olarak almaktadır (`const my_class&` ve `const my_class&&`). `std::move(_my_class)` ifadesi bir `my_class&&` (`rvalue` referansı) üretir. Ancak, bu `rvalue` referansı `const` olduğu için (fonksiyon imzası `const my_class&&`), içindeki kaynakların taşınmasına (değiştirilmesine) izin verilmez. Taşıma kurucusu ise parametresini `const` almadığı (`my_class&&`) için eşleşmez. Bu durumda, derleyici `const my_class&&` parametresine sahip `func` aşırı yüklemesini seçecektir. Ancak bu fonksiyon sadece bir referansı kabul eder, yeni bir `my_class` nesnesi oluşturmaz. Bu nedenle, herhangi bir kurucu (`Copy Ctor` veya `Move Ctor`) çağrılmaz.
 
-    Bu durumda, derleyici `const my_class&&` parametresine sahip `func` aşırı yüklemesini seçecektir. Ancak bu fonksiyon sadece bir referansı kabul eder, yeni bir `my_class` nesnesi oluşturmaz. Bu nedenle, herhangi bir kurucu (`Copy Ctor` veya `Move Ctor`) çağrılmaz.
+-----
 
----
+2)  **Soru:** Aşağıdaki `func(std::move(_my_class));` satırı çalıştırıldığında Move'mu yoksa Copy Constructor mı çağırılır?
 
-2) **Soru:** Aşağıdaki `func(std::move(_my_class));` satırı çalıştırıldığında Move'mu yoksa Copy Constructor mı çağırılır?
+<!-- end list -->
 
 ```cpp
 class my_class
@@ -761,15 +784,15 @@ int main()
 }
 ```
 
-  - **Cevap:** **Her ikisi de çağrılmaz\!** `func(const my_class&&)` fonksiyonu çağrılır.
+  * **Cevap:** **Her ikisi de çağrılmaz\!** `func(const my_class&&)` fonksiyonu çağrılır.
 
-    **Açıklama:** Bu soru bir öncekiyle aynıdır ve aynı mantık geçerlidir. `std::move(_my_class)` bir `my_class&&` (rvalue referansı) üretir. `func` fonksiyonunun iki aşırı yüklemesi arasında, `func(const my_class&&)` daha iyi bir eşleşmedir çünkü `rvalue` referansı `const rvalue` referansına dönüştürülebilir.
+    **Açıklama:** Bu soru bir öncekiyle aynıdır ve aynı mantık geçerlidir. `std::move(_my_class)` bir `my_class&&` (`rvalue` referansı) üretir. `func` fonksiyonunun iki aşırı yüklemesi arasında, `func(const my_class&&)` daha iyi bir eşleşmedir çünkü `rvalue` referansı `const rvalue` referansına dönüştürülebilir. Yine de, `func` fonksiyonu sadece bir referans alır ve yeni bir `my_class` nesnesi yaratmaz. Dolayısıyla, **hiçbir kurucu çağrılmaz**. Sadece `func(const my_class&&)`'nin içine yazılan metin ekrana basılır.
 
-    Yine de, `func` fonksiyonu sadece bir referans alır ve yeni bir `my_class` nesnesi yaratmaz. Dolayısıyla, **hiçbir kurucu çağrılmaz**. Sadece `func(const my_class&&)`'nin içine yazılan metin ekrana basılır.
+-----
 
----
+3)  **Soru:** Aşağıdaki `my_class &&r = std::move(m);` satırı çalıştırıldığında Move Constructor çağırılır mı?
 
-3) **Soru:** Aşağıdaki `my_class &&r = std::move(m);` satırı çalıştırıldığında Move Constructor çağırılır mı?
+<!-- end list -->
 
 ```cpp
 class my_class
@@ -790,13 +813,15 @@ int main()
 }
 ```
 
-  - **Cevap:** **Çağrılmaz\!**
+  * **Cevap:** **Çağrılmaz\!**
 
-    **Açıklama:** `my_class &&r = std::move(_my_class);` satırı bir nesne oluşturma işlemi değildir. Bu satırda, `std::move(_my_class)` ile `_my_class`'ın bir `rvalue` referansı elde edilir ve bu `rvalue` referansı, **`r` adlı bir başka `rvalue` referansına bağlanır**. Yani, `r` sadece `_my_class` nesnesine bir takma ad (alias) olarak işlev görür. Bellekte yeni bir `my_class` nesnesi yaratılmadığı için ne Kopyalama ne de Taşıma Kurucusu çağrılır.
+    **Açıklama:** `my_class &&r = std::move(_my_class);` satırı bir nesne oluşturma işlemi değildir. Bu satırda, `std::move(_my_class)` ile `_my_class`'ın bir `rvalue` referansı elde edilir ve bu `rvalue` referansı, **`r` adlı bir başka `rvalue` referansına bağlanır**. Yani, `r` sadece `_my_class` nesnesine bir takma ad (`alias`) olarak işlev görür. Bellekte yeni bir `my_class` nesnesi yaratılmadığı için ne Kopyalama ne de Taşıma Kurucusu çağrılır.
 
----
+-----
 
-4) **Soru:** Aşağıdaki `foo(std::move(_my_class));` satırı çalıştığında `func(const my_class&)` fonksiyonu mu çağrılır yoksa `func(const my_class&&)` fonksiyonu mu çağrılır?
+4)  **Soru:** Aşağıdaki `foo(std::move(_my_class));` satırı çalıştığında `func(const my_class&)` fonksiyonu mu çağrılır yoksa `func(const my_class&&)` fonksiyonu mu çağrılır?
+
+<!-- end list -->
 
 ```cpp
 class my_class
@@ -821,15 +846,15 @@ int main()
 }
 ```
 
-  - **Cevap:** `func(const my_class&)` fonksiyonu çağrılır.
+  * **Cevap:** `func(const my_class&)` fonksiyonu çağrılır.
 
-    **Açıklama:** `foo(my_class&& r)` fonksiyonunun içinde `r` bir **isimlendirilmiş `rvalue` referanstır**. C++'ta, isimlendirilmiş `rvalue` referansları dahi **`lvalue` olarak kabul edilirler**. Yani, `func(r)` ifadesindeki `r`, bir `lvalue` ifadedir.
+    **Açıklama:** `foo(my_class&& r)` fonksiyonunun içinde `r` bir **isimlendirilmiş `rvalue` referanstır**. C++'ta, isimlendirilmiş `rvalue` referansları dahi **`lvalue` olarak kabul edilirler**. Yani, `func(r)` ifadesindeki `r`, bir `lvalue` ifadedir. Bu nedenle, `func`'ın aşırı yüklemeleri arasında, `lvalue` referansı alan `func(const my_class&)` fonksiyonu çağrılacaktır. Bu, C++'ın "isimler `lvalue`'dir" kuralının bir sonucudur. Bir `rvalue` referansını taşımaya devam etmek isterseniz, `func(std::move(r));` şeklinde açıkça `std::move` kullanmanız gerekirdi.
 
-    Bu nedenle, `func`'ın aşırı yüklemeleri arasında, `lvalue` referansı alan `func(const my_class&)` fonksiyonu çağrılacaktır. Bu, C++'ın "isimler `lvalue`'dir" kuralının bir sonucudur. Bir `rvalue` referansını taşımaya devam etmek isterseniz, `func(std::move(r));` şeklinde açıkça `std::move` kullanmanız gerekirdi.
+-----
 
----
+5)  **Soru:** `foo(parametre)` fonksiyonunun içi öyle bir oluşturulmalıdır ki `foo()`'ya gönderilen ifade L-Value ise buradaki nesneyi Copy Constructor ile eğer gönderilen ifade R-Value ise Move Constructor ile oluşacak. Gerek kodu yazın.
 
-5) **Soru:** `foo(parametre)` fonksiyonunun içi öyle bir oluşturulmalıdır ki `foo()`'ya gönderilen ifade L-Value ise buradaki nesneyi Copy Constructor ile eğer gönderilen ifade R-Value ise Move Constructor ile oluşacak. Gerek kodu yazın.
+<!-- end list -->
 
 ```cpp
 class my_class
@@ -857,7 +882,7 @@ int main()
 }
 ```
 
-  - **Cevap:** Bu durumu elde etmek için **fonksiyon aşırı yüklemesi (`function overloading`)** kullanmamız gerekir.
+  * **Cevap:** Bu durumu elde etmek için **fonksiyon aşırı yüklemesi (`function overloading`)** kullanmamız gerekir.
 
     **Kod:**
 
@@ -911,21 +936,22 @@ int main()
 
     **Açıklama:**
 
-      * `foo(const my_class &param)` aşırı yüklemesi, `_my_class` gibi bir **`lvalue`** argümanla çağrıldığında seçilir. Fonksiyonun içinde `my_class yeni_nesne(param);` ifadesi, `param` bir `lvalue` olduğu için **Kopyalama Kurucusu**'nu tetikler.
-      * `foo(my_class &&param)` aşırı yüklemesi, `std::move(_my_class)` gibi bir **`rvalue`** argümanla çağrıldığında seçilir. Fonksiyonun içinde `my_class yeni_nesne(std::move(param));` ifadesi kullanılır. Burada `std::move(param)` kritik öneme sahiptir çünkü `param` her ne kadar bir `rvalue` referansı olsa da, **ismi olduğu için fonksiyon içinde bir `lvalue` gibi davranır**. `std::move` kullanarak onu tekrar bir `rvalue`'ye dönüştürür ve böylece **Taşıma Kurucusu**'nun çağrılmasını sağlarız.
+  * `foo(const my_class &param)` aşırı yüklemesi, `_my_class` gibi bir **`lvalue`** argümanla çağrıldığında seçilir. Fonksiyonun içinde `my_class yeni_nesne(param);` ifadesi, `param` bir `lvalue` olduğu için **Kopyalama Kurucusu**'nu tetikler.
 
----
+  * `foo(my_class &&param)` aşırı yüklemesi, `std::move(_my_class)` gibi bir **`rvalue`** argümanla çağrıldığında seçilir. Fonksiyonun içinde `my_class yeni_nesne(std::move(param));` ifadesi kullanılır. Burada `std::move(param)` kritik öneme sahiptir çünkü `param` her ne kadar bir `rvalue` referansı olsa da, **ismi olduğu için fonksiyon içinde bir `lvalue` gibi davranır**. `std::move` kullanarak onu tekrar bir `rvalue`'ye dönüştürür ve böylece **Taşıma Kurucusu**'nun çağrılmasını sağlarız.
 
-6) **Soru:** Bir nesnenin **move constructor** ile, **copy constructor** ile hayata getirilmesindeki fark nedir?
+-----
 
-  - **Cevap:** Kaynakların ele alınma biçimindeki farktır.
+6)  **Soru:** Bir nesnenin **move constructor** ile, **copy constructor** ile hayata getirilmesindeki fark nedir?
+
+<!-- end list -->
+
+  * **Cevap:** Kaynakların ele alınma biçimindeki farktır.
 
     **Açıklama:**
 
-      * **Kopyalama Kurucusu:** Kaynak nesnedeki tüm verinin **yeni bir kopyasını** oluşturur. Maliyetlidir, bağımsız iki nesne oluşur.
+  * **Kopyalama Kurucusu:** Kaynak nesnedeki tüm verinin **yeni bir kopyasını** oluşturur. Maliyetlidir, bağımsız iki nesne oluşur.
 
-      * **Taşıma Kurucusu:** Kaynak nesnedeki dinamik bellek gibi **kaynakların sahipliğini aktarır** (kopyalamaz). Çok daha hızlıdır. Kaynak nesne taşındıktan sonra genellikle "boş" veya geçersiz durumda bırakılır.
+  * **Taşıma Kurucusu:** Kaynak nesnedeki dinamik bellek gibi **kaynakların sahipliğini aktarır** (kopyalamaz). Çok daha hızlıdır. Kaynak nesne taşındıktan sonra genellikle "boş" veya geçersiz durumda bırakılır.
 
-    Kısaca: **Kopyalama veriyi çoğaltır; Taşıma sahipliği aktarır.**
-
------
+  * Kısaca: **Kopyalama veriyi çoğaltır; Taşıma sahipliği aktarır.**

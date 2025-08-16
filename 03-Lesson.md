@@ -1,14 +1,12 @@
-# 3.Ders
+# 3. Ders
 
-## ```constexpr``` Functions
+## ```constexpr``` Functions (```constexpr``` Fonksiyonlar)
 
 ```constexpr``` anahtar kelimesi, sadece sabitler (constants) ile değil, fonksiyon tanımlarında da kullanılabilir. Bu tür fonksiyonlar, yalnızca **derleme zamanında** hesaplanabilen işlemler içerir.
 
 - ```constexpr``` ile işaretlenmiş fonksiyonlar, **derleme zamanında** hesaplanabilir. Bu, programın çalışması sırasında değil, derleme aşamasında hesaplanan sonuçların kullanılmasını sağlar.
-
 - ```constexpr``` fonksiyonlar yalnızca **sabit ifadelerle** çalışabilir. Fonksiyonun tamamı **sabit değerlere** dayanmalıdır.
-
-- ```constexpr``` fonksiyonlar, ```const``` fonksiyonlardan farklıdır. Bir const fonksiyon yalnızca bir nesnenin sabit olduğunu belirtirken, ```constexpr``` fonksiyonun değeri derleme zamanında hesaplanabilir.
+- ```constexpr``` fonksiyonlar, ```const``` fonksiyonlardan farklıdır. Bir `const` fonksiyon yalnızca bir nesnenin sabit olduğunu belirtirken, ```constexpr``` fonksiyonun değeri derleme zamanında hesaplanabilir.
 
 ```cpp
 constexpr int x_func(int x)
@@ -24,11 +22,10 @@ constexpr int y_func(int x)
     static int y = x;
     return y * y - 3;
 }
-
 ```
 
 **NOT-1:** Her fonksiyon ```constexpr``` fonksiyonu olamaz.
-- ```constexpr```fonksiyonlar, statik ömürlü yerel değişkenler içeremez.
+- ```constexpr``` fonksiyonlar, statik ömürlü yerel değişkenler içeremez.
 
 **NOT-2:** Eğer bir fonksiyon, parametrelerine sabit ifadelerle çağrılırsa, fonksiyonun **geri dönüş değeri derleme zamanında** hesaplanır.
 
@@ -76,17 +73,17 @@ int main()
     const int z = 82345;
     const int r = 12191;
 
-    constexpr auto b = isprime (z + r - 19);
+    constexpr auto b = isprime(z + r - 19);
 }
 ```
 
 ---
 
-## ODR -One definition Rule (Tek tanımlama kuralı)
+## One Definition Rule - ODR (Tek Tanımlama Kuralı)
 
 Bir öğenin (değişken, fonksiyon, sınıf, vb.) yalnızca **bir kez** tanımlanabileceğini belirten temel bir kuraldır. Bu kural, bir öğenin birden fazla tanımının **çakışmaması gerektiğini** garanti eder. Eğer bir öğe birden fazla kez tanımlanırsa, derleyici bir "**linker error**" verir.
 
-- C++'ta bir fonksiyonun birden fazla tanımı olursa, bu ODR kuralını ihlal eder ve derleme zamanında hataya yol açar.
+- C++'ta bir fonksiyonun birden fazla tanımı olursa, bu ODR kuralını ihlal edir ve derleme zamanında hataya yol açar.
 
 ```cpp
 // func.cpp dosyası
@@ -154,9 +151,8 @@ int main()
 ```
 
 - ```foo.h``` başlık dosyasındaki **declaration** (bildirim) birden fazla dosyada paylaşılabilir.
-- ```foo.cpp``` dosyasındaki **definition** (tanım) sadece **bir dosyada** yapılmalıdır
+- ```foo.cpp``` dosyasındaki **definition** (tanım) sadece **bir dosyada** yapılmalıdır.
 - Bu kullanım **ODR'yi ihlal etmez** çünkü fonksiyon sadece **bir kez tanımlanır**.
-
 
 ```cpp
 // api.c dosyası
@@ -172,25 +168,23 @@ inline int foo(int x, int y)
 }
 ```
 
-**NOT-3:** **inline anahtar** kelimesi ile tanımlanmış bir fonksiyon birden fazla dosya içerisinde tekrar edilebilir(token by token aynı olmalıdır). **ODR(One Definition Rule) ihlal edilmemiş olur**!
+**NOT-3:** **inline anahtar** kelimesi ile tanımlanmış bir fonksiyon birden fazla dosya içerisinde tekrar edilebilir (token by token aynı olmalıdır). **ODR(One Definition Rule) ihlal edilmemiş olur**!
 
 ### Hangi tanımlar ODR'yi ihlal etmez?
-
-1) **Inline fonksiyon** tanımları
-2) **Inline değişen** tanımları(C++17)
-3) **User-defined types** tanımları
-4) **```constexpr```** fonksiyonlar
+1) **Inline fonksiyon** tanımları  
+2) **Inline değişken** tanımları (C++17)  
+3) **User-defined types** tanımları  
+4) **```constexpr```** fonksiyonlar  
 
 ---
 
-## Inline Expansion
+## Inline Expansion (Satır İçi Genişletme)
 
 ```inline``` anahtar kelimesiyle işaretlenmiş fonksiyonların **derleyici tarafından fonksiyon çağrısı** yerine **fonksiyonun içeriği**'nin **yerine yerleştirilmesi** işlemidir. Bu sayede **fonksiyon çağrısı yapılmaz**, bunun yerine fonksiyonun kodu **doğrudan** çağrıldığı yere eklenir.
 
 - ```inline``` fonksiyonlar, **küçük ve sıkça çağrılan** fonksiyonlar için genellikle kullanılır. **Büyük fonksiyonlar için** ```inline``` genişletmesi yapıldığında, **kod boyutunun** artmasına ve performansın **tersine etkilenmesine** yol açabilir.
 
 ### Inline Expansion Nasıl Çalışır?
-
 - **Fonksiyon çağrısı yerine** fonksiyonun **gövdesi derleyici tarafından çağrıldığı yere eklenir**.
 - Fonksiyonun **gövdeleri** sadece **derleme zamanında** eklenir. Yani, runtime'da işleme yapılmaz.
 - **Inline fonksiyonlar**, genellikle **başlık dosyalarında tanımlanır**, çünkü şablonlar ve inline fonksiyonlar çoğu zaman birden fazla dosyada kullanılır.
@@ -210,26 +204,25 @@ int main()
     return 0;
 }
 ```
- 
+
 **NOT-2:** ```add``` fonksiyonu **inline** olarak işaretlenmiştir. Bu, derleyicinin fonksiyon çağrısını doğrudan fonksiyonun içeriğiyle **değiştirmesini** sağlar. Yani, ```add(5, 3)``` çağrısı yerine derleyici ```5 + 3``` işlemini doğrudan ekler.
 
 ```cpp
 // api.h dosyası 
 
 inline int g = 10; // api.h dosyasını birden çok kere include edilse dahi run-time'da bir adet 'g' değişkeni oluşacak.
-
 ```
 
-**NOT-3:** Yukarıda yapılmış olan tanım Cpp'ın 2017 standartı ile hayatımıza girmiştir. Global değişkenler için ```inline``` anahtar sözcüğü kullanılabiliyor.
+**NOT-3:** Yukarıda yapılmış olan tanım C++'ın 2017 standartı ile hayatımıza girmiştir. Global değişkenler için ```inline``` anahtar sözcüğü kullanılabiliyor.
 
 ---
 
-## Enumaration Types
+## Enumeration Types (Numaralandırma Türleri)
 
 Sabit sayısal değerlerin isimlendirilmiş bir koleksiyonunu tanımlamak için kullanılan bir veri türüdür. **```enum```** türleri, bir grup sabit değeri isimlendirerek daha okunabilir ve yönetilebilir hale getirir.
 
 ```cpp
-enum Color {Blue, Black, White, Pruple, Red}; // C'de kullanımı
+enum Color {Blue, Black, White, Purple, Red}; // C'de kullanımı
 
 int main()
 {
@@ -237,12 +230,10 @@ int main()
     my_color = 3;   // C'de bu atama geçerlidir, fakat C++'da böyle bir atama yapılamaz! 
                     // C++'da sadece enum türünde tanımlanmış bir değişkene, enum tipinde tanımlanmış bir değer atanabilir!
 }
-
 ```
 
-### C++ dilinde(modern C++ öncesi), enum türlerinin istenmeyen özellikleri:
-
-1) Underliying-type'ın (baz tür) derleyiciye bağlı için enum türleri başlık dosyalarında incomplete type olarak kullanılamıyor.
+### C++ dilinde (modern C++ öncesi), enum türlerinin istenmeyen özellikleri:
+1) Underlying-type'ın (baz tür) derleyiciye bağlı olması nedeniyle, enum türleri başlık dosyalarında incomplete type olarak kullanılamıyor.
 
 ```cpp
 // api.h dosyası
@@ -252,16 +243,16 @@ enum Color;
 struct Data
 {
   //...
-  Color mc
+  Color mc;
 };
 
 // Bu kod C'de geçerlidir fakat C++'da, enum türlerinin alt türlerinin derleyiciye bağlı olması nedeniyle, enum türlerinin incomplete-type olarak kullanılmasına engel olur.
 ```
 
-2) Aritmetik türlerden, enum türlerine örtülü dönüşüm olmamasına rağmen farklı enum türleri arasında örtülü dönüşüm olmamasına rağmen farklı enum türlerinden aritmetik türlere örtülü dönüşüm var.
+2) Aritmetik türlerden, enum türlerine örtülü dönüşüm olmamasına rağmen, farklı enum türlerinden aritmetik türlere örtülü dönüşüm var.
 
 ```cpp
-enum Color {Blue, Black, White, Pruple, Red};
+enum Color {Blue, Black, White, Purple, Red};
 enum Pos {On, Off, Hold};
 
 int main()
@@ -273,11 +264,11 @@ int main()
   Color my_color = Black;
   int ival;
   // ...
-  ival = mycolor; // C++'da bu geçerli!
+  ival = my_color; // C++'da bu geçerli!
 }
 ```
 
-3) Enumaratörlerin ayrı bir scopeları yoktur.
+3) Enumerator'ların ayrı bir scope'ları yoktur.
 
 ```cpp 
 // api.h dosyası
@@ -288,5 +279,3 @@ enum screen_color {Magenta, White, Black, Red};
 
 // Her iki başlık dosyası include edildiğinde, "Red" in ayrı bir scope'u olmadığı için bu kod derlendiğinde "Syntax hatası" olur.
 ```
-
----

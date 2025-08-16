@@ -1,12 +1,10 @@
-# 7.Ders
+# 7. Ders
 
-## Class
+## Classes (Sınıflar)
 
-### ```this``` Keyword(Anahtar Kelimesi):
+### The `this` Pointer (this İşaretçisi)
 
-```this``` anahtar kelimesi, bir **üye fonksiyon (member function)** içinde çağrıldığı **nesnenin (object) kendisini** gösteren bir **işaretçidir (pointer)**. Aşağıdaki durumlarda kullanılır:
-
-```this``` keyword'ü oluşturulan bir değer **PR-Value** ifadedir.
+`this` anahtar kelimesi, bir **üye fonksiyon (member function)** içinde çağrıldığı **nesnenin (object) kendisini** gösteren bir **işaretçidir (pointer)**. `this` keyword'ü oluşturulan bir değer **PR-Value** ifadesidir. Aşağıdaki durumlarda kullanılır:
 
 ```cpp
 class my_class
@@ -14,8 +12,8 @@ class my_class
     public:
         foo();
     private:
-        int mx{}, my{}
-}
+        int mx{}, my{};
+};
 
 void fun1(my_class *p)
 {
@@ -29,20 +27,20 @@ void fun1(my_class &p)
 
 void my_class::foo()
 {
-    mx = 56
+    mx = 56;
     this->mx = 56;
     (*this).mx = 56;
     my_class::mx = 56;    
 
     // Yukarıdaki ifadelerin hepsinin derleyici kısmında aynı kodu üretecektir.
 
-    func1(this);    // fonksiyon parametresi pointer ise
-    fun2(*this);    // fonksiyon parametresi referans ise
+    fun1(this);    // fonksiyon parametresi pointer ise
+    fun1(*this);    // fonksiyon parametresi referans ise
 }
 ```
 
-1) **Sınıfın Veri Üyeleri ile Yerel Değişkenler Arasındaki İsim Çakışmalarını Çözmek:**
-    
+1)  **Sınıfın Veri Üyeleri ile Yerel Değişkenler Arasındaki İsim Çakışmalarını Çözmek:**
+
     Bir üye fonksiyonun parametresi veya yerel değişkeni, sınıfın bir veri üyesiyle aynı isme sahip olduğunda kullanılır.
 
     ```cpp
@@ -59,9 +57,9 @@ void my_class::foo()
     };
     ```
 
-2) **Zincirleme Çağrılar (Chaining) Yapmak:**
+2)  **Chaining (Zincirleme Çağrılar) Yapmak:**
 
-    Bir üye fonksiyonun, çağrıldığı nesnenin kendisini döndürmesi gerektiğinde (```*this``` kullanarak), aynı nesne üzerinde birden fazla üye fonksiyon çağrısı arka arkaya yapılabilir.
+    Bir üye fonksiyonun, çağrıldığı nesnenin kendisini döndürmesi gerektiğinde (`*this` kullanarak), aynı nesne üzerinde birden fazla üye fonksiyon çağrısı arka arkaya yapılabilir.
 
     ```cpp
     class HesapMakinesi 
@@ -87,7 +85,7 @@ void my_class::foo()
     HesapMakinesi& HesapMakinesi::bol(double deger)
     {
         sonuc *= deger;
-        return *this    // Çağrıldığı nesnenin kendisini döndür
+        return *this;    // Çağrıldığı nesnenin kendisini döndür
     }
 
     // main içinde zincirleme çağrı örneği:
@@ -96,9 +94,9 @@ void my_class::foo()
     // std::cout << h.sonuc << std::endl; // Çıktı: 13
     ```
 
-3) **Nesnenin Kendi Adresini Başka Bir Fonksiyona Geçirmek:**
+3)  **Nesnenin Kendi Adresini Başka Bir Fonksiyona Geçirmek:**
 
-    Bir nesnenin kendi adresini (```this```) başka bir fonksiyona veya nesneye parametre olarak geçirmek gerektiğinde kullanılır.
+    Bir nesnenin kendi adresini (`this`) başka bir fonksiyona veya nesneye parametre olarak geçirmek gerektiğinde kullanılır.
 
     ```cpp
     class B; // İleri bildirim (Forward declaration)
@@ -124,11 +122,13 @@ void my_class::foo()
     }
     ```
 
-* **Önemli Notlar:**
+<!-- end list -->
 
-    - **```const``` Üye Fonksiyonlarda ```this```:** Bir ```const``` üye fonksiyon içinde ```this``` işaretçisi, ```const``` olmayan bir ```this``` işaretçisi yerine const bir işaretçi (```const Ornek*```) olarak kabul edilir. Bu, ```const``` fonksiyonların sınıfın veri üyelerini değiştirememesini sağlar.
+  * **Önemli Notlar:**
 
-    - **Static Üye Fonksiyonlarda ```this``` Yoktur:** ```static``` üye fonksiyonlar bir sınıfın nesnesine bağlı değildir; doğrudan sınıf adıyla çağrılırlar. Bu nedenle, ```static``` üye fonksiyonların içinde ```this``` işaretçisi bulunmaz ve kullanılamaz.
+      * **`const` Üye Fonksiyonlarda `this`:** Bir `const` üye fonksiyon içinde `this` işaretçisi, `const` olmayan bir `this` işaretçisi yerine `const` bir işaretçi (`const Ornek*`) olarak kabul edilir. Bu, `const` fonksiyonların sınıfın veri üyelerini değiştirememesini sağlar.
+
+      * **Static Üye Fonksiyonlarda `this` Yoktur:** `static` üye fonksiyonlar bir sınıfın nesnesine bağlı değildir; doğrudan sınıf adıyla çağrılırlar. Bu nedenle, `static` üye fonksiyonların içinde `this` işaretçisi bulunmaz ve kullanılamaz.
 
         ```cpp
         class my_class
@@ -142,10 +142,10 @@ void my_class::foo()
             {
                 this;   // Syntax hatası oluşturur.
             }
-        }
+        };
         ```
 
-    - Aşağıdaki gibi bir **Zincirleme Çağrılar (Chaining)** yapmak mümkündür:
+      * Aşağıdaki gibi bir **Chaining (Zincirleme Çağrılar)** yapmak mümkündür:
 
         ```cpp
         class my_class
@@ -154,26 +154,28 @@ void my_class::foo()
                 my_class* foo() { return this; }
                 my_class* bar() { return this; }
                 my_class* baz() { return this; }
-        }
+        };
 
         int main()
         {
             my_class * x = new my_class;
             x->bar()->foo()->baz();     // Zincirleme Çağrılar (Chaining) alternatif kullanım 
         }
-        ``` 
+        ```
 
----
+-----
 
-### ```const``` Member Functions(Sabit Üye Fonksiyonlar)
+### const Member Functions (const Üye Fonksiyonlar)
 
-```const``` üye fonksiyonların temel amacı, bir nesnenin durumunu (yani veri üyelerinin değerlerini) **okuyan** ancak **değiştirmeyen** fonksiyonları açıkça belirtmektir. Bu, aşağıdaki faydaları sağlar:
+`const` üye fonksiyonların temel amacı, bir nesnenin durumunu (yani veri üyelerinin değerlerini) **okuyan** ancak **değiştirmeyen** fonksiyonları açıkça belirtmektir. Bu, aşağıdaki faydaları sağlar:
 
-1) **Veri Bütünlüğü ve Güvenlik:** Bir nesnenin, ```const``` bir bağlamda kullanıldığında (örneğin ```const``` bir referans veya işaretçi aracılığıyla erişildiğinde) veri üyelerinin yanlışlıkla değiştirilmesini engeller. Bu, özellikle büyük ve karmaşık sistemlerde veri bütünlüğünü korumak için kritik öneme sahiptir.
+1)  **Veri Bütünlüğü ve Güvenlik:** Bir nesnenin, `const` bir bağlamda kullanıldığında (örneğin `const` bir referans veya işaretçi aracılığıyla erişildiğinde) veri üyelerinin yanlışlıkla değiştirilmesini engeller. Bu, özellikle büyük ve karmaşık sistemlerde veri bütünlüğünü korumak için kritik öneme sahiptir.
 
-2) **Okunabilirlik ve Niyet Açıklığı:** Fonksiyonun ismine bakmadan bile, ```const``` anahtar kelimesi sayesinde o fonksiyonun nesnenin durumunu değiştirmeyeceğini anlarsınız. Bu, kodun okunabilirliğini ve anlaşılırlığını artırır.
+2)  **Okunabilirlik ve Niyet Açıklığı:** Fonksiyonun ismine bakmadan bile, `const` anahtar kelimesi sayesinde o fonksiyonun nesnenin durumunu değiştirmeyeceğini anlarsınız. Bu, kodun okunabilirliğini ve anlaşılırlığını artırır.
 
-3) **```const``` Nesnelerle Çalışma Yeteneği:** Sadece ```const``` üye fonksiyonlar, ```const``` olarak tanımlanmış nesneler üzerinden çağrılabilir. Eğer bir fonksiyon ```const``` olmasaydı ve ```const``` bir nesne üzerinden çağrılmaya çalışılsaydı derleme hatası alınırdı. Bu, ```const``` nesnelerle güvenli bir şekilde etkileşim kurmayı sağlar.
+3)  **`const` Nesnelerle Çalışma Yeteneği:** Sadece `const` üye fonksiyonlar, `const` olarak tanımlanmış nesneler üzerinden çağrılabilir. Eğer bir fonksiyon `const` olmasaydı ve `const` bir nesne üzerinden çağrılmaya çalışılsaydı derleme hatası alınırdı. Bu, `const` nesnelerle güvenli bir şekilde etkileşim kurmayı sağlar.
+
+<!-- end list -->
 
 ```cpp
 class Kitap 
@@ -211,52 +213,52 @@ class Kitap
 };
 ```
 
-* **```const``` Nesneler ve ```const``` Üye Fonksiyon İlişkisi**
+### const Objects and const Member Functions (const Nesneler ve const Üye Fonksiyonlar)
 
-    **Yalnızca ```const``` üye fonksiyonlar, ```const``` nesneler üzerinden çağrılabilir.**
+**Yalnızca `const` üye fonksiyonlar, `const` nesneler üzerinden çağrılabilir**.
 
-    ```cpp
-    #include <string>
+```cpp
+#include <string>
 
-    class Kitap 
-    {
-        private:
-            std::string baslik;
-            int sayfaSayisi;
+class Kitap 
+{
+    private:
+        std::string baslik;
+        int sayfaSayisi;
 
-        public:
-            Kitap(const std::string& b, int ss) : baslik(b), sayfaSayisi(ss) {} // Constructor bir fonksiyondur. İlerleyen zamanlarda anlatılacak.
-            std::string getBaslik() const { return baslik; }
-            int getSayfaSayisi() const { return sayfaSayisi; }
-            void setSayfaSayisi(int yeniSayfaSayisi) { sayfaSayisi = yeniSayfaSayisi; }
-    };
+    public:
+        Kitap(const std::string& b, int ss) : baslik(b), sayfaSayisi(ss) {} // Constructor bir fonksiyondur. İlerleyen zamanlarda anlatılacak.
+        std::string getBaslik() const { return baslik; }
+        int getSayfaSayisi() const { return sayfaSayisi; }
+        void setSayfaSayisi(int yeniSayfaSayisi) { sayfaSayisi = yeniSayfaSayisi; }
+};
 
-    int main() 
-    {
-        // Normal (non-const) bir nesne
-        Kitap roman("Yüz Yıllık Yalnızlık", 450);
+int main() 
+{
+    // Normal (non-const) bir nesne
+    Kitap roman("Yüz Yıllık Yalnızlık", 450);
 
-        // Normal nesne üzerinden hem const hem de non-const fonksiyonlar çağrılabilir.
-        std::cout << "Başlık (Normal Nesne): " << roman.getBaslik() << std::endl;
-        roman.setSayfaSayisi(460); // Sayfa sayısını değiştirebiliriz
+    // Normal nesne üzerinden hem const hem de non-const fonksiyonlar çağrılabilir.
+    std::cout << "Başlık (Normal Nesne): " << roman.getBaslik() << std::endl;
+    roman.setSayfaSayisi(460); // Sayfa sayısını değiştirebiliriz
 
-        // const bir nesne
-        const Kitap dersKitabi("C++ Programlama", 800);
+    // const bir nesne
+    const Kitap dersKitabi("C++ Programlama", 800);
 
-        // const nesne üzerinden SADECE const üye fonksiyonlar çağrılabilir.
-        std::cout << "Başlık (Const Nesne): " << dersKitabi.getBaslik() << std::endl;
-        std::cout << "Sayfa Sayısı (Const Nesne): " << dersKitabi.getSayfaSayisi() << std::endl;
+    // const nesne üzerinden SADECE const üye fonksiyonlar çağrılabilir.
+    std::cout << "Başlık (Const Nesne): " << dersKitabi.getBaslik() << std::endl;
+    std::cout << "Sayfa Sayısı (Const Nesne): " << dersKitabi.getSayfaSayisi() << std::endl;
 
-        // dersKitabi.setSayfaSayisi(810); // Hata! 'dersKitabi' const olduğu için
-                                        // non-const 'setSayfaSayisi' çağrılamaz.
-    }
-    ```
+    // dersKitabi.setSayfaSayisi(810); // Hata! 'dersKitabi' const olduğu için
+                                    // non-const 'setSayfaSayisi' çağrılamaz.
+}
+```
 
-    Bu, fonksiyonlara ```const``` referans veya işaretçi ile nesneler geçirdiğinizde büyük önem taşır. Bu sayede fonksiyonun, aldığı nesnenin durumunu değiştirmeyeceğinden emin olursunuz.
+Bu, fonksiyonlara `const` referans veya işaretçi ile nesneler geçirdiğinizde büyük önem taşır. Bu sayede fonksiyonun, aldığı nesnenin durumunu değiştirmeyeceğinden emin olursunuz.
 
-#### ```mutable``` Anahtar Kelimesi (```const```'un İstisnası)
+#### The `mutable` Keyword (mutable Anahtar Sözcüğü)
 
-Nadiren de olsa, bir ```const``` üye fonksiyon içinde dahi bazı veri üyelerini değiştirmeye ihtiyaç duyabilirsiniz (örneğin, bir önbellek sayacı veya bir kilit mekanizması gibi mantıksal olarak nesnenin durumunu değiştirmeyen ancak fiziksel olarak belleği güncelleyen üyeler). Bu tür durumlar için, veri üyesini ```mutable``` olarak işaretleyebilirsiniz.
+Nadiren de olsa, bir `const` üye fonksiyon içinde dahi bazı veri üyelerini değiştirmeye ihtiyaç duyabilirsiniz (örneğin, bir önbellek sayacı veya bir kilit mekanizması gibi mantıksal olarak nesnenin durumunu değiştirmeyen ancak fiziksel olarak belleği güncelleyen üyeler). Bu tür durumlar için, veri üyesini `mutable` olarak işaretleyebilirsiniz.
 
 ```cpp
 class Sayac 
@@ -280,7 +282,7 @@ class Sayac
 // std::cout << s.getDeger() << std::endl; // erisimSayisi tekrar artırılır
 ```
 
----
+-----
 
 **Mülakat Notları-1**
 
