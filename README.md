@@ -1,27 +1,24 @@
-# Contents of Cpp Notes
+# Not İçerik Navigasyonu
 
-<details>
-<summary><strong>🔍 Ders 1: Genel C++ Kavramları, Pointer'lar ve Referanslar</strong></summary>
+🔍 **Hatırlatma:** Aşağıdaki içerik tablosu akardiyon biçimindedir. Gitmek istediğiniz ders notu için başlığa tıklayınız. <u>Örnek olması için "**Ders 1**" altındaki ilk üç başlığa ait akordiyon liste açık biçimde verilmiştir.</u>
 
-<details>
+<summary><strong>📖 Ders 1: Genel C++ Kavramları, Pointer'lar ve Referanslar</strong></summary>
+
 <summary><code>Essential C Topics (Bilinmesi Gereken C Konuları)</code></summary>
   
 - [Essential C Topics (Bilinmesi Gereken C Konuları)](01-Lesson.md#essential-c-topics-bilinmesi-gereken-c-konuları)
-</details>
 
-<details>
 <summary><code>References (Referanslar)</code></summary>
   
 - [References (Referanslar)](01-Lesson.md#references-referanslar)
-</details>
 
-<details>
+
 <summary><code>Array Pointers (Dizi Pointer'ları)</code></summary>
   
 - [Array Pointers (Dizi Pointer'ları)](01-Lesson.md#array-pointers-dizi-pointerları)
 - [Definition and Explanation Table (Tanım ve Açıklama Tablosu)](01-Lesson.md#definition-and-explanation-table-tanım-ve-açıklama-tablosu)
 - [`a` ve `&a` Arasındaki Fark](01-Lesson.md#a-ve-a-arasındaki-fark)
-</details>
+
 
 <details>
 <summary><code>Semantics and Common Semantic Types (Semantik ve Sık Geçen Semantik Türleri)</code></summary>
@@ -89,7 +86,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 2: `decltype` Belirleyici, Varsayılan Argümanlar ve `constexpr`</strong></summary>
+<summary><strong>📖 Ders 2: `decltype` Belirleyici, Varsayılan Argümanlar ve `constexpr`</strong></summary>
 
 <details>
 <summary><code>The `decltype` Specifier (`decltype` Belirleyici)</code></summary>
@@ -126,7 +123,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 3: `constexpr` Fonksiyonlar, ODR ve Enum Türleri</strong></summary>
+<summary><strong>📖 Ders 3: `constexpr` Fonksiyonlar, ODR ve Enum Türleri</strong></summary>
 
 <details>
 <summary><code>`constexpr` Functions (`constexpr` Fonksiyonlar)</code></summary>
@@ -158,7 +155,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 4: Scoped Enumerations, İsim Arama ve Tür Dönüşümleri</strong></summary>
+<summary><strong>📖 Ders 4: Scoped Enumerations, İsim Arama ve Tür Dönüşümleri</strong></summary>
 
 <details>
 <summary><code>Scoped Enumerations (Kapsamlı Numaralandırmalar)</code></summary>
@@ -221,7 +218,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 5: Fonksiyon Aşırı Yükleme ve Çözümleme</strong></summary>
+<summary><strong>📖 Ders 5: Fonksiyon Aşırı Yükleme ve Çözümleme</strong></summary>
 
 <details>
 <summary><code>Function Overloading (Fonksiyon Aşırı Yükleme)</code></summary>
@@ -269,7 +266,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 6: Sınıflar ve İsim Arama</strong></summary>
+<summary><strong>📖 Ders 6: Sınıflar ve İsim Arama</strong></summary>
 
 <details>
 <summary><code>Classes</code></summary>
@@ -314,7 +311,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 7: Classes (Sınıflar)</strong></summary>
+<summary><strong>📖 Ders 7: Classes (Sınıflar)</strong></summary>
 
 <details>
 <summary><code>The `this` Pointer (this İşaretçisi)</code></summary>
@@ -350,7 +347,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 8: Sınıflar</strong></summary>
+<summary><strong>📖 Ders 8: Sınıflar</strong></summary>
 
 <details>
 <summary><code>Constructor Functions (Yapıcı Fonksiyonlar)</code></summary>
@@ -399,7 +396,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 9: Class, Value Type, Value Semantics ve Özel Anahtar Sözcükler</strong></summary>
+<summary><strong>📖 Ders 9: Class, Value Type, Value Semantics ve Özel Anahtar Sözcükler</strong></summary>
 
 <details>
 <summary><code>Class</code></summary>
@@ -412,8 +409,8 @@
 - [Declarations and Special Member Functions in C++](09-Lesson.md#declarations-and-special-member-functions-in-c)
 - [`not declared` Error (`not declared` Hatası)](09-Lesson.md#not-declared-error-not-declared-hatası)
 - [`user-declared` & `user-defined`](09-Lesson.md#user-declared--user-defined-kullanıcı-tarafından-bildirilmiş--kullanıcı-tanımlı)
-- [`= default`](09-Lesson.md=-default-varsayılan-olarak-ayarla)
-- [`= delete`](09-Lesson.md=-delete-silinmiş-olarak-ayarla)
+- [`= default`](09-Lesson.md#-default-varsayılan-olarak-ayarla)
+- [`= delete`](09-Lesson.md#-delete-silinmiş-olarak-ayarla)
 - [`implicitly declared`](09-Lesson.md#implicitly-declared-dolaylı-olarak-bildirilmiş)
 - [Special Member Functions](09-Lesson.md#special-member-functions-özel-üye-fonksiyonları)
 - [Constructor (Kurucu)](09-Lesson.md#constructor-kurucu)
@@ -449,7 +446,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 10: Copy & Move Semantics, Derleyici Kuralları ve Ek Bilgiler</strong></summary>
+<summary><strong>📖 Ders 10: Copy & Move Semantics, Derleyici Kuralları ve Ek Bilgiler</strong></summary>
 
 <details>
 <summary><code>Class (Sınıf)</code></summary>
@@ -498,7 +495,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 11: Classes (Sınıflar)</strong></summary>
+<summary><strong>📖 Ders 11: Classes (Sınıflar)</strong></summary>
 
 <details>
 <summary><code>Move-Only Types (Sadece Taşınabilir Tipler)</code></summary>
@@ -554,7 +551,7 @@
 ---
 
 <details>
-<summary><strong>🔍 Ders 12: Copy Elision (Kopya Elemesi), Temporary Materialization (Geçici Malzemeleştirme) ve Return Value Optimization (Dönüş Değeri Optimizasyonu)</strong></summary>
+<summary><strong>📖 Ders 12: Copy Elision (Kopya Elemesi), Temporary Materialization (Geçici Malzemeleştirme) ve Return Value Optimization (Dönüş Değeri Optimizasyonu)</strong></summary>
 
 <details>
 <summary><code>Copy Elision (Kopya Elemesi)</code></summary>
